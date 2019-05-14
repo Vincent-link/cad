@@ -224,7 +224,7 @@ namespace WindowsFormsApp1
             string[] factorid = new string[] { "b73e3fce-8314-4d5b-8e2b-0a3e8844b28b" };
             string type = "polygon";
             string name = "123";
-            string srid = "4214";
+            string srid = "4326";
 
             string attrlistString = string.Empty;
             attrlistString = JsonConvert.SerializeObject(attrlist);
