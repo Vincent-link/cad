@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FenTuZe.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Form2.cs">
       <SubType>Form</SubType>

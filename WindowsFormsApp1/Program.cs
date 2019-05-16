@@ -20,6 +20,16 @@ namespace EntitySelection
 
         }
 
+        [CommandMethod("分图则")]
+
+        static public void fen()
+
+        {
+            Application.EnableVisualStyles();
+            Application.Run(new Form1());
+
+        }
+
         [CommandMethod("read")]
 
         static public void read()

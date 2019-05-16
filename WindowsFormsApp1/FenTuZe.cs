@@ -14,7 +14,7 @@ using System.Data;
 
 namespace WindowsFormsApp1
 {
-    public class Send
+    public class FenTuZe
     {
         public void SendData(System.Data.DataTable table)
         {
@@ -64,7 +64,7 @@ namespace WindowsFormsApp1
                         if (acSSObj != null)
                         {
                             Entity ent1 = tr.GetObject(acSSObj.ObjectId, OpenMode.ForWrite) as Entity;
-                            if (ent1 is Hatch)
+                            if (ent1 is Polyline)
                             {
                                 resultAll.Add(ent1);
                             }
@@ -81,7 +81,7 @@ namespace WindowsFormsApp1
 
         //private static char[] constant = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-        public static void DrawBorder(ArrayList hats, Transaction trans, BlockTableRecord btr, int numSample, Editor ed, System.Data.DataTable table)
+        public static void DrawBorder(ArrayList polylines, Transaction trans, BlockTableRecord btr, int numSample, Editor ed, System.Data.DataTable table)
         {
             ArrayList two = new ArrayList();
             System.Collections.Generic.Dictionary<string, string> result = new System.Collections.Generic.Dictionary<string, string>();
@@ -89,12 +89,12 @@ namespace WindowsFormsApp1
             ArrayList attributeList = new ArrayList();
             ArrayList attributeListPrimary = new ArrayList();
 
-            foreach (Hatch hat in hats)
+            foreach (Polyline polyline in polylines)
             {
                 ArrayList one = new ArrayList();
 
                 //取得边界数
-                int loopNum = hat.NumberOfLoops;
+                int loopNum = 1;
                 Point2dCollection col_point2d = new Point2dCollection();
                 BulgeVertexCollection col_ver = new BulgeVertexCollection();
                 Curve2dCollection col_cur2d = new Curve2dCollection();
@@ -105,7 +105,7 @@ namespace WindowsFormsApp1
                     HatchLoop hatLoop = null;
                     try
                     {
-                        hatLoop = hat.GetLoopAt(i);
+                        //hatLoop = polyline.GetLoopAt(i);
                     }
                     catch (System.Exception)
                     {
@@ -156,11 +156,6 @@ namespace WindowsFormsApp1
                         //旋转中心点
                         double centerX = 114.00092403;
                         double centerY = 36.14333070;
-
-                        //double xParam = 92.90255752;
-                        //double yParam = -329.393416163;
-                        //double xMultiple = 1.284757379858244;
-                        //double yMultiple = 1.055152700392359;
 
 
                         //旋转角度
@@ -239,7 +234,7 @@ namespace WindowsFormsApp1
                 two.Add(one);
 
                 // 颜色
-                LayerTableRecord ltr = (LayerTableRecord)trans.GetObject(hat.LayerId, OpenMode.ForRead);
+                LayerTableRecord ltr = (LayerTableRecord)trans.GetObject(polyline.LayerId, OpenMode.ForRead);
                 string hatchColor = "hatchColor:" + ltr.Color;
                 attrlist.Add(hatchColor);
 

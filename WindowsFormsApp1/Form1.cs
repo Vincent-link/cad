@@ -38,13 +38,9 @@ namespace WindowsFormsApp1
                     // 初始化一个字符串数组
                     string[] words = new string[idArray.Length];
 
-                    string[] compositionTableIndex = new string[22] {"R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41",
+                    string[] compositionTableIndex = new string[22] {"R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41", "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1"};
 
-                                "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1"};
-
-                    string[] requirementsIndex = {"主导功能", "规    模", "居    住", "工    业", "绿    地", "商业设施", "交通设施", "市政设施", "公共服务设施", "公共安全设施",
-
-                                "开发用地控制", "城市设计", "地下空间"};
+                    string[] requirementsIndex = {"主导功能", "规    模", "居    住", "工    业", "绿    地", "商业设施", "交通设施", "市政设施", "公共服务设施", "公共安全设施", "开发用地控制", "城市设计", "地下空间"};
 
                     // 输出最终结果的字符串
                     string rString = "";
@@ -219,10 +215,14 @@ namespace WindowsFormsApp1
                     } // 规划要求索引循环结束
 
                     //SetupLayout(songsDataGridView);
+
+                    // 用地构成表
                     InitializeComponent(songsDataGridView);
+                    // 控规要求
                     InitializeComponent2(songsDataGridView2);
+                    // 发送到GIS
                     Send sendTo = new Send();
-                    sendTo.SendData(table2);
+                    sendTo.SendData(table);
 
                 } // 事务结束
 
