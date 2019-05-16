@@ -240,8 +240,8 @@ namespace WindowsFormsApp1
 
                 // 颜色
                 LayerTableRecord ltr = (LayerTableRecord)trans.GetObject(hat.LayerId, OpenMode.ForRead);
-                string hatchColor = "hatchColor:" + ltr.Color;
-                attrlist.Add(hatchColor);
+                string hatchColor = "hatchColor:" + ltr.Name;
+                attrlist.Add(ltr.Name);
 
                 // 用地构成表主键
                 DataRow[] foundRows;
