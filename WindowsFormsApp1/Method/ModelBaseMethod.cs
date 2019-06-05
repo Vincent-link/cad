@@ -1,0 +1,310 @@
+﻿using Autodesk.AutoCAD.ApplicationServices;
+using RegulatoryPlan.Model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.DatabaseServices;
+using RegulatoryPlan.Command;
+using System.Drawing;
+using Autodesk.AutoCAD.Geometry;
+
+namespace RegulatoryPlan.Method
+{
+   public  class ModelBaseMethod<T> where T:ModelBase
+    {
+        List<Polyline> lengedList = new List<Polyline>();
+        List<ObjectId> allModelId = new List<ObjectId>();
+        //public  void GetLengedPoints(T model)
+        //{
+        //    Document doc = Application.DocumentManager.MdiActiveDocument;
+        //    ObjectIdCollection ids = new ObjectIdCollection();
+
+        //    PromptSelectionResult ProSset = null;
+        //    TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, MethodCommand.LegendLayer)};
+        //    SelectionFilter sfilter = new SelectionFilter(filList);
+        //    LayoutManager layoutMgr = LayoutManager.Current;
+          
+        //   string ss= layoutMgr.CurrentLayout;
+        //    ProSset = doc.Editor.SelectAll(sfilter);
+        ////  List<ObjectId> idss=  GetEntitiesInModelSpace();
+        //    Database db = doc.Database;
+        //    if (ProSset.Status == PromptStatus.OK)
+        //    {
+        //        using (Transaction tran = db.TransactionManager.StartTransaction())
+        //        {
+        //            SelectionSet sst = ProSset.Value;
+
+        //            ObjectId[] oids = sst.GetObjectIds();
+        //            model.LegendList = new Dictionary<int, List<System.Drawing.PointF>>();
+        //            int ad = 0;
+        //            List<string> aa = new List<string>();
+        //            LayerModel lm = new LayerModel();
+        //            LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
+        //            foreach (ObjectId layerId in lt)
+        //            {
+        //                LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
+        //                if (ltr.Name == MethodCommand.LegendLayer)
+        //                {
+        //                    lm.Color = ltr.Color.PenIndex;
+        //                }
+        //            }
+        //            for (int i = 0; i < oids.Length; i++)
+        //            {
+        //              //  if (idss.Contains(oids[i]))
+        //              //  {
+        //                    DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+        //                if (!aa.Contains((ob as Polyline).BlockName)) { aa.Add((ob as Polyline).BlockName); }
+        //                    if (ob is Polyline&&(ob as Polyline).BlockName.ToLower()== "*model_space")
+        //                    {
+        //                        lengedList.Add(ob as Polyline);
+        //                        model.LegendList.Add(ad,PolylineMethod.GetPolyLineInfoPt(ob as Polyline));
+        //                        ad++;
+        //                    }
+        //               // }
+    
+                   
+        //            }
+        //            model.allLines = new List<LayerModel>();
+                  
+        //            model.allLines.Add(lm);
+        //        }
+        //    }
+
+            
+        //}
+
+        public List<Autodesk.AutoCAD.DatabaseServices.ObjectId> GetEntitiesInModelSpace()
+        {
+            List<Autodesk.AutoCAD.DatabaseServices.ObjectId> objects = new List<Autodesk.AutoCAD.DatabaseServices.ObjectId>();
+            using (Autodesk.AutoCAD.DatabaseServices.Transaction transaction = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.TransactionManager.StartTransaction())
+            {
+                Autodesk.AutoCAD.DatabaseServices.BlockTable blockTable =
+                    (Autodesk.AutoCAD.DatabaseServices.BlockTable)transaction.GetObject(
+                    Autodesk.AutoCAD.DatabaseServices.HostApplicationServices.WorkingDatabase.BlockTableId,
+                    Autodesk.AutoCAD.DatabaseServices.OpenMode.ForRead);
+                Autodesk.AutoCAD.DatabaseServices.BlockTableRecord blockTableRecord =
+                    (Autodesk.AutoCAD.DatabaseServices.BlockTableRecord)transaction.GetObject(
+                    blockTable[Autodesk.AutoCAD.DatabaseServices.BlockTableRecord.ModelSpace],
+                    Autodesk.AutoCAD.DatabaseServices.OpenMode.ForRead);
+                foreach (Autodesk.AutoCAD.DatabaseServices.ObjectId objId in blockTableRecord)
+                {
+                    objects.Add(objId);
+                }
+                transaction.Commit();
+            }
+            return objects;
+        }
+        /// <summary>
+        /// 获取图例文本
+        /// </summary>
+        /// <returns></returns>
+        private List<MText> GetAllLengedText()
+        {
+            List<MText> textList = new List<MText>();
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            ObjectIdCollection ids = new ObjectIdCollection();
+
+            PromptSelectionResult ProSset = null;
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例框") };
+            SelectionFilter sfilter = new SelectionFilter(filList);
+            LayoutManager layoutMgr = LayoutManager.Current;
+
+            string ss = layoutMgr.CurrentLayout;
+            ProSset = doc.Editor.SelectAll(sfilter);
+          //  List<ObjectId> idss =allModelId.Count==0? GetEntitiesInModelSpace():allModelId;
+            Database db = doc.Database;
+            if (ProSset.Status == PromptStatus.OK)
+            {
+                using (Transaction tran = db.TransactionManager.StartTransaction())
+                {
+                    SelectionSet sst = ProSset.Value;
+
+                    ObjectId[] oids = sst.GetObjectIds();
+                  //  model.LegendPoints = new Dictionary<int, List<System.Drawing.PointF>>();
+                    int ad = 0;
+                    for (int i = 0; i < oids.Length; i++)
+                    {
+                        //if (idss.Contains(oids[i]))
+                        //{
+                            DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+
+                            if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
+                            {
+                                textList.Add(ob as MText);
+                               // model.LegendPoints.Add(ad, PolylineMethod.GetPolyLineInfo(ob as Polyline));
+                                ad++;
+                            }
+                       // }
+
+
+                    }
+
+                }
+            }
+            return textList;
+        }
+
+        public void GetAllLengedGemo(T model)
+        {
+            List<BlockInfoModel> list = new List<BlockInfoModel>();
+            List<Polyline> allLengenPolyine = new List<Polyline>();
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            ObjectIdCollection ids = new ObjectIdCollection();
+
+            PromptSelectionResult ProSset = null;
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, MethodCommand.LegendLayer) };
+            SelectionFilter sfilter = new SelectionFilter(filList);
+            LayoutManager layoutMgr = LayoutManager.Current;
+
+            string ss = layoutMgr.CurrentLayout;
+            ProSset = doc.Editor.SelectAll(sfilter);
+            //  List<ObjectId> idss=  GetEntitiesInModelSpace();
+            Database db = doc.Database;
+            List<BlockReference> blockTableRecords = new List<BlockReference>();
+            if (ProSset.Status == PromptStatus.OK)
+            {
+                using (Transaction tran = db.TransactionManager.StartTransaction())
+                {
+                    SelectionSet sst = ProSset.Value;
+
+                    ObjectId[] oids = sst.GetObjectIds();
+                    
+                    int ad = 0;
+                    List<string> aa = new List<string>();
+                    LayerModel lm = new LayerModel();
+                    LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
+                    foreach (ObjectId layerId in lt)
+                    {
+                        LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
+                        if (ltr.Name == MethodCommand.LegendLayer)
+                        {
+                            lm.Color = ltr.Color.PenIndex;
+                        }
+                    }
+                    for (int i = 0; i < oids.Length; i++)
+                    {
+                        //  if (idss.Contains(oids[i]))
+                        //  {
+                        DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+                       // if (!aa.Contains((ob as Polyline).BlockName)) { aa.Add((ob as Polyline).BlockName); }
+                        if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
+                        {
+                            allLengenPolyine.Add((ob as Polyline));
+                            //  lengedList.Add(ob as Polyline);
+                            //  model.LegendPoints.Add(ad, PolylineMethod.GetPolyLineInfoPt(ob as Polyline));
+                            // ad++;
+                        } else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
+                        {
+                            blockTableRecords.Add(ob as BlockReference);
+                        }
+                    }
+                    Dictionary<int, List<Polyline>> plList = MethodCommand.FindMaxAreaPoline(allLengenPolyine);
+                    model.LegendList = new List<LengedModel>();
+                    this.lengedList = plList[0];
+                    foreach (Polyline polyline in plList[0])
+                    {
+                        LengedModel legm = new LengedModel();
+                        legm.GemoModels = new List<BlockInfoModel>();
+                       legm.BoxPointList=PolylineMethod.GetPolyLineInfoPt(polyline);
+                       List<ObjectId> ois = GetCrossObjectIds(doc.Editor,polyline,sfilter,tran);
+                        
+                        if (ois != null)
+                        {
+                            foreach (ObjectId lengGemo in ois)
+                            {
+                                DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
+
+                                if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
+                                {
+                                    BlockInfoModel plModel = new BlockInfoModel();
+                                    plModel.PolyLine = AutoCad2ModelTools.Polyline2Model(ob as Polyline);
+                                    legm.GemoModels.Add(plModel);
+                                }
+                                else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
+                                {
+                                    legm.GemoModels.Add(BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference));
+                                } else if (ob is DBText && (ob as DBText).BlockName.ToLower() == "*model_space")
+                                {
+
+                                    BlockInfoModel plModel = new BlockInfoModel();
+                                    plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as DBText);
+                                    legm.GemoModels.Add(plModel);
+                                }
+                                else if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
+                                {
+
+                                    BlockInfoModel plModel = new BlockInfoModel();
+                                    plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as MText);
+                                    legm.GemoModels.Add(plModel);
+                                } else if (ob is Hatch && (ob as Hatch).BlockName.ToLower() == "*model_space")
+                                {
+                                    BlockInfoModel plModel = new BlockInfoModel();
+                                    plModel.Hatch = AutoCad2ModelTools.Hatch2Model(ob as Hatch);
+                                    legm.GemoModels.Add(plModel);
+                                }
+                                else if (ob is Circle && (ob as Circle).BlockName.ToLower() == "*model_space")
+                                {
+                                    BlockInfoModel plModel = new BlockInfoModel();
+                                    plModel.Circle.Add( AutoCad2ModelTools.Circle2Model(ob as Circle));
+                                    legm.GemoModels.Add(plModel);
+                                }
+                            }
+                        }
+                        model.LegendList.Add(legm);
+                       
+                    }
+
+
+                }
+            }
+            
+        }
+
+        public List<ObjectId> GetCrossObjectIds(Editor ed,Polyline pl,SelectionFilter sf,Transaction tran)
+        {
+            Point3dCollection point3DCollection = new Point3dCollection();
+            ObjectId[] list=null; List<ObjectId> ooids = new List<ObjectId>();
+            for (int i = 0; i < pl.NumberOfVertices; i++)
+            {
+                point3DCollection.Add(pl.GetPoint3dAt(i));
+            }
+          PromptSelectionResult psr=  ed.SelectCrossingPolygon(point3DCollection, sf);
+            if (psr.Status == PromptStatus.OK)
+            {
+                SelectionSet sst = psr.Value;
+               ObjectId[] oids=  sst.GetObjectIds();
+              
+                foreach (ObjectId item in oids)
+                {
+                    if (item.OldId!=pl.ObjectId.OldId)
+                    {
+                        ooids.Add(item);
+                    }
+                }
+                
+            }
+             
+            return ooids;
+        }
+
+        public void GetExportLayers(T model)
+        {
+            if (lengedList.Count > 0)
+            {
+                model.LayerList = new List<string>();
+               List<MText> txtList= GetAllLengedText();
+
+                foreach (MText dBText in txtList)
+                {
+                    if (MethodCommand.FindDBTextIsInPolyine(dBText,model.LegendList))
+                    {
+                        model.LayerList.Add(dBText.Text);
+                    }
+                }
+            }
+        }
+
+        }
+    
+}

@@ -29,7 +29,8 @@ namespace RegulatoryPlan.Menu
 
             ////多级
             //AcadPopupMenu pm = pmParnet.AddSubMenu(pmParnet.Count + 1, "打开");
-            //AcadPopupMenuItem pmi0 = pm.AddMenuItem(pm.Count + 1, "文件  ", "OPEN1\n");  //第一个参数是在菜单项中的位置（第几项），第二个参数是显示的名称，第三个参数是点击之后执行的命令
+            //AcadPopupMenuItem pmi0 = pm.AddMenuItem(pm.Count + 1, "文件  ", "OPEN1\n"); 
+            //第一个参数是在菜单项中的位置（第几项），第二个参数是显示的名称，第三个参数是点击之后执行的命令
             //AcadPopupMenuItem pmi1 = pm.AddMenuItem(pm.Count + 1, "模版  ", "OPEN2\n");
 
             //单级

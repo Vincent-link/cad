@@ -72,7 +72,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\BlockCommand.cs" />
+    <Compile Include="Command\JsonCommand.cs" />
     <Compile Include="Command\MenuMethodCommand.cs" />
+    <Compile Include="Command\MethodCommand.cs" />
+    <Compile Include="Command\ReflectionClass.cs" />
     <Compile Include="FenTuZe.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Form2.cs">
@@ -90,23 +94,40 @@
     <Compile Include="Menu\ICommad.cs" />
     <Compile Include="Menu\TitelMenuCommand.cs" />
     <Compile Include="Method\DrawingMethod.cs" />
+    <Compile Include="Method\ModelBaseMethod.cs" />
+    <Compile Include="Method\PolylineMethod.cs" />
+    <Compile Include="Method\RoadMethod.cs" />
+    <Compile Include="Model\BlockInfoModel.cs" />
+    <Compile Include="Model\Cad2ModelTools.cs" />
+    <Compile Include="Model\CommandItemModel.cs" />
+    <Compile Include="Model\GemoTypeModel.cs" />
+    <Compile Include="Model\LayerModel.cs" />
+    <Compile Include="Model\LengedModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\FuelGasModel.cs" />
     <Compile Include="Model\CommunicationModel.cs" />
     <Compile Include="Model\BuildingIntegratedModel.cs" />
     <Compile Include="Model\FiveLineModel.cs" />
     <Compile Include="Model\LimitFactorModel.cs" />
+    <Compile Include="Model\PolylineModel.cs" />
     <Compile Include="Model\RainWaterModel.cs" />
     <Compile Include="Model\ReuseWaterModel.cs" />
     <Compile Include="Model\Power10kvModel.cs" />
     <Compile Include="Model\RoadSectionModel.cs" />
     <Compile Include="Model\PipeLineModel.cs" />
     <Compile Include="Model\HeatSupplyModel.cs" />
+    <Compile Include="Model\StyleModel.cs" />
     <Compile Include="Model\WaterSupplyvModel.cs" />
     <Compile Include="Model\Power35kvModel.cs" />
     <Compile Include="Model\SewageModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\ChooseCityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ChooseCityForm.Designer.cs">
+      <DependentUpon>ChooseCityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +150,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\ChooseCityForm.resx">
+      <DependentUpon>ChooseCityForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

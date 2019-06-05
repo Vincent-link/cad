@@ -11,8 +11,14 @@ namespace RegulatoryPlan.Command
         [CommandMethod("ShowMainForm")]
         public void ShowMain()
         {
-            MainForm form = new MainForm();
-            form.ShowDialog();
+            ChooseCityForm cf = new ChooseCityForm();
+            if (cf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                MethodCommand.OpenFile(cf.openFile,cf.openCity,cf.derivedType);
+               
+            }
+            //MainForm form = new MainForm();
+            //form.ShowDialog();
         }
 
     }

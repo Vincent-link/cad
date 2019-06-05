@@ -21,7 +21,7 @@ namespace WindowsFormsApp1
             Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Editor ed = doc.Editor;
             Database db = doc.Database;
-
+          
             // 选择实体
             PromptSelectionResult psr = ed.SelectAll();
             SelectionSet SS = psr.Value;
