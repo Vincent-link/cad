@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using Autodesk.AutoCAD.Runtime;
+using RegulatoryPlan.Method;
 using RegulatoryPlan.UI;
+using RegulatoryPost.FenTuZe;
+
 [assembly: CommandClass(typeof(RegulatoryPlan.Command.MenuMethodCommand))]
 namespace RegulatoryPlan.Command
 {
@@ -19,6 +22,22 @@ namespace RegulatoryPlan.Command
             }
             //MainForm form = new MainForm();
             //form.ShowDialog();
+        }
+
+        // 手动选择实体
+        [CommandMethod("手动选择")]
+        static public void fen()
+        {
+            FenTuZeMethod r = new FenTuZeMethod();
+            r.ManualSelect();
+        }
+
+        // 按图层读取
+        [CommandMethod("图层选择")]
+        static public void Layer()
+        {
+            FenTuZeMethod r = new FenTuZeMethod();
+            r.LayerSelect();
         }
 
     }

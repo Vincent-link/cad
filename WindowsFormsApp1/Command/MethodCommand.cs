@@ -2,6 +2,8 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
+using RegulatoryModel.Model;
+using RegulatoryPlan.Method;
 using RegulatoryPlan.Model;
 using RegulatoryPlan.UI;
 using System;
@@ -58,6 +60,55 @@ namespace RegulatoryPlan.Command
             }
             return res;
         }
+        /// <summary>
+        /// 管线文本查询
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <param name="lineList"></param>
+        /// <returns></returns>
+        public static MText FindMTextIsInPolyineForPipe(Polyline line, List<MText> txtList)
+        {
+            double min = 20;
+            MText resText = null;
+
+            double mToPtMin = double.NaN;
+            int num = line.NumberOfVertices;
+            List<Point2d> point = new List<Point2d>();
+            for (int i = 0; i < num; i++)
+            {
+                point.Add(line.GetPoint2dAt(i));
+
+
+            }
+            double mToPt = double.NaN;
+            foreach (MText txt in txtList)
+            {
+                Point2d mPt = txt.Location.Convert2d(new Plane());
+
+                for (int i = 0; i < point.Count - 1; i++)
+                {
+
+                    Point2d st = point[i];
+                    Point2d et = point[i + 1];
+                    double lLen = PolylineMethod.DistancePointToSegment(mPt, st, et);
+                    if (double.IsNaN(mToPt) || lLen < mToPt)
+                    {
+                        mToPt = lLen;
+                    }
+                }
+
+
+                if (double.IsNaN(mToPtMin) || (mToPtMin > mToPt))
+                {
+
+                    mToPtMin = mToPt;
+                    resText = txt;
+                }
+
+            }
+
+            return resText;
+        }
 
         public static bool FindDBTextIsInPolyine(MText txt, List<LengedModel> lineList)
         {
@@ -65,7 +116,7 @@ namespace RegulatoryPlan.Command
 
             foreach (LengedModel line in lineList)
             {
-               
+
                 double minX = double.NaN;
                 double maxX = double.NaN;
                 double maxY = double.NaN;
@@ -73,7 +124,7 @@ namespace RegulatoryPlan.Command
                 double thres = double.NaN;
                 for (int i = 0; i < line.BoxPointList.Count; i++)
                 {
-                  PointF p1 = line.BoxPointList[i];
+                    PointF p1 = line.BoxPointList[i];
                     if (p1.X > maxX || double.IsNaN(maxX))
                     {
                         maxX = p1.X;
@@ -142,7 +193,7 @@ namespace RegulatoryPlan.Command
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public static Dictionary<int,List<Polyline>> FindMaxAreaPoline(List<Polyline> polylines)
+        public static Dictionary<int, List<Polyline>> FindMaxAreaPoline(List<Polyline> polylines)
         {
             Dictionary<int, List<Polyline>> allPolines = new Dictionary<int, List<Polyline>>();
             allPolines.Add(0, new List<Polyline>());
@@ -150,7 +201,7 @@ namespace RegulatoryPlan.Command
             double maxArea = double.NaN;
             foreach (Polyline line in polylines)
             {
-                if (double.IsNaN(maxArea)||line.Area > maxArea)
+                if (double.IsNaN(maxArea) || line.Area > maxArea)
                 {
                     maxArea = line.Area;
                 }
@@ -160,7 +211,7 @@ namespace RegulatoryPlan.Command
             {
                 if (line.Area.ToString("F5") == maxArea.ToString("F5"))
                 {
-                  allPolines[0].Add(line);
+                    allPolines[0].Add(line);
                 }
                 else
                 {
@@ -169,6 +220,60 @@ namespace RegulatoryPlan.Command
             }
             return allPolines;
         }
+
+
+        /// <summary>
+        /// 根据图层名获取图层颜色
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLayerColorByName(string layerName)
+        {
+            string colorStr = "";
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+            using (Transaction Trans = db.TransactionManager.StartTransaction())
+            {
+                //以读模式打开图层表
+                LayerTable layerTable;
+                layerTable = Trans.GetObject(db.LayerTableId, OpenMode.ForRead) as LayerTable;
+                string sLayerName = "test1";
+                if (layerTable.Has(layerName))
+                {
+                    LayerTableRecord ltr = Trans.GetObject(layerTable[layerName], OpenMode.ForNotify) as LayerTableRecord;
+                   
+                    colorStr = System.Drawing.ColorTranslator.ToHtml( ltr.Color.ColorValue);
+
+                }
+
+                return colorStr;
+            }
+        }
+
+    
+        /// <summary>
+        /// 根据图层名获取图层颜色
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLayerColorByID(ObjectId layerId)
+        {
+            string colorStr = "";
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+            using (Transaction Trans = db.TransactionManager.StartTransaction())
+            {
+
+                LayerTableRecord ltr = Trans.GetObject(layerId, OpenMode.ForRead) as LayerTableRecord;
+
+                if (ltr != null)
+                {
+
+                    colorStr = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+
+                }
+            }
+            return colorStr;
+        }
+
     }
 }
         

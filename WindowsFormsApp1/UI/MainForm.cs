@@ -1,6 +1,9 @@
-﻿using RegulatoryPlan.Command;
+﻿using RegulatoryModel.Command;
+using RegulatoryModel.Model;
+using RegulatoryPlan.Command;
 using RegulatoryPlan.Method;
 using RegulatoryPlan.Model;
+using RegulatoryPost.FenTuZe;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -53,7 +56,59 @@ namespace RegulatoryPlan.UI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(model.ToJson());
+            switch (model.DerivedType)
+            {
+                case DerivedTypeEnum.BuildingIntegrated:
+                    PostModel.PostModelBase(model as BuildingIntegratedModel);
+                    break;
+
+                case DerivedTypeEnum.UnitPlan:
+                    PostModel.PostModelBase(model);
+                    break;
+                case DerivedTypeEnum.PointsPlan:
+                    PostModel.PostModelBase(model);
+                    break;
+                case DerivedTypeEnum.Power10Kv:
+                    PostModel.PostModelBase(model as Power10kvModel);
+                    break;
+                case DerivedTypeEnum.Power35kv:
+                    PostModel.PostModelBase(model as Power35kvModel );
+                    break;
+                case DerivedTypeEnum.WaterSupply:
+                    PostModel.PostModelBase(model as WaterSupplyvModel);
+                    break;
+                case DerivedTypeEnum.HeatSupply:
+                    PostModel.PostModelBase(model as HeatSupplyModel);
+                    break;
+                case DerivedTypeEnum.FuelGas:
+                    PostModel.PostModelBase(model as FuelGasModel);
+                    break;
+                case DerivedTypeEnum.Communication:
+                    PostModel.PostModelBase(model as CommunicationModel);
+                    break;
+                case DerivedTypeEnum.TheRoadSection:
+                    PostModel.PostModelBase(model as RoadSectionModel);
+                    break;
+                case DerivedTypeEnum.PipeLine:
+                    PostModel.PostModelBase(model as PipeLineModel);
+                    break;
+                case DerivedTypeEnum.Sewage:
+                    PostModel.PostModelBase(model as SewageModel);
+                    break;
+                case DerivedTypeEnum.FiveLine:
+                    PostModel.PostModelBase(model as FiveLineModel);
+                    break;
+                case DerivedTypeEnum.LimitFactor:
+                    PostModel.PostModelBase(model as LimitFactorModel );
+                    break;
+                case DerivedTypeEnum.RainWater:
+                    PostModel.PostModelBase(model as RainWaterModel);
+                    break;
+                case DerivedTypeEnum.ReuseWater:
+                    PostModel.PostModelBase(model as ReuseWaterModel);
+                    break;
+
+            }
         }
         DerivedTypeEnum crtType;
 
@@ -63,7 +118,8 @@ namespace RegulatoryPlan.UI
             {
                 case DerivedTypeEnum.TheRoadSection:
                     return new RoadSectionModel();
-                    
+                case DerivedTypeEnum.Sewage:
+                    return new SewageModel();
             }
             return new ModelBase();
 
@@ -71,12 +127,14 @@ namespace RegulatoryPlan.UI
         private void InitData()
         {
             ModelBase mb = new ModelBase();
-           mb= ChangeToModel(mb);
+            mb= ChangeToModel(mb);
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
             // mbm.GetLengedPoints(mb);
             mbm.GetAllLengedGemo(mb);
             mbm.GetExportLayers(mb);
-            mb.AddSpecialLayerModel();
+            LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
+            layerSpecial.AddSpecialLayerModel(mb);
+          //  mb.AddSpecialLayerModel();
             DataTable tb = new DataTable();
             tb.Columns.Add("所在图层");
             tb.Columns.Add("数据图层");
@@ -200,7 +258,13 @@ namespace RegulatoryPlan.UI
             if (mb is RoadSectionModel)
             {
                 LayerModel spModel = (mb as RoadSectionModel).allLines[(mb as RoadSectionModel).allLines.Count - 1];
-                GetSpecialDataRowInfo (spModel.modelItemList,tb,spModel.Name);
+                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+            }
+            else if (mb is PipeModel)
+            {
+                LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
+                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+
             }
 
             this.dataGridView1.DataSource = tb;
@@ -240,7 +304,8 @@ namespace RegulatoryPlan.UI
 
         private void GetSpecialDataRowInfo(List<object> list, DataTable tb, string layerName)
         {
-            if (list.Count > 0) {
+            if (list.Count > 0)
+            {
                 if (list[0] is RoadSectionItemModel)
                 {
                     DataColumn dc = new DataColumn("道路名称");
@@ -266,31 +331,95 @@ namespace RegulatoryPlan.UI
                     }
 
 
-                }
-                for (int i = 0; i < list.Count; i++)
-                {
-                    int colNum = 1;
-                    DataRow dr = tb.NewRow();
-                    dr[0] = layerName;
 
-                    if (list[i] is RoadSectionItemModel)
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        RoadSectionItemModel road = list[i] as RoadSectionItemModel;
-                        dr["道路名称"] = road.RoadName==null?"":road.RoadName;
-                        dr["道路长度"] = road.RoadLength== null ? "" : road.RoadLength;
-                        dr["线颜色"] = road.ColorIndex;
-                        for (int j = 0; j < road.roadList.Count; j++)
-                        {
-                            DataColumn dc = new DataColumn("Point" + (j + 1));
-                            if (!tb.Columns.Contains("Point" + (j + 1)))
-                            {
-                                tb.Columns.Add(dc);
-                            }
-                            dr[("Point" + (j + 1))] = "X:" + road.roadList[j].X + ",Y:" + road.roadList[j].Y;
-                        }
+                        int colNum = 1;
+                        DataRow dr = tb.NewRow();
+                        dr[0] = layerName;
 
+                        if (list[i] is RoadSectionItemModel)
+                        {
+                            RoadSectionItemModel road = list[i] as RoadSectionItemModel;
+                            dr["道路名称"] = road.RoadName == null ? "" : road.RoadName;
+                            dr["道路长度"] = road.RoadLength == null ? "" : road.RoadLength;
+                            dr["线颜色"] = road.ColorIndex;
+                            for (int j = 0; j < road.roadList.Count; j++)
+                            {
+                                DataColumn dc5 = new DataColumn("Point" + (j + 1));
+                                if (!tb.Columns.Contains("Point" + (j + 1)))
+                                {
+                                    tb.Columns.Add(dc5);
+                                }
+                                dr[("Point" + (j + 1))] = "X:" + road.roadList[j].X + ",Y:" + road.roadList[j].Y;
+                            }
+
+                        }
+                        tb.Rows.Add(dr);
                     }
-                    tb.Rows.Add(dr);
+                }
+
+                if (list[0] is PipeItemModel)
+                {
+                    DataColumn dc = new DataColumn("管线类型");
+                    DataColumn dc1 = new DataColumn("管线长度");
+                    DataColumn dc2 = new DataColumn("管线宽度");
+                    DataColumn dc3 = new DataColumn("管线颜色");
+                    DataColumn dc6 = new DataColumn("管道信息位置");
+                 
+
+                    if (!tb.Columns.Contains("管线类型"))
+                    {
+                        tb.Columns.Add(dc);
+                    }
+                    if (!tb.Columns.Contains("管道信息位置"))
+                    {
+                        tb.Columns.Add(dc6);
+                    }
+                    if (!tb.Columns.Contains("管线长度"))
+                    {
+                        tb.Columns.Add(dc1);
+                    }
+                    if (!tb.Columns.Contains("管线宽度"))
+                    {
+                        tb.Columns.Add(dc2);
+                    }
+                    if (!tb.Columns.Contains("管线颜色"))
+                    {
+                        tb.Columns.Add(dc3);
+                    }
+
+
+
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        int colNum = 1;
+                        DataRow dr = tb.NewRow();
+                       
+
+                        if (list[i] is PipeItemModel)
+                        {
+                          
+                            PipeItemModel road = list[i] as PipeItemModel;
+                            dr["所在图层"] = road.PipeLayer == null ? "" : road.PipeLayer;
+                            dr["管线类型"] = road.PipeType == null ? "" : road.PipeType;
+                            dr["管道信息位置"] = "X:" + road.TxtLocation.X + ",Y:" + road.TxtLocation.Y;
+                            dr["管线长度"] = road.PipeLength== null ? "" : road.PipeLength;
+                            dr["管线宽度"] = road.PipeWidth== null ? "" : road.PipeWidth;
+                            dr["管线颜色"] = road.ColorIndex;
+                            for (int j = 0; j < road.pipeList.Count; j++)
+                            {
+                                DataColumn dc5 = new DataColumn("Point" + (j + 1));
+                                if (!tb.Columns.Contains("Point" + (j + 1)))
+                                {
+                                    tb.Columns.Add(dc5);
+                                }
+                                dr[("Point" + (j + 1))] = "X:" + road.pipeList[j].X + ",Y:" + road.pipeList[j].Y;
+                            }
+
+                        }
+                        tb.Rows.Add(dr);
+                    }
                 }
             }
         }
@@ -367,7 +496,14 @@ namespace RegulatoryPlan.UI
                     outStr += "{";
                     foreach(BlockInfoModel item1 in item.GemoModels)
                     {
-                        outStr += "\"line"+part+"\":[" +JsonCommand.ToJson(item1.PolyLine.Vertices)+"],";
+                        try
+                        {
+                            outStr += "\"line" + part + "\":[" + JsonCommand.ToJson(item1.PolyLine.Vertices) + "],";
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
                     }
                     outStr = outStr.TrimEnd(',');
                     outStr += "}";

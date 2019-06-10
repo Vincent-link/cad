@@ -2,6 +2,7 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
+using RegulatoryModel.Model;
 using RegulatoryPlan.Model;
 using System;
 using System.Collections.Generic;
@@ -205,6 +206,18 @@ namespace RegulatoryPlan.Method
         /// <returns></returns>
         public static double DistancePointToSegment(Point2d P, Point2d A, Point2d B)
         {
+            double atp = A.GetDistanceTo(P);
+            double btp = B.GetDistanceTo(P);
+            double atb = A.GetDistanceTo(B);
+
+            if (atp*atp>=atb*atb+btp*btp)
+            {
+                return atp;
+            }
+            if (btp * btp >= atb * atb + atp * atp)
+            {
+                return btp;
+            }
             //计算点到线段(a,b)的距离  
             double l = 0.0;
             double s = 0.0;
@@ -212,6 +225,37 @@ namespace RegulatoryPlan.Method
             s = ((A.Y - P.Y) * (B.X - A.X) - (A.X - P.X) * (B.Y - A.Y)) / (l * l);
             return (Math.Abs(s * l));
         }
+
+        public static double GetMinDistance(PointF pt1, PointF pt2, PointF pt3)
+        {
+            double dis = 0;
+            if (pt1.X == pt2.X)
+            {
+                dis = Math.Abs(pt3.X - pt1.X);
+                return dis;
+            }
+            double lineK = (pt2.Y - pt1.Y) / (pt2.X - pt1.X);
+            double lineC = (pt2.X * pt1.Y - pt1.X * pt2.Y) / (pt2.X - pt1.X);
+            dis = Math.Abs(lineK * pt3.X - pt3.Y + lineC) / (Math.Sqrt(lineK * lineK + 1));
+            return dis;
+
+        }
+
+        public static double GetMinDistance(Point2d pt1, Point2d pt2, Point2d pt3)
+        {
+            double dis = 0;
+            if (pt1.X == pt2.X)
+            {
+                dis = Math.Abs(pt3.X - pt1.X);
+                return dis;
+            }
+            double lineK = (pt2.Y - pt1.Y) / (pt2.X - pt1.X);
+            double lineC = (pt2.X * pt1.Y - pt1.X * pt2.Y) / (pt2.X - pt1.X);
+            dis = Math.Abs(lineK * pt3.X - pt3.Y + lineC) / (Math.Sqrt(lineK * lineK + 1));
+            return dis;
+
+        }
+
         /// <summary>
         /// 点到点的距离
         /// </summary>

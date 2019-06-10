@@ -8,6 +8,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using RegulatoryPlan.Command;
 using System.Drawing;
 using Autodesk.AutoCAD.Geometry;
+using RegulatoryModel.Model;
 
 namespace RegulatoryPlan.Method
 {

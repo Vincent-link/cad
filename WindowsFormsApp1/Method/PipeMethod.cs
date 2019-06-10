@@ -11,41 +11,46 @@ using System.Text;
 
 namespace RegulatoryPlan.Method
 {
-   public class RoadMethod<T> where T : RoadSectionModel
+   public class PipeMethod<T>where T:PipeModel
     {
-        public void GetAllRoadInfo(T model)
+        public void GetAllPipeInfo(T model)
         {
             Document doc = Application.DocumentManager.MdiActiveDocument;
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;
             PromptSelectionResult ProSset1 = null;
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, RoadSectionModel.roadNameLayer) };
+            PromptSelectionResult ProSsetActuality = null;
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName,model.PipeInfo) };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
-            TypedValue[] filList1 = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, RoadSectionModel.roadLineLayer) };
+            TypedValue[] filList1 = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName,model.PipePlanLine) };
             SelectionFilter sfilter1 = new SelectionFilter(filList1);
-    
+
+            TypedValue[] filListActuality = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.PipeActualityLine) };
+            SelectionFilter sfilterActuality = new SelectionFilter(filListActuality);
 
             string ss = layoutMgr.CurrentLayout;
             ProSset = doc.Editor.SelectAll(sfilter);
             ProSset1 = doc.Editor.SelectAll(sfilter1);
+            ProSsetActuality = doc.Editor.SelectAll(sfilterActuality);
             if (model.allLines == null)
             {
                 model.allLines = new List<LayerModel>();
             }
             List<Polyline> roadLine = new List<Polyline>();
-            List<DBText> roadText = new List<DBText>();
+            List<MText> roadText = new List<MText>();
             Database db = doc.Database;
-            if (ProSset.Status == PromptStatus.OK&&ProSset1.Status==PromptStatus.OK)
+            if (ProSset.Status == PromptStatus.OK && ProSset1.Status == PromptStatus.OK)
             {
                 using (Transaction tran = db.TransactionManager.StartTransaction())
                 {
                     SelectionSet sst = ProSset.Value;
                     SelectionSet sst1 = ProSset1.Value;
+                    SelectionSet sstActuality = ProSsetActuality.Value;
                     ObjectId[] oids = sst.GetObjectIds();
                     ObjectId[] oids1 = sst1.GetObjectIds();
-               
+                    ObjectId[] oidsActuality = sstActuality.GetObjectIds();
                     int rt = 0;
                     int rl = 0;
                     //List<string> aa = new List<string>();
@@ -61,17 +66,14 @@ namespace RegulatoryPlan.Method
                     }
                     for (int i = 0; i < oids.Length; i++)
                     {
-                       
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
-                   
-                            if (ob is DBText)
-                            {
 
-                            if ((ob as DBText).BlockName.ToLower() == "*model_space")
+                        if (ob is MText)
+                        {
+                            if ((ob as MText).BlockName.ToLower() == "*model_space")
                             {
-
-                                roadText.Add((ob as DBText));
-                               rt++;
+                                roadText.Add((ob as MText));
+                                rt++;
                             }
                         }
                     }
@@ -80,25 +82,41 @@ namespace RegulatoryPlan.Method
 
                         DBObject ob = tran.GetObject(oids1[i], OpenMode.ForRead);
 
-                        
-                            if (ob is Polyline)
-                            {
+
+                        if (ob is Polyline)
+                        {
                             if ((ob as Polyline).BlockName.ToLower() == "*model_space")
                             {
                                 roadLine.Add((ob as Polyline));
                                 rl++;
                             }
 
-                         
                         }
                     }
-                    lm.Name = RoadSectionModel.roadLineLayer;
+
+                    for (int i = 0; i < oidsActuality.Length; i++)
+                    {   
+
+                        DBObject ob = tran.GetObject(oidsActuality[i], OpenMode.ForRead);
+
+
+                        if (ob is Polyline)
+                        {
+                            if ((ob as Polyline).BlockName.ToLower() == "*model_space")
+                            {
+                                roadLine.Add((ob as Polyline));
+                                rl++;
+                            }
+
+                        }
+                    }
+                    lm.Name = model.PipePlanLine;
                     lm.modelItemList = new List<object>();
                     foreach (Polyline polyline in roadLine)
                     {
-                       lm.modelItemList.Add(GetRoadItemInfo(polyline,roadText));   
+                        lm.modelItemList.Add(GetPipeItemInfo(polyline, roadText));
                     }
-                    if (model.allLines==null)
+                    if (model.allLines == null)
                     {
                         model.allLines = new List<LayerModel>();
                     }
@@ -109,41 +127,35 @@ namespace RegulatoryPlan.Method
 
         }
 
-        public RoadSectionItemModel GetRoadItemInfo(Polyline line,List<DBText> txtList)
+        public PipeItemModel GetPipeItemInfo(Polyline line, List<MText> txtList)
         {
-            RoadSectionItemModel item = new RoadSectionItemModel();
-            item.RoadLength = line.Length.ToString();
-            item.RoadWidth = line.ConstantWidth.ToString();
-            item.ColorIndex = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            Database db = doc.Database;
-            using (Transaction tran = db.TransactionManager.StartTransaction())
+        
+            PipeItemModel item = new PipeItemModel();
+            try
             {
-                int vtnum = line.NumberOfVertices;
-
-                foreach (DBText mText in txtList)
+                item.PipeLength = line.Length.ToString();
+                item.PipeWidth = line.ConstantWidth.ToString();
+                item.ColorIndex = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                Database db = doc.Database;
+                using (Transaction tran = db.TransactionManager.StartTransaction())
                 {
-                    if (item.RoadName != null)
+                    int vtnum = line.NumberOfVertices;
+                    MText mText = MethodCommand.FindMTextIsInPolyineForPipe(line, txtList);
+                    if (mText != null)
                     {
-                        break;
+                        item.TxtLocation = new System.Drawing.PointF((float)mText.Location.X, (float)mText.Location.Y);
+                        item.PipeType = mText.Text; //Replace(" ", "").Replace("　", "");
+                        item.PipeLayer = line.Layer;
                     }
-                        Point2d pt = mText.AlignmentPoint.Convert2d(new Plane());
 
-                        for (int i = 0; i < vtnum-1; i++)
-                        {
-                            if (PolylineMethod.PtInPolyLine(pt,line.GetPoint2dAt(i),line.GetPoint2dAt(i+1),20)==1)
-                            {
-                                item.RoadName =  mText.TextString.Replace(" ", "").Replace("　","");
-                                break;
-                            }
-                        }
-                    
+
                 }
-                 item.roadList= PolylineMethod.GetPolyLineInfoPt(line);
+                item.pipeList = PolylineMethod.GetPolyLineInfoPt(line);
             }
+            catch
+            { }
             return item;
         }
-
-        
     }
 }

@@ -64,6 +64,10 @@
     <Reference Include="Flurl.Http">
       <HintPath>..\..\..\..\.nuget\packages\flurl.http\2.4.1\lib\netstandard2.0\Flurl.Http.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\11.0.2\lib\net20\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -73,53 +77,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\BlockCommand.cs" />
-    <Compile Include="Command\JsonCommand.cs" />
+    <Compile Include="Command\LayerSpecialCommand.cs" />
     <Compile Include="Command\MenuMethodCommand.cs" />
     <Compile Include="Command\MethodCommand.cs" />
-    <Compile Include="Command\ReflectionClass.cs" />
-    <Compile Include="FenTuZe.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Menu\ICommad.cs" />
     <Compile Include="Menu\TitelMenuCommand.cs" />
+    <Compile Include="Method\Cad2ModelTools.cs" />
     <Compile Include="Method\DrawingMethod.cs" />
+    <Compile Include="Method\FenTuZeMethod.cs" />
     <Compile Include="Method\ModelBaseMethod.cs" />
+    <Compile Include="Method\PipeMethod.cs" />
     <Compile Include="Method\PolylineMethod.cs" />
+    <Compile Include="Method\readAttributeList.cs" />
     <Compile Include="Method\RoadMethod.cs" />
-    <Compile Include="Model\BlockInfoModel.cs" />
-    <Compile Include="Model\Cad2ModelTools.cs" />
-    <Compile Include="Model\CommandItemModel.cs" />
-    <Compile Include="Model\GemoTypeModel.cs" />
-    <Compile Include="Model\LayerModel.cs" />
-    <Compile Include="Model\LengedModel.cs" />
-    <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\FuelGasModel.cs" />
-    <Compile Include="Model\CommunicationModel.cs" />
-    <Compile Include="Model\BuildingIntegratedModel.cs" />
-    <Compile Include="Model\FiveLineModel.cs" />
-    <Compile Include="Model\LimitFactorModel.cs" />
-    <Compile Include="Model\PolylineModel.cs" />
-    <Compile Include="Model\RainWaterModel.cs" />
-    <Compile Include="Model\ReuseWaterModel.cs" />
-    <Compile Include="Model\Power10kvModel.cs" />
-    <Compile Include="Model\RoadSectionModel.cs" />
-    <Compile Include="Model\PipeLineModel.cs" />
-    <Compile Include="Model\HeatSupplyModel.cs" />
-    <Compile Include="Model\StyleModel.cs" />
-    <Compile Include="Model\WaterSupplyvModel.cs" />
-    <Compile Include="Model\Power35kvModel.cs" />
-    <Compile Include="Model\SewageModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ChooseCityForm.cs">
@@ -134,12 +104,6 @@
     <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -172,9 +136,15 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="file1.ts" />
+    <ProjectReference Include="..\RegulatoryModel\RegulatoryModel.csproj">
+      <Project>{2386ee5c-509e-4ece-83d5-7c3c7d244fa6}</Project>
+      <Name>RegulatoryModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RegulatoryPost\RegulatoryPost.csproj">
+      <Project>{143cb076-871d-4d20-9896-397389d3c6f8}</Project>
+      <Name>RegulatoryPost</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <COMReference Include="AutoCAD">
       <Guid>{851A4561-F4EC-4631-9B0C-E7DC407512C9}</Guid>

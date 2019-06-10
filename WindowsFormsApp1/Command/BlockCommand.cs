@@ -2,6 +2,8 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Runtime;
+using RegulatoryModel.Command;
+using RegulatoryModel.Model;
 using RegulatoryPlan.Model;
 using System;
 using System.Collections.Generic;

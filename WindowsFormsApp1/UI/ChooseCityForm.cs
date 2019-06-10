@@ -1,4 +1,5 @@
-﻿using RegulatoryPlan.Command;
+﻿using RegulatoryModel.Model;
+using RegulatoryPlan.Command;
 using RegulatoryPlan.Model;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace RegulatoryPlan.UI
         private DerivedTypeEnum GetChooseType()
         {
             DerivedTypeEnum crtType= DerivedTypeEnum.None;
-            switch (comboBox1.SelectedIndex)
+       switch (comboBox1.SelectedIndex)
             {
                 case 0:
                     crtType = DerivedTypeEnum.UnitPlan;
@@ -108,7 +109,7 @@ namespace RegulatoryPlan.UI
                     crtType = DerivedTypeEnum.ReuseWater;
                     break;
 
-            }
+            }    
             return crtType;
         }
 
