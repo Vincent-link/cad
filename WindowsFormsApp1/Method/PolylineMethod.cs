@@ -3,6 +3,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using RegulatoryModel.Model;
+using RegulatoryPlan.Command;
 using RegulatoryPlan.Model;
 using System;
 using System.Collections.Generic;
@@ -187,85 +188,16 @@ namespace RegulatoryPlan.Method
                         return 1;
                     if (Math.Abs(l2.Y - l1.Y) <= allowError && Math.Abs(l2.Y - pt.Y) <= allowError)
                         return 1;
-                    if (DistancePointToSegment(pt, l1, l2) <= allowError)
+                    if (MethodCommand.DistancePointToSegment(pt, l1, l2) <= allowError)
                         return 1;
                     //如果点到线段的距离在容差范围内,则选取成功
-                    if (DistancePointToSegment(pt, l1, l2) <= allowError)
+                    if (MethodCommand.DistancePointToSegment(pt, l1, l2) <= allowError)
                         return 1;
                 }
             }
 
             return 0;
         }
-        /// <summary>
-        /// 点到线段的距离公式(利用平行四边形的面积算法，非常牛叉)
-        /// </summary>
-        /// <param name="P">目标点</param>
-        /// <param name="A">线段端点A</param>
-        /// <param name="B">线段端点B</param>
-        /// <returns></returns>
-        public static double DistancePointToSegment(Point2d P, Point2d A, Point2d B)
-        {
-            double atp = A.GetDistanceTo(P);
-            double btp = B.GetDistanceTo(P);
-            double atb = A.GetDistanceTo(B);
-
-            if (atp*atp>=atb*atb+btp*btp)
-            {
-                return atp;
-            }
-            if (btp * btp >= atb * atb + atp * atp)
-            {
-                return btp;
-            }
-            //计算点到线段(a,b)的距离  
-            double l = 0.0;
-            double s = 0.0;
-            l = DistancePointToPoint(A, B);
-            s = ((A.Y - P.Y) * (B.X - A.X) - (A.X - P.X) * (B.Y - A.Y)) / (l * l);
-            return (Math.Abs(s * l));
-        }
-
-        public static double GetMinDistance(PointF pt1, PointF pt2, PointF pt3)
-        {
-            double dis = 0;
-            if (pt1.X == pt2.X)
-            {
-                dis = Math.Abs(pt3.X - pt1.X);
-                return dis;
-            }
-            double lineK = (pt2.Y - pt1.Y) / (pt2.X - pt1.X);
-            double lineC = (pt2.X * pt1.Y - pt1.X * pt2.Y) / (pt2.X - pt1.X);
-            dis = Math.Abs(lineK * pt3.X - pt3.Y + lineC) / (Math.Sqrt(lineK * lineK + 1));
-            return dis;
-
-        }
-
-        public static double GetMinDistance(Point2d pt1, Point2d pt2, Point2d pt3)
-        {
-            double dis = 0;
-            if (pt1.X == pt2.X)
-            {
-                dis = Math.Abs(pt3.X - pt1.X);
-                return dis;
-            }
-            double lineK = (pt2.Y - pt1.Y) / (pt2.X - pt1.X);
-            double lineC = (pt2.X * pt1.Y - pt1.X * pt2.Y) / (pt2.X - pt1.X);
-            dis = Math.Abs(lineK * pt3.X - pt3.Y + lineC) / (Math.Sqrt(lineK * lineK + 1));
-            return dis;
-
-        }
-
-        /// <summary>
-        /// 点到点的距离
-        /// </summary>
-        /// <param name="ptA"></param>
-        /// <param name="ptB"></param>
-        /// <returns></returns>
-        private static double DistancePointToPoint(Point2d ptA, Point2d ptB)
-        {
-            return Math.Sqrt(Math.Pow(ptA.X - ptB.X, 2) + Math.Pow(ptA.Y - ptB.Y, 2));
-        }
-        
+     
     }
 }

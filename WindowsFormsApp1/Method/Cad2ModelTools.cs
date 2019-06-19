@@ -160,12 +160,12 @@ namespace RegulatoryPlan.Model
             return polylineModel;
         }
 
-        private static System.Drawing.PointF Point2d2Pointf(Point2d point2d)
+       public static System.Drawing.PointF Point2d2Pointf(Point2d point2d)
         {
             return new System.Drawing.PointF((float)point2d.X, (float)point2d.Y);
         }
 
-        private static System.Drawing.PointF Point3d2Pointf(Point3d point2d)
+        public static System.Drawing.PointF Point3d2Pointf(Point3d point2d)
         {
             return new System.Drawing.PointF((float)point2d.X, (float)point2d.Y);
         }

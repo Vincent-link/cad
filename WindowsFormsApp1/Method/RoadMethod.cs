@@ -64,8 +64,8 @@ namespace RegulatoryPlan.Method
                        
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
                    
-                            if (ob is DBText)
-                            {
+                        if (ob is DBText)
+                        {
 
                             if ((ob as DBText).BlockName.ToLower() == "*model_space")
                             {
@@ -81,8 +81,8 @@ namespace RegulatoryPlan.Method
                         DBObject ob = tran.GetObject(oids1[i], OpenMode.ForRead);
 
                         
-                            if (ob is Polyline)
-                            {
+                        if (ob is Polyline)
+                        {
                             if ((ob as Polyline).BlockName.ToLower() == "*model_space")
                             {
                                 roadLine.Add((ob as Polyline));
@@ -114,6 +114,7 @@ namespace RegulatoryPlan.Method
             RoadSectionItemModel item = new RoadSectionItemModel();
             item.RoadLength = line.Length.ToString();
             item.RoadWidth = line.ConstantWidth.ToString();
+            item.RoadType = "Polyline";
             item.ColorIndex = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             Document doc = Application.DocumentManager.MdiActiveDocument;
             Database db = doc.Database;
@@ -127,17 +128,30 @@ namespace RegulatoryPlan.Method
                     {
                         break;
                     }
-                        Point2d pt = mText.AlignmentPoint.Convert2d(new Plane());
+                    Point2d pt = mText.AlignmentPoint.Convert2d(new Plane());
 
-                        for (int i = 0; i < vtnum-1; i++)
+                    for (int i = 0; i < vtnum - 1; i++)
+                    {
+                        if (PolylineMethod.PtInPolyLine(pt, line.GetPoint2dAt(i), line.GetPoint2dAt(i + 1), 20) == 1)
                         {
-                            if (PolylineMethod.PtInPolyLine(pt,line.GetPoint2dAt(i),line.GetPoint2dAt(i+1),20)==1)
+                            item.RoadName = mText.TextString.Replace(" ", "").Replace("　", "");
+                            item.RoadNameLocaiton = new List<System.Drawing.PointF>();
+                            double middleLen = MethodCommand.DistancePointToPoint(mText.Position,mText.AlignmentPoint);
+                            double textLen = MethodCommand.GetEndLengthByTheorem(middleLen,mText.Height/2)*2;
+                            double partLength = textLen / item.RoadName.Length;
+
+                            for (int j =1; j < item.RoadName.Length+1;j++)
                             {
-                                item.RoadName =  mText.TextString.Replace(" ", "").Replace("　","");
-                                break;
+                                item.RoadNameLocaiton.Add(MethodCommand.GetEndPointByTrigonometricHu(mText.Rotation, AutoCad2ModelTools.Point3d2Pointf( mText.Position), partLength*j));
                             }
+                      
+                            item.RoadNameLayer = RoadSectionModel.roadNameLayer;
+                            item.RoadNameType = "text";
+
+                            break;
                         }
-                    
+                    }
+
                 }
                  item.roadList= PolylineMethod.GetPolyLineInfoPt(line);
             }

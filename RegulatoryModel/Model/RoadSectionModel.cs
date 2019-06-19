@@ -32,6 +32,9 @@ namespace RegulatoryModel.Model
         string roadType;
         string colorIndex;
         string roadWidth;
+      
+        string roadNameLayer;
+        string roadNameType;
         public List<PointF> roadList;
 
         public string RoadName { get => roadName; set => roadName = value; }
@@ -39,6 +42,10 @@ namespace RegulatoryModel.Model
         public string RoadType { get => roadType; set => roadType = value; }
         public string ColorIndex { get => colorIndex; set => colorIndex = value; }
         public string RoadWidth { get => roadWidth; set => roadWidth = value; }
+        public List<PointF> RoadNameLocaiton = new List<PointF>();
+        public string RoadNameLayer { get => roadNameLayer; set => roadNameLayer = value; }
+        public string RoadNameType { get => roadNameType; set => roadNameType = value; }
+
         public override string ItemToJson()
         {
             string outJson = "{";

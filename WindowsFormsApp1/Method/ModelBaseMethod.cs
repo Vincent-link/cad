@@ -107,7 +107,7 @@ namespace RegulatoryPlan.Method
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例框") };
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例") };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
 
@@ -130,7 +130,7 @@ namespace RegulatoryPlan.Method
                         //{
                             DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
 
-                            if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
+                            if (ob is MText)
                             {
                                 textList.Add(ob as MText);
                                // model.LegendPoints.Add(ad, PolylineMethod.GetPolyLineInfo(ob as Polyline));
@@ -154,7 +154,7 @@ namespace RegulatoryPlan.Method
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, MethodCommand.LegendLayer) };
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例") };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
 
@@ -189,13 +189,13 @@ namespace RegulatoryPlan.Method
                         //  {
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
                        // if (!aa.Contains((ob as Polyline).BlockName)) { aa.Add((ob as Polyline).BlockName); }
-                        if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
+                        if (ob is Polyline)
                         {
                             allLengenPolyine.Add((ob as Polyline));
                             //  lengedList.Add(ob as Polyline);
                             //  model.LegendPoints.Add(ad, PolylineMethod.GetPolyLineInfoPt(ob as Polyline));
                             // ad++;
-                        } else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
+                        } else if (ob is BlockReference)
                         {
                             blockTableRecords.Add(ob as BlockReference);
                         }
@@ -216,35 +216,35 @@ namespace RegulatoryPlan.Method
                             {
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
 
-                                if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
+                                if (ob is Polyline)
                                 {
                                     BlockInfoModel plModel = new BlockInfoModel();
                                     plModel.PolyLine = AutoCad2ModelTools.Polyline2Model(ob as Polyline);
                                     legm.GemoModels.Add(plModel);
                                 }
-                                else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
+                                else if (ob is BlockReference)
                                 {
                                     legm.GemoModels.Add(BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference));
-                                } else if (ob is DBText && (ob as DBText).BlockName.ToLower() == "*model_space")
+                                } else if (ob is DBText)
                                 {
 
                                     BlockInfoModel plModel = new BlockInfoModel();
                                     plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as DBText);
                                     legm.GemoModels.Add(plModel);
                                 }
-                                else if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
+                                else if (ob is MText)
                                 {
 
                                     BlockInfoModel plModel = new BlockInfoModel();
                                     plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as MText);
                                     legm.GemoModels.Add(plModel);
-                                } else if (ob is Hatch && (ob as Hatch).BlockName.ToLower() == "*model_space")
+                                } else if (ob is Hatch)
                                 {
                                     BlockInfoModel plModel = new BlockInfoModel();
                                     plModel.Hatch = AutoCad2ModelTools.Hatch2Model(ob as Hatch);
                                     legm.GemoModels.Add(plModel);
                                 }
-                                else if (ob is Circle && (ob as Circle).BlockName.ToLower() == "*model_space")
+                                else if (ob is Circle)
                                 {
                                     BlockInfoModel plModel = new BlockInfoModel();
                                     plModel.Circle.Add( AutoCad2ModelTools.Circle2Model(ob as Circle));

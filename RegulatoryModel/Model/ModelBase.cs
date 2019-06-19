@@ -32,6 +32,7 @@ namespace RegulatoryModel.Model
     }
     public class ModelBase
     {
+        string docName;
         string name;
         DerivedTypeEnum derivedType;
         public List<string> specailLayers;
@@ -41,6 +42,7 @@ namespace RegulatoryModel.Model
         public string Name { get => name; set => name = value; }
         public DerivedTypeEnum DerivedType { get => derivedType; set => derivedType = value; }
         private string uuid { get => System.Guid.NewGuid().ToString(); }
+        public string DocName { get => docName; set => docName = value; }
 
         public virtual string ToJson()
         {

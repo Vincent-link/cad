@@ -15,10 +15,10 @@ namespace RegulatoryPlan.Command
 {
     public static class MethodCommand
     {
-        public static string LegendLayer = "图例框";
+        public static string LegendLayer = "图例";
 
-        static string fileName = "";
-        static string cityName = "";
+     public   static string fileName = "";
+    public    static string cityName = "";
         static DerivedTypeEnum dp = DerivedTypeEnum.None;
         public static bool FindDBTextIsInPolyine(MText txt, List<Polyline> lineList)
         {
@@ -90,7 +90,7 @@ namespace RegulatoryPlan.Command
 
                     Point2d st = point[i];
                     Point2d et = point[i + 1];
-                    double lLen = PolylineMethod.DistancePointToSegment(mPt, st, et);
+                    double lLen = MethodCommand.DistancePointToSegment(mPt, st, et);
                     if (double.IsNaN(mToPt) || lLen < mToPt)
                     {
                         mToPt = lLen;
@@ -209,7 +209,7 @@ namespace RegulatoryPlan.Command
 
             foreach (Polyline line in polylines)
             {
-                if (line.Area.ToString("F5") == maxArea.ToString("F5"))
+                if (line.Area.ToString("F0") == maxArea.ToString("F0"))
                 {
                     allPolines[0].Add(line);
                 }
@@ -273,6 +273,142 @@ namespace RegulatoryPlan.Command
             }
             return colorStr;
         }
+        /// <summary>
+        /// 点到线段的距离公式(利用平行四边形的面积算法，非常牛叉)
+        /// </summary>
+        /// <param name="P">目标点</param>
+        /// <param name="A">线段端点A</param>
+        /// <param name="B">线段端点B</param>
+        /// <returns></returns>
+        public static double DistancePointToSegment(Point2d P, Point2d A, Point2d B)
+        {
+            double atp = A.GetDistanceTo(P);
+            double btp = B.GetDistanceTo(P);
+            double atb = A.GetDistanceTo(B);
+
+            if (atp * atp >= atb * atb + btp * btp)
+            {
+                return atp;
+            }
+            if (btp * btp >= atb * atb + atp * atp)
+            {
+                return btp;
+            }
+            //计算点到线段(a,b)的距离  
+            double l = 0.0;
+            double s = 0.0;
+            l = DistancePointToPoint(A, B);
+            s = ((A.Y - P.Y) * (B.X - A.X) - (A.X - P.X) * (B.Y - A.Y)) / (l * l);
+            return (Math.Abs(s * l));
+        }
+
+        public static double GetMinDistance(PointF pt1, PointF pt2, PointF pt3)
+        {
+            double dis = 0;
+            if (pt1.X == pt2.X)
+            {
+                dis = Math.Abs(pt3.X - pt1.X);
+                return dis;
+            }
+            double lineK = (pt2.Y - pt1.Y) / (pt2.X - pt1.X);
+            double lineC = (pt2.X * pt1.Y - pt1.X * pt2.Y) / (pt2.X - pt1.X);
+            dis = Math.Abs(lineK * pt3.X - pt3.Y + lineC) / (Math.Sqrt(lineK * lineK + 1));
+            return dis;
+
+        }
+
+        public static double GetMinDistance(Point2d pt1, Point2d pt2, Point2d pt3)
+        {
+            double dis = 0;
+            if (pt1.X == pt2.X)
+            {
+                dis = Math.Abs(pt3.X - pt1.X);
+                return dis;
+            }
+            double lineK = (pt2.Y - pt1.Y) / (pt2.X - pt1.X);
+            double lineC = (pt2.X * pt1.Y - pt1.X * pt2.Y) / (pt2.X - pt1.X);
+            dis = Math.Abs(lineK * pt3.X - pt3.Y + lineC) / (Math.Sqrt(lineK * lineK + 1));
+            return dis;
+
+        }
+
+        /// <summary>
+        /// 点到点的距离
+        /// </summary>
+        /// <param name="ptA"></param>
+        /// <param name="ptB"></param>
+        /// <returns></returns>
+        public static double DistancePointToPoint(Point2d ptA, Point2d ptB)
+        {
+            return Math.Sqrt(Math.Pow(ptA.X - ptB.X, 2) + Math.Pow(ptA.Y - ptB.Y, 2));
+        }
+
+        /// <summary>
+        /// 点到点的距离
+        /// </summary>
+        /// <param name="ptA"></param>
+        /// <param name="ptB"></param>
+        /// <returns></returns>
+        public static double DistancePointToPoint(Point3d ptA, Point3d ptB)
+        {
+            return Math.Sqrt(Math.Pow(ptA.X - ptB.X, 2) + Math.Pow(ptA.Y - ptB.Y, 2));
+        }
+
+
+
+        /// <summary>
+        /// 通过三角函数求终点坐标
+        /// </summary>
+        /// <param name="angle">角度</param>
+        /// <param name="StartPoint">起点</param>
+        /// <param name="distance">距离</param>
+        /// <returns>终点坐标</returns>
+        public static PointF GetEndPointByTrigonometric(double angle, PointF StartPoint, double distance)
+        {
+           PointF EndPoint = new PointF();
+
+            //角度转弧度
+            var radian = (angle * Math.PI) / 180;
+
+            //计算新坐标 r 就是两者的距离
+            EndPoint.X =(float) (StartPoint.X +distance * Math.Cos(radian));
+            EndPoint.Y= (float)(StartPoint.Y + distance * Math.Sin(radian));
+        
+            return EndPoint;
+        }
+
+        /// <summary>
+        /// 通过三角函数求终点坐标
+        /// </summary>
+        /// <param name="angle">弧度</param>
+        /// <param name="StartPoint">起点</param>
+        /// <param name="distance">距离</param>
+        /// <returns>终点坐标</returns>
+        public static PointF GetEndPointByTrigonometricHu(double angle, PointF StartPoint, double distance)
+        {
+            PointF EndPoint = new PointF();
+
+            //角度转弧度
+         //   var radian = (angle * Math.PI) / 180;
+
+            //计算新坐标 r 就是两者的距离
+            EndPoint.X = (float)(StartPoint.X + distance * Math.Cos(angle));
+            EndPoint.Y = (float)(StartPoint.Y + distance * Math.Sin(angle));
+
+            return EndPoint;
+        }
+
+        /// <summary>
+        /// 勾股定理求长度
+        /// </summary>
+        /// <param name="最长边长度">length1</param>
+        /// <param name="边长度">length2</param>
+        /// <returns>另一边长度</returns>
+        public static double GetEndLengthByTheorem(double length1,double length2)
+        {
+            return Math.Sqrt(Math.Pow(length1,2)-Math.Pow(length2,2));
+        }
+
 
     }
 }

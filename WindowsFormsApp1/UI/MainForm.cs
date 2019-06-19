@@ -17,7 +17,7 @@ namespace RegulatoryPlan.UI
     public partial class MainForm : Form
     {
         ModelBase model;
-   
+        
         public MainForm()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace RegulatoryPlan.UI
         }
         public MainForm(string cityName,DerivedTypeEnum derivedType)
         {
-           crtType = derivedType;
+            crtType = derivedType;
             InitializeComponent();
             InitPage();
             InitData();
@@ -35,7 +35,7 @@ namespace RegulatoryPlan.UI
 
         private void InitPage()
         {
-         this.lb_DrawingName.Text=   DrawingMethod.GetDrawingName();
+            this.lb_DrawingName.Text=   DrawingMethod.GetDrawingName();
             foreach (string item in comboBox1.Items)
             {
                 if (item.Contains(lb_DrawingName.Text))
@@ -63,7 +63,7 @@ namespace RegulatoryPlan.UI
                     break;
 
                 case DerivedTypeEnum.UnitPlan:
-                    PostModel.PostModelBase(model);
+                    PostModel.PostModelBase(model as UnitPlanModel);
                     break;
                 case DerivedTypeEnum.PointsPlan:
                     PostModel.PostModelBase(model);
@@ -120,6 +120,8 @@ namespace RegulatoryPlan.UI
                     return new RoadSectionModel();
                 case DerivedTypeEnum.Sewage:
                     return new SewageModel();
+                case DerivedTypeEnum.UnitPlan:
+                    return new UnitPlanModel();
             }
             return new ModelBase();
 
@@ -127,6 +129,7 @@ namespace RegulatoryPlan.UI
         private void InitData()
         {
             ModelBase mb = new ModelBase();
+            mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
             mb= ChangeToModel(mb);
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
             // mbm.GetLengedPoints(mb);
@@ -264,7 +267,11 @@ namespace RegulatoryPlan.UI
             {
                 LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
                 GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
-
+            }
+            else if (mb is UnitPlanModel)
+            {
+                LayerModel spModel = (mb as UnitPlanModel).allLines[(mb as UnitPlanModel).allLines.Count - 1];
+                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
             }
 
             this.dataGridView1.DataSource = tb;

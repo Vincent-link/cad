@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
-  public  class LayerModel
+  public class LayerModel
     {
         private string name;
         private int color;

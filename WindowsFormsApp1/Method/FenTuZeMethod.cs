@@ -39,10 +39,7 @@ namespace RegulatoryPlan.Method
                                                 OpenMode.ForWrite) as BlockTableRecord;
 
                 PromptSelectionResult acSSPrompt = ed.GetSelection();
-
                 ArrayList entities = new ArrayList();
-
-                // 生成所有实体的UUID，并且放进与entity对应的数组内
 
                 if (acSSPrompt.Status == PromptStatus.OK)
                 {
@@ -123,7 +120,7 @@ namespace RegulatoryPlan.Method
         }
 
         // 筛选实体
-        private void screenEntities(Entity ent1, ArrayList entities)
+        public void screenEntities(Entity ent1, ArrayList entities)
         {
             // 点
             if (ent1 is DBPoint)
@@ -200,7 +197,7 @@ namespace RegulatoryPlan.Method
         }
 
         // 获取实体信息
-        public static void GetEntitiesInfo(ArrayList entities, Transaction trans, BlockTableRecord btr, int numSample, Document doc, Editor ed)
+        public void GetEntitiesInfo(ArrayList entities, Transaction trans, BlockTableRecord btr, int numSample, Document doc, Editor ed)
         {
             ArrayList uuid = new ArrayList();
             ArrayList geom = new ArrayList();   // 坐标点集合
@@ -350,6 +347,8 @@ namespace RegulatoryPlan.Method
                 } // 单个实体几何坐标数量循环结束
 
                 // UUID
+                Entity entityLayer = (Entity)entity;
+
                 Guid guid = new Guid();
                 guid = Guid.NewGuid();
                 string str = guid.ToString();
@@ -367,7 +366,6 @@ namespace RegulatoryPlan.Method
                 }
                 else
                 {
-                    Entity entityLayer = (Entity)entity;
                     LayerTableRecord ltr = (LayerTableRecord)trans.GetObject(entityLayer.LayerId, OpenMode.ForRead);
 
                     string color;
@@ -770,6 +768,52 @@ namespace RegulatoryPlan.Method
             int x = System.Math.Abs(endPoint.X - startPoint.X);
             int y = System.Math.Abs(endPoint.Y - startPoint.Y);
             return Math.Sqrt(x * x + y * y);
+        }
+
+        public bool AddXdata(ObjectId objId, string appName, string proStr)
+        {
+            bool retureValue = false;
+            try
+            {
+                using (Database db = HostApplicationServices.WorkingDatabase)
+                {
+                    using (Transaction trans = db.TransactionManager.StartTransaction())
+                    {
+                        RegAppTable rAt = (RegAppTable)trans.GetObject(db.RegAppTableId, OpenMode.ForWrite);
+
+                        RegAppTableRecord rAtr;
+                        ObjectId rAtrId = ObjectId.Null;
+
+                        TypedValue tvName = new TypedValue
+                        (DxfCode.ExtendedDataRegAppName.GetHashCode(), appName);
+                        TypedValue tvPro = new TypedValue
+                        (DxfCode.ExtendedDataAsciiString.GetHashCode(), proStr);
+
+                        ResultBuffer rb = new ResultBuffer(tvName, tvPro);
+                        if (rAt.Has(appName))
+                        {
+                            rAtrId = rAt[appName];
+                        }
+                        else
+                        {
+                            rAtr = new RegAppTableRecord();
+                            rAtr.Name = appName;
+                            rAtrId = rAt.Add(rAtr);
+                            trans.AddNewlyCreatedDBObject(rAtr, true);
+                        }
+
+                        Entity en = (Entity)trans.GetObject(objId, OpenMode.ForWrite);
+                        en.XData = rb;
+                        trans.Commit();
+                        retureValue = true;
+                    }
+                }
+            }
+            catch
+            {
+                retureValue = false;
+            }
+            return retureValue;
         }
     }
 }

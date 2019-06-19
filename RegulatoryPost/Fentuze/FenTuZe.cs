@@ -14,8 +14,6 @@ namespace RegulatoryPost.FenTuZe
 {
     public class FenTuZe
     {
-      
-
         // 发送块参照方法
         public static void SendData(Dictionary<string, string> result, ArrayList uuid, ArrayList geom, ArrayList colorList, ArrayList type, ArrayList layerName, ArrayList tableName, 
             ArrayList attributeIndexList, System.Data.DataTable attributeList, ArrayList tuliList, string projectId, string chartName, ArrayList kgGuide, String srid, ArrayList parentId, ArrayList textContent, ArrayList blockContent)
@@ -74,7 +72,6 @@ namespace RegulatoryPost.FenTuZe
             // 块内容
             result.Add("blockContent", blockContentString);
 
-
             // 发送
             PostData(result);
         }
@@ -86,7 +83,7 @@ namespace RegulatoryPost.FenTuZe
             // 发送 开始
             string[] baseAddresses = new string[] {
                 "http://172.18.84.102:8080/CIM/", // 測試
-               //"http://172.18.84.102:8080/CIM/cim/geom!addCadGeomByType.action", // GIS
+               //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
                 //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
             };
 
@@ -154,7 +151,6 @@ namespace RegulatoryPost.FenTuZe
                     }
                 }
             }
-
             // 发送 结束
         }
 

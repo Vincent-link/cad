@@ -64,9 +64,9 @@
     <Reference Include="Flurl.Http">
       <HintPath>..\..\..\..\.nuget\packages\flurl.http\2.4.1\lib\netstandard2.0\Flurl.Http.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\11.0.2\lib\net20\Newtonsoft.Json.dll</HintPath>
+      <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -89,6 +89,8 @@
     <Compile Include="Method\PipeMethod.cs" />
     <Compile Include="Method\PolylineMethod.cs" />
     <Compile Include="Method\readAttributeList.cs" />
+    <Compile Include="Method\readDanAttributeList.cs" />
+    <Compile Include="Method\UnitPlanMethod.cs" />
     <Compile Include="Method\RoadMethod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
