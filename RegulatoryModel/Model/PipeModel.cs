@@ -10,26 +10,27 @@ namespace RegulatoryModel.Model
     {
         
         string pipeInfo ;
-        string pipePlanLine;
-        string pipeActualityLine;
-
+        //string pipePlanLine;
+        //string pipeActualityLine;
+        List<string> pipeNameList;
 
         public string PipeInfo { get => pipeInfo; set => pipeInfo = value; }
-        /// <summary>
-        /// 规划图层
-        /// </summary>
-        public string PipePlanLine { get => pipePlanLine; set => pipePlanLine = value; }
-        /// <summary>
-        /// 现状图层
-        /// </summary>
-        public string PipeActualityLine { get => pipeActualityLine; set => pipeActualityLine = value; }
+        ///// <summary>
+        ///// 规划图层
+        ///// </summary>
+        //public string PipePlanLine { get => pipePlanLine; set => pipePlanLine = value; }
+        ///// <summary>
+        ///// 现状图层
+        ///// </summary>
+        //public string PipeActualityLine { get => pipeActualityLine; set => pipeActualityLine = value; }
     }
 
     public class PipeItemModel : CommandItemModel
     {
 
         string pipeLength;
-        string pipeType;
+        string pipeType="polyline";
+        string pipeText;
         string colorIndex;
         string pipeWidth;
         PointF txtLocation;
@@ -37,6 +38,7 @@ namespace RegulatoryModel.Model
         public List<PointF> pipeList;
 
         public string PipeLength { get => pipeLength; set => pipeLength = value; }
+        public string PipeText{ get => pipeText; set => pipeText = value; }
         public string PipeType { get => pipeType; set => pipeType = value; }
         public string ColorIndex { get => colorIndex; set => colorIndex = value; }
         public string PipeWidth { get => pipeWidth; set => pipeWidth = value; }

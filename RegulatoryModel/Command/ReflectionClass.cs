@@ -34,25 +34,25 @@ namespace RegulatoryModel.Command
             public static string GetAllPropertyInfo<T>(T t, string type)
             {
                 string result = "#" + type + "#";
-                PropertyInfo[] pps = GetPropertyInfos(t.GetType());
-                foreach (var pp in pps)
+            PropertyInfo[] pps = GetPropertyInfos(t.GetType());
+            foreach (var pp in pps)
+            {
+                try
                 {
-                    try
-                    {
-                        object value = pp.GetValue(t, null);
-                        if (!value.GetType().IsValueType && value is Autodesk.AutoCAD.Geometry.Entity2d)
-                        {
-                            result += "\"" + pp.Name + "\":\"#" + GetAllPropertyInfo(t, type) + "#\","; ;
-                        }
-                        else
-                        {
-                            result += "\"" + pp.Name + "\":\"" + value.ToString() + "\",";
-                        }
-                    }
-                    catch (Exception ex)
-                    { }
+                    object value = pp.GetValue(t, null);
+                    //if (!value.GetType().IsValueType && value is Autodesk.AutoCAD.Geometry.Entity2d)
+                    //{
+                    //    result += "\"" + pp.Name + "\":\"#" + GetAllPropertyInfo(t, type) + "#\","; ;
+                    //}
+                    //else
+                    //{
+                        result += "\"" + pp.Name + "\":\"" + value.ToString() + "\",";
+                    //}
                 }
-                return result.TrimEnd(',');
+                catch (Exception ex)
+                { }
+            }
+            return result.TrimEnd(',');
             }
             /// <summary>
             /// 创建对象字符串

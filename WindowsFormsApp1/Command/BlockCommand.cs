@@ -143,12 +143,12 @@ namespace RegulatoryPlan.Command
                     if (entity is DBText)
                     {
                         DBText dbText = entity as DBText;
-                        item.DbText = AutoCad2ModelTools.DbText2Model(dbText); ;
+                        item.DbText.Add(AutoCad2ModelTools.DbText2Model(dbText)); ;
                     }
                     else if (entity is Polyline)
                     {
                         Polyline polyLine = entity as Polyline;
-                        item.PolyLine = AutoCad2ModelTools.Polyline2Model(polyLine);
+                        item.PolyLine .Add(AutoCad2ModelTools.Polyline2Model(polyLine));
                     }
                     else if (entity is Line)
                     {
@@ -156,7 +156,8 @@ namespace RegulatoryPlan.Command
                     }
                     else if (entity is Hatch)
                     {
-                        item.Hatch = AutoCad2ModelTools.Hatch2Model(entity as Hatch);
+                        item.Hatch.Add( AutoCad2ModelTools.Hatch2Model(entity as Hatch));
+                      
 
                     }
                     else if(entity is Circle)

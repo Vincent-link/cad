@@ -6,5 +6,9 @@ namespace RegulatoryModel.Model
 {
    public class BuildingIntegratedModel:ModelBase
     {
+        public BuildingIntegratedModel()
+        {
+            this.DerivedType = DerivedTypeEnum.BuildingIntegrated;
+        }
     }
 }

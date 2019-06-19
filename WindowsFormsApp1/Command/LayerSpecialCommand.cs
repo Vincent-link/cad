@@ -14,7 +14,7 @@ namespace RegulatoryPlan.Command
             switch (model.DerivedType)
             {
                 case DerivedTypeEnum.BuildingIntegrated:
-
+                   
                     break;
 
                 case DerivedTypeEnum.UnitPlan:
@@ -26,10 +26,16 @@ namespace RegulatoryPlan.Command
                 case DerivedTypeEnum.Power35kv:
                     break;
                 case DerivedTypeEnum.WaterSupply:
+                    PipeMethod<PipeModel> pipeMethod1 = new PipeMethod<PipeModel>();
+                    pipeMethod1.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.HeatSupply:
+                    PipeMethod<PipeModel> pipeMethod2 = new PipeMethod<PipeModel>();
+                    pipeMethod2.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.FuelGas:
+                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>();
+                    pipeMethod4.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.Communication:
                     break;
@@ -48,8 +54,16 @@ namespace RegulatoryPlan.Command
                 case DerivedTypeEnum.LimitFactor:
                     break;
                 case DerivedTypeEnum.RainWater:
+                    PipeMethod<PipeModel> pipeMethod5 = new PipeMethod<PipeModel>();
+                    pipeMethod5.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.ReuseWater:
+                    PipeMethod<PipeModel> pipeMethod6 = new PipeMethod<PipeModel>();
+                    pipeMethod6.GetAllPipeInfo(model as PipeModel);
+                    break;
+                case DerivedTypeEnum.Road:
+                    RoadMethod<RoadNoSectionModel> mMethod1 = new RoadMethod<RoadNoSectionModel>();
+                    mMethod1.GetAllRoadInfo(model as RoadNoSectionModel);
                     break;
 
             }

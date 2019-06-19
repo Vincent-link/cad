@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace RegulatoryModel.Model
 {
 
     #region 几何模型
-    
+
     public class PolyLineModel : GemoTypeModel
     {
-       
+        public PolyLineModel()
+        {
+            GeoType = "polyline";
+        }
+
+        public string Color { get; set; }
         /// <summary>
         /// 面积
         /// </summary>
@@ -38,7 +41,11 @@ namespace RegulatoryModel.Model
     
     public class LineModel : GemoTypeModel
     {
-       
+        public LineModel()
+        {
+            GeoType = "line";
+        }
+
         public double Angle { get; set; }
        
         /// <summary>
@@ -55,6 +62,7 @@ namespace RegulatoryModel.Model
         /// 长度
         /// </summary>
         public double Length { get; set; }
+        public string Color { get; set; }
     }
     
     /// <summary>
@@ -62,7 +70,10 @@ namespace RegulatoryModel.Model
     /// </summary>
     public class ArcModel : GemoTypeModel
     {
-       
+        public ArcModel()
+        {
+            GeoType = "arc";
+        }
         /// <summary>
         /// 圆心
         /// </summary>
@@ -93,12 +104,22 @@ namespace RegulatoryModel.Model
         /// 结束点
         /// </summary>
         public PointF EndPoint { get; set; }
+
+        public List<PointF> pointList = new List<PointF>();
+
+        public string Color { get; set; }
     }
     /// <summary>
     /// 圆
     /// </summary>
     public class CircleModel : GemoTypeModel
     {
+
+        public List<PointF> pointList = new List<PointF>();
+        public CircleModel()
+        {
+            GeoType = "circle";
+        }
         /// <summary>
         /// 圆心
         /// </summary>
@@ -107,12 +128,19 @@ namespace RegulatoryModel.Model
         /// 半径
         /// </summary>
         public double Radius { get; set; }
+        public string Color { get; set; }
     }
     /// <summary>
     /// 椭圆
     /// </summary>
     public class EllipseModel : GemoTypeModel
     {
+
+        public List<PointF> pointList = new List<PointF>();
+        public EllipseModel()
+        {
+            GeoType = "ellipse";
+        }
         /// <summary>
         /// 圆心
         /// </summary>
@@ -125,14 +153,33 @@ namespace RegulatoryModel.Model
         /// 短边
         /// </summary>
         public PointF MinorAxis { get; set; }
+        public string Color { get; set; }
     }
 
     public class HatchModel : GemoTypeModel
     {
-        public List<PointF> loopPoints=new List<PointF>();
+        public HatchModel()
+        {
+            GeoType = "polygon";
+        }
+        public Dictionary<int,ColorAndPointItemModel> loopPoints=new Dictionary<int,ColorAndPointItemModel>();
         public double Area { get; set; }
-        public string Color { get; set; }
+       // public string Color { get; set; }
 
+    }
+
+    public class ColorAndPointItemModel 
+    {
+        private string zIndex="1";
+        public ColorAndPointItemModel()
+        {
+            loopPoints = new List<PointF>();
+            // GeoType = "polygon";
+        }
+      
+        public  List<PointF> loopPoints;
+        public string Color { get; set; }
+        public string ZIndex { get => zIndex; set => zIndex = value; }
     }
 
     /// <summary>
@@ -140,7 +187,10 @@ namespace RegulatoryModel.Model
     /// </summary>
     public class DbTextModel:GemoTypeModel
     {
-       
+        public DbTextModel()
+        {
+            GeoType = "text";
+        }
         /// <summary>
         /// 位置
         /// </summary>
@@ -165,14 +215,19 @@ namespace RegulatoryModel.Model
         /// </summary>
        
         public string Text { get; set; }
+        public string Color { get; set; }
 
-   
+
     }
     /// <summary>
     /// 标注
     /// </summary>
     public class AlignedDimensionModel : GemoTypeModel
     {
+        public AlignedDimensionModel()
+        {
+            GeoType = "dimension";
+        }
         /// <summary>
         /// 标注位置
         /// </summary>

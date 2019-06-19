@@ -19,38 +19,34 @@ namespace RegulatoryPlan.Method
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;
-            PromptSelectionResult ProSset1 = null;
-            PromptSelectionResult ProSsetActuality = null;
+
             TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName,model.PipeInfo) };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
-            TypedValue[] filList1 = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName,model.PipePlanLine) };
-            SelectionFilter sfilter1 = new SelectionFilter(filList1);
 
-            TypedValue[] filListActuality = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.PipeActualityLine) };
-            SelectionFilter sfilterActuality = new SelectionFilter(filListActuality);
 
             string ss = layoutMgr.CurrentLayout;
             ProSset = doc.Editor.SelectAll(sfilter);
-            ProSset1 = doc.Editor.SelectAll(sfilter1);
-            ProSsetActuality = doc.Editor.SelectAll(sfilterActuality);
+
             if (model.allLines == null)
             {
                 model.allLines = new List<LayerModel>();
             }
             List<Polyline> roadLine = new List<Polyline>();
+            foreach (string layer in model.LayerList)
+            {
+                roadLine.AddRange(PolylineMethod.GetPolyliness(layer));
+            }
             List<MText> roadText = new List<MText>();
             Database db = doc.Database;
-            if (ProSset.Status == PromptStatus.OK && ProSset1.Status == PromptStatus.OK)
+            if (ProSset.Status == PromptStatus.OK )
             {
                 using (Transaction tran = db.TransactionManager.StartTransaction())
                 {
                     SelectionSet sst = ProSset.Value;
-                    SelectionSet sst1 = ProSset1.Value;
-                    SelectionSet sstActuality = ProSsetActuality.Value;
+
                     ObjectId[] oids = sst.GetObjectIds();
-                    ObjectId[] oids1 = sst1.GetObjectIds();
-                    ObjectId[] oidsActuality = sstActuality.GetObjectIds();
+
                     int rt = 0;
                     int rl = 0;
                     //List<string> aa = new List<string>();
@@ -61,7 +57,7 @@ namespace RegulatoryPlan.Method
                         LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
                         if (ltr.Name == MethodCommand.LegendLayer)
                         {
-                            lm.Color = ltr.Color.PenIndex;
+                            lm.Color =  System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
                         }
                     }
                     for (int i = 0; i < oids.Length; i++)
@@ -77,40 +73,8 @@ namespace RegulatoryPlan.Method
                             }
                         }
                     }
-                    for (int i = 0; i < oids1.Length; i++)
-                    {
-
-                        DBObject ob = tran.GetObject(oids1[i], OpenMode.ForRead);
-
-
-                        if (ob is Polyline)
-                        {
-                            if ((ob as Polyline).BlockName.ToLower() == "*model_space")
-                            {
-                                roadLine.Add((ob as Polyline));
-                                rl++;
-                            }
-
-                        }
-                    }
-
-                    for (int i = 0; i < oidsActuality.Length; i++)
-                    {   
-
-                        DBObject ob = tran.GetObject(oidsActuality[i], OpenMode.ForRead);
-
-
-                        if (ob is Polyline)
-                        {
-                            if ((ob as Polyline).BlockName.ToLower() == "*model_space")
-                            {
-                                roadLine.Add((ob as Polyline));
-                                rl++;
-                            }
-
-                        }
-                    }
-                    lm.Name = model.PipePlanLine;
+                
+                    lm.Name = model.LayerList[0];
                     lm.modelItemList = new List<object>();
                     foreach (Polyline polyline in roadLine)
                     {
@@ -126,6 +90,7 @@ namespace RegulatoryPlan.Method
 
 
         }
+        
 
         public PipeItemModel GetPipeItemInfo(Polyline line, List<MText> txtList)
         {
@@ -146,7 +111,7 @@ namespace RegulatoryPlan.Method
                     {
                         item.TxtLocation = new System.Drawing.PointF((float)mText.Location.X, (float)mText.Location.Y);
                         item.PipeType = mText.Text; //Replace(" ", "").Replace("　", "");
-                        item.PipeLayer = line.Layer;
+                        item.PipeLayer =mText.Layer;
                     }
 
 

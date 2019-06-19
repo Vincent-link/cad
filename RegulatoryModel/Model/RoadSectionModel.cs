@@ -7,16 +7,21 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
-    public class RoadSectionModel : ModelBase
+    public class RoadSectionModel: RoadModel
     {
+     
+      
 
-        public static string roadNameLayer = "Tx-道路名";
-        public static string roadLineLayer = "道路";
         public RoadSectionModel()
         {
-            this.specailLayers = new List<string>() {roadLineLayer,roadNameLayer};
+            RoadNameLayer = "路名";
+            RoadLineLayer = "RD-中线";
+            RoadSectionLayer = "横断面符号";
+            this.specailLayers = new List<string>() {RoadLineLayer,RoadNameLayer};
             this.DerivedType = DerivedTypeEnum.TheRoadSection;
         }
+
+       
 
         //public override void AddSpecialLayerModel()
         //{
@@ -25,20 +30,27 @@ namespace RegulatoryModel.Model
         //}
     }
 
-    public class RoadSectionItemModel:CommandItemModel
+    public class RoadInfoItemModel:CommandItemModel
     {
         string roadName;
         string roadLength;
         string roadType;
         string colorIndex;
         string roadWidth;
-        public List<PointF> roadList;
+        string roadNameLayer;
+        string roadNameType;
+        public List<PointF> roadList=new List<PointF>();
+        public List<RoadSectionItemModel> sectionList= new List<RoadSectionItemModel>();
 
         public string RoadName { get => roadName; set => roadName = value; }
         public string RoadLength { get => roadLength; set => roadLength = value; }
         public string RoadType { get => roadType; set => roadType = value; }
         public string ColorIndex { get => colorIndex; set => colorIndex = value; }
         public string RoadWidth { get => roadWidth; set => roadWidth = value; }
+        public List<PointF> RoadNameLocaiton = new List<PointF>();
+        public string RoadNameLayer { get => roadNameLayer; set => roadNameLayer = value; }
+        public string RoadNameType { get => roadNameType; set => roadNameType = value; }
+
         public override string ItemToJson()
         {
             string outJson = "{";
@@ -51,5 +63,13 @@ namespace RegulatoryModel.Model
             }
             return outJson+"}";
         }
+    }
+    public class RoadSectionItemModel 
+    {
+        DbTextModel sectionName;
+        PolyLineModel line;
+
+        public DbTextModel SectionName { get => sectionName; set => sectionName = value; }
+        public PolyLineModel Line { get => line; set => line = value; }
     }
 }

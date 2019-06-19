@@ -6,6 +6,11 @@ namespace RegulatoryModel.Model
 {
   public  class GemoTypeModel
     {
+        private string geoType;
+        private string zIndex="0";
+
+        public string GeoType { get => geoType; set => geoType = value; }
+        public string ZIndex { get => zIndex; set => zIndex = value; }
 
         public virtual string ToInfoString()
         {

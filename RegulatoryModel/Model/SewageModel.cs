@@ -10,8 +10,8 @@ namespace RegulatoryModel.Model
     {
         public SewageModel()
         {
-          PipeActualityLine= "现状污水管线";
-            PipePlanLine = "规划污水管线";
+            this.LayerList = new List<string>() { "现状污水管线", "规划污水管线" };
+     
            PipeInfo = "管道管径";
             this.DerivedType = DerivedTypeEnum.Sewage;
         }

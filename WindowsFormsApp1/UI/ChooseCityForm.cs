@@ -108,6 +108,9 @@ namespace RegulatoryPlan.UI
                 case 15:
                     crtType = DerivedTypeEnum.ReuseWater;
                     break;
+                case 16:
+                    crtType = DerivedTypeEnum.Road;
+                    break;
 
             }    
             return crtType;

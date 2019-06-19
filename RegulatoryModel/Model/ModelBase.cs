@@ -27,11 +27,13 @@ namespace RegulatoryModel.Model
         LimitFactor,// 限制性要素
         RainWater,// 雨水规划
         ReuseWater,//  再生水规划
+        Road,//道路
         None
 
     }
     public class ModelBase
     {
+        string docName;
         string name;
         DerivedTypeEnum derivedType;
         public List<string> specailLayers;
@@ -41,6 +43,7 @@ namespace RegulatoryModel.Model
         public string Name { get => name; set => name = value; }
         public DerivedTypeEnum DerivedType { get => derivedType; set => derivedType = value; }
         private string uuid { get => System.Guid.NewGuid().ToString(); }
+        public string DocName { get => docName; set => docName = value; }
 
         public virtual string ToJson()
         {

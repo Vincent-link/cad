@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="acdbmgd, Version=17.1.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\AutoCAD 2008\acdbmgd.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll</HintPath>
@@ -67,10 +63,12 @@
     <Compile Include="Model\Power35kvModel.cs" />
     <Compile Include="Model\RainWaterModel.cs" />
     <Compile Include="Model\ReuseWaterModel.cs" />
+    <Compile Include="Model\RoadModel.cs" />
+    <Compile Include="Model\RoadNoSectionModel.cs" />
     <Compile Include="Model\RoadSectionModel.cs" />
     <Compile Include="Model\SewageModel.cs" />
     <Compile Include="Model\StyleModel.cs" />
-    <Compile Include="Model\WaterSupplyvModel.cs" />
+    <Compile Include="Model\WaterSupplyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,9 +10,9 @@ namespace RegulatoryModel.Model
   public  class LayerModel
     {
         private string name;
-        private int color;
-        public Dictionary<int,List<object>> pointFs;
-        public List<object> modelItemList;
+        private string color;
+        public Dictionary<int,List<object>> pointFs;//图例框识别的模型
+        public List<object> modelItemList;//特殊图层的模型
         private string jsonStr;
 
         public string JsonStr { get
@@ -46,7 +46,7 @@ namespace RegulatoryModel.Model
                 return jsonStr;
             } set => jsonStr = value; }
 
-        public int Color { get => color; set => color = value; }
+        public string Color { get => color; set => color = value; }
         public string Name { get => name; set => name = value; }
     }
 }

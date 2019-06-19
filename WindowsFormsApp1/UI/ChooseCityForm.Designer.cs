@@ -34,6 +34,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.lb_FileLocation = new System.Windows.Forms.Label();
             this.lb_FileTime = new System.Windows.Forms.Label();
             this.lb_PageName = new System.Windows.Forms.Label();
@@ -41,8 +43,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -117,6 +117,41 @@
             this.groupBox1.Text = "导出图纸";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "单元图则",
+            "分图则",
+            "成安控规10kv供电规划图",
+            "成安控规35kv供电规划图",
+            "成安控规给水规划图",
+            "成安控规供热规划图",
+            "成安控规燃气规划图",
+            "成安控规通信规划图",
+            "城区建筑整合20170211",
+            "道路断面符号0701-2",
+            "管线综合",
+            "污水规划",
+            "五线图",
+            "限制性要素160603",
+            "雨水规划",
+            "再生水规划",
+            "道路"});
+            this.comboBox1.Location = new System.Drawing.Point(67, 66);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(221, 20);
+            this.comboBox1.TabIndex = 12;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 69);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(59, 12);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "导出类型:";
+            // 
             // lb_FileLocation
             // 
             this.lb_FileLocation.AutoSize = true;
@@ -181,40 +216,6 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "城市选择";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "单元图则",
-            "分图则",
-            "成安控规10kv供电规划图",
-            "成安控规35kv供电规划图",
-            "成安控规给水规划图",
-            "成安控规供热规划图",
-            "成安控规燃气规划图",
-            "成安控规通信规划图",
-            "城区建筑整合20170211",
-            "道路断面符号0701-2",
-            "管线综合",
-            "污水规划",
-            "五线图",
-            "限制性要素160603",
-            "雨水规划",
-            "再生水规划"});
-            this.comboBox1.Location = new System.Drawing.Point(67, 66);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(221, 20);
-            this.comboBox1.TabIndex = 12;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 69);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 12);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "导出类型:";
             // 
             // ChooseCityForm
             // 

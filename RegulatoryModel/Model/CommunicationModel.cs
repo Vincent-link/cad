@@ -6,5 +6,9 @@ namespace RegulatoryModel.Model
 {
   public  class CommunicationModel:ModelBase
     {
+        public CommunicationModel()
+        {
+            this.DerivedType = DerivedTypeEnum.Communication;
+        }
     }
 }

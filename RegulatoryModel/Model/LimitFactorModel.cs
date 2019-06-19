@@ -4,7 +4,11 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
- public   class LimitFactorModel : ModelBase
+    public class LimitFactorModel : ModelBase
     {
+        public LimitFactorModel()
+        {
+            this.DerivedType = DerivedTypeEnum.LimitFactor;
+        }
     }
 }

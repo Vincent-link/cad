@@ -23,6 +23,11 @@ namespace RegulatoryPlan.Command
             //MainForm form = new MainForm();
             //form.ShowDialog();
         }
+        [CommandMethod("测试发送")]
+        public void SendTestInfo()
+        {
+
+        }
 
         // 手动选择实体
         [CommandMethod("手动选择")]

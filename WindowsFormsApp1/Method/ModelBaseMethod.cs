@@ -47,7 +47,7 @@ namespace RegulatoryPlan.Method
         //                LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
         //                if (ltr.Name == MethodCommand.LegendLayer)
         //                {
-        //                    lm.Color = ltr.Color.PenIndex;
+        //                    lm.Color =  System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
         //                }
         //            }
         //            for (int i = 0; i < oids.Length; i++)
@@ -180,7 +180,7 @@ namespace RegulatoryPlan.Method
                         LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
                         if (ltr.Name == MethodCommand.LegendLayer)
                         {
-                            lm.Color = ltr.Color.PenIndex;
+                            lm.Color =  System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
                         }
                     }
                     for (int i = 0; i < oids.Length; i++)
@@ -215,41 +215,53 @@ namespace RegulatoryPlan.Method
                             foreach (ObjectId lengGemo in ois)
                             {
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
+                                BlockInfoModel plModel = AnalysisBlcokInfo(ob);
+                                if (plModel != null)
+                                {
+                                    List<object> obj = new List<object>() { plModel };
+                                    legm.GemoModels.Add(plModel);
+                                   
+                                }
+                                //if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
+                                //{
+                                //    BlockInfoModel plModel = new BlockInfoModel();
+                                //    plModel.PolyLine = AutoCad2ModelTools.Polyline2Model(ob as Polyline);
+                                //    legm.GemoModels.Add(plModel);
+                                //}
+                                //else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
+                                //{
+                                //    legm.GemoModels.Add(BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference));
+                                //}
+                                //else if (ob is DBText && (ob as DBText).BlockName.ToLower() == "*model_space")
+                                //{
 
-                                if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
-                                {
-                                    BlockInfoModel plModel = new BlockInfoModel();
-                                    plModel.PolyLine = AutoCad2ModelTools.Polyline2Model(ob as Polyline);
-                                    legm.GemoModels.Add(plModel);
-                                }
-                                else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
-                                {
-                                    legm.GemoModels.Add(BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference));
-                                } else if (ob is DBText && (ob as DBText).BlockName.ToLower() == "*model_space")
-                                {
+                                //    BlockInfoModel plModel = new BlockInfoModel();
+                                //    plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as DBText);
+                                //    legm.GemoModels.Add(plModel);
+                                //}
+                                //else if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
+                                //{
 
-                                    BlockInfoModel plModel = new BlockInfoModel();
-                                    plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as DBText);
-                                    legm.GemoModels.Add(plModel);
-                                }
-                                else if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
-                                {
-
-                                    BlockInfoModel plModel = new BlockInfoModel();
-                                    plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as MText);
-                                    legm.GemoModels.Add(plModel);
-                                } else if (ob is Hatch && (ob as Hatch).BlockName.ToLower() == "*model_space")
-                                {
-                                    BlockInfoModel plModel = new BlockInfoModel();
-                                    plModel.Hatch = AutoCad2ModelTools.Hatch2Model(ob as Hatch);
-                                    legm.GemoModels.Add(plModel);
-                                }
-                                else if (ob is Circle && (ob as Circle).BlockName.ToLower() == "*model_space")
-                                {
-                                    BlockInfoModel plModel = new BlockInfoModel();
-                                    plModel.Circle.Add( AutoCad2ModelTools.Circle2Model(ob as Circle));
-                                    legm.GemoModels.Add(plModel);
-                                }
+                                //    BlockInfoModel plModel = new BlockInfoModel();
+                                //    plModel.DbText = AutoCad2ModelTools.DbText2Model(ob as MText);
+                                //    legm.GemoModels.Add(plModel);
+                                //}
+                                //else if (ob is Hatch && (ob as Hatch).BlockName.ToLower() == "*model_space")
+                                //{
+                                //    BlockInfoModel plModel = new BlockInfoModel();
+                                //    plModel.Hatch = AutoCad2ModelTools.Hatch2Model(ob as Hatch);
+                                //    legm.GemoModels.Add(plModel);
+                                //}
+                                //else if (ob is Circle && (ob as Circle).BlockName.ToLower() == "*model_space")
+                                //{
+                                //    BlockInfoModel plModel = new BlockInfoModel();
+                                //    plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+                                //    legm.GemoModels.Add(plModel);
+                                //}
+                                //else if (ob is Entity)
+                                //{
+                                    
+                                //}
                             }
                         }
                         model.LegendList.Add(legm);
@@ -260,6 +272,171 @@ namespace RegulatoryPlan.Method
                 }
             }
             
+        }
+
+        public LayerModel GetAllLayerGemo(T model,string layerName)
+        {
+            LayerModel lyModel = new LayerModel();
+            List<BlockInfoModel> list = new List<BlockInfoModel>();
+            lyModel.Name = layerName;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            ObjectIdCollection ids = new ObjectIdCollection();
+
+            PromptSelectionResult ProSset = null;
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
+            SelectionFilter sfilter = new SelectionFilter(filList);
+            LayoutManager layoutMgr = LayoutManager.Current;
+
+            string ss = layoutMgr.CurrentLayout;
+            ProSset = doc.Editor.SelectAll(sfilter);
+            //  List<ObjectId> idss=  GetEntitiesInModelSpace();
+            Database db = doc.Database;
+            List<BlockReference> blockTableRecords = new List<BlockReference>();
+            if (ProSset.Status == PromptStatus.OK)
+            {
+                lyModel.pointFs = new Dictionary<int, List<object>>();
+                using (Transaction tran = db.TransactionManager.StartTransaction())
+                {
+                    SelectionSet sst = ProSset.Value;
+
+                    ObjectId[] oids = sst.GetObjectIds();
+
+                    int ad = 0;
+                    List<string> aa = new List<string>();
+                   
+                    LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
+                    foreach (ObjectId layerId in lt)
+                    {
+                        LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
+                        if (ltr.Name == layerName)
+                        {
+                            lyModel.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                        }
+                    }
+
+                    int i = 0;
+                    foreach (ObjectId lengGemo in oids)
+                    {
+
+                        DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
+                        BlockInfoModel plModel = AnalysisBlcokInfo(ob);
+                        if (plModel != null)
+                        {
+                            List<object> obj = new List<object>() { plModel };
+                            lyModel.pointFs.Add(i, obj);
+                            i++;
+                        }
+                    
+                        }
+                    }
+
+
+                
+
+
+            }
+            
+            return lyModel;
+        }
+        private void AnalysisBlcokInfo(BlockInfoModel plModel, DBObject ob)
+        {
+
+          
+              
+
+                if (ob is Polyline)
+                {
+
+                    plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+
+                }
+                else if (ob is BlockReference)
+                {
+                    plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
+                }
+                else if (ob is DBText)
+                {
+                    plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
+                }
+                else if (ob is MText)
+                {
+                    plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText));
+                }
+                else if (ob is Hatch)
+                {
+
+                    plModel.Hatch.Add( AutoCad2ModelTools.Hatch2Model(ob as Hatch));
+
+                }
+                else if (ob is Circle)
+                {
+
+                    plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+
+                }
+                else if (ob is Entity)
+                {
+                    Entity ety = ob as Entity;
+                    DBObjectCollection objs = new DBObjectCollection();
+                    ety.Explode(objs);
+                    foreach (DBObject obj in objs)
+                    {
+                        AnalysisBlcokInfo(plModel, obj);
+                    }
+                }
+               
+            
+          
+        }
+        private BlockInfoModel AnalysisBlcokInfo(DBObject ob)
+        {
+
+            if (ob is Entity && (ob as Entity).BlockName.ToLower() == "*model_space")
+            {
+                BlockInfoModel plModel = new BlockInfoModel();
+
+                if (ob is Polyline)
+                {
+
+                    plModel.PolyLine.Add( AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+
+                }
+                else if (ob is BlockReference)
+                {
+                    plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
+                }
+                else if (ob is DBText)
+                {
+                    plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
+                }
+                else if (ob is MText)
+                {
+                    plModel.DbText.Add( AutoCad2ModelTools.DbText2Model(ob as MText));
+                }
+                else if (ob is Hatch)
+                {
+ plModel.Hatch.Add( AutoCad2ModelTools.Hatch2Model(ob as Hatch));
+
+                }
+                else if (ob is Circle)
+                {
+
+                    plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+
+                }
+                else if (ob is Entity)
+                {
+                    Entity ety = ob as Entity;
+                    DBObjectCollection objs = new DBObjectCollection();
+                    ety.Explode(objs);
+                    foreach (DBObject obj in objs)
+                    {
+                        AnalysisBlcokInfo(plModel, obj);
+                    }
+                }
+                return plModel;
+            }
+            return null;
         }
 
         public List<ObjectId> GetCrossObjectIds(Editor ed,Polyline pl,SelectionFilter sf,Transaction tran)
