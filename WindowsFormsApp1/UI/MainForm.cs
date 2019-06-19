@@ -17,7 +17,7 @@ namespace RegulatoryPlan.UI
     public partial class MainForm : Form
     {
         ModelBase model;
-
+        public static bool isOnlyModel=true;
         public MainForm()
         {
             InitializeComponent();
@@ -63,7 +63,7 @@ namespace RegulatoryPlan.UI
                     break;
 
                 case DerivedTypeEnum.UnitPlan:
-                    PostModel.PostModelBase(model);
+                    PostModel.PostModelBase(model as UnitPlanModel);
                     break;
                 case DerivedTypeEnum.PointsPlan:
                     PostModel.PostModelBase(model);
@@ -127,8 +127,7 @@ namespace RegulatoryPlan.UI
                     return new BuildingIntegratedModel();
 
                 case DerivedTypeEnum.UnitPlan:
-                    // PostModel.PostModelBase(model);
-                    break;
+                    return new UnitPlanModel();
                 case DerivedTypeEnum.PointsPlan:
                     break;
                 case DerivedTypeEnum.Power10Kv:
@@ -340,6 +339,7 @@ namespace RegulatoryPlan.UI
             ModelBase mb = new ModelBase();
 
             mb = ChangeToModel(mb);
+            isOnlyModel = mb.IsOnlyModel;
             mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
             // mbm.GetLengedPoints(mb);
@@ -412,7 +412,11 @@ namespace RegulatoryPlan.UI
             {
                 LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
                 GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
-
+            }
+            else if (mb is UnitPlanModel)
+            {
+                LayerModel spModel = (mb as UnitPlanModel).allLines[(mb as UnitPlanModel).allLines.Count - 1];
+                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
             }
 
             this.dataGridView1.DataSource = tb;
@@ -678,7 +682,7 @@ namespace RegulatoryPlan.UI
                     tb.Columns.Add("图层");
 
                 }
-                if (e.Node.Index == 0)
+                if (e.Node.Parent== null)
                 {
                     foreach (TreeNode itemNode in e.Node.Nodes)
                     {

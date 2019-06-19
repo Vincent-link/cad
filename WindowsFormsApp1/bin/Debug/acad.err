@@ -612,6 +612,7 @@
 -------------
 
 
+<<<<<<< HEAD
 致命错误:  Unhandled e0434f4dh Exception at 776608b2h
 
 06/12/2019 at 11:29:08.859  图形: E:\503\图集\道路名称图.dwg
@@ -717,4 +718,345 @@
 致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 1beb409dh
 
 06/19/2019 at 10:35:20.581  图形: E:\503\图集\中心城区10kv供电规划图 - 副本.dwg
+=======
+致命错误:  Unhandled e0434f4dh Exception at 753d1942h
+
+06/12/2019 at 10:58:37.094  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 753d1942h
+
+06/12/2019 at 15:06:35.595  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 13f20394h
+
+06/12/2019 at 15:07:13.720  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 16530394h
+
+06/12/2019 at 15:09:32.256  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 15b00394h
+
+06/12/2019 at 15:10:47.630  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 172a0394h
+
+06/12/2019 at 15:11:52.196  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 6b1daf4h
+
+06/12/2019 at 15:14:55.850  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\分图则\08-01至08-03地块分图图则.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 753d1942h
+
+06/12/2019 at 15:17:20.958  图形: C:\Users\lyj\Desktop\道路名称图.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at f9d054ch
+
+06/12/2019 at 16:43:20.027  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 18b00374h
+
+06/12/2019 at 16:45:13.541  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 17f30374h
+
+06/12/2019 at 16:48:21.717  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 753d1942h
+
+06/12/2019 at 17:14:16.095  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 753d1942h
+
+06/12/2019 at 17:16:57.822  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 161e29ceh
+
+06/12/2019 at 17:31:53.041  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 174f29ceh
+
+06/12/2019 at 17:35:35.360  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 17ea29a7h
+
+06/12/2019 at 18:03:32.767  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 17c429a7h
+
+06/12/2019 at 18:04:54.215  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at ac08cd1h
+
+06/12/2019 at 18:24:46.914  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at abf29efh
+
+06/12/2019 at 18:27:27.745  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 6fda284h
+
+06/12/2019 at 19:38:27.548  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 70ca284h
+
+06/12/2019 at 19:49:03.183  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 74722c92h
+
+06/12/2019 at 20:05:51.373  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 74722c92h
+
+06/12/2019 at 20:11:13.656  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 74722c92h
+
+06/12/2019 at 20:12:30.085  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 74722c92h
+
+06/12/2019 at 20:29:54.118  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 74722c92h
+
+06/13/2019 at 09:20:34.159  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 74722c92h
+
+06/13/2019 at 09:59:18.756  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 74722c92h
+
+06/13/2019 at 10:56:03.650  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 10ef613h
+
+06/13/2019 at 16:03:07.847  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 76a12c92h
+
+06/13/2019 at 18:06:08.889  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 76a12c92h
+
+06/13/2019 at 18:11:02.965  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 76a12c92h
+
+06/13/2019 at 18:13:16.553  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 76a12c92h
+
+06/13/2019 at 20:25:53.032  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 76a12c92h
+
+06/13/2019 at 20:28:32.127  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e0434f4dh Exception at 76a12c92h
+
+06/14/2019 at 09:31:09.699  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0008 Exception at 18995105h
+
+06/14/2019 at 09:49:15.895  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0008 Exception at 1836512dh
+
+06/14/2019 at 09:56:05.970  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0008 Exception at 1783512dh
+
+06/14/2019 at 09:57:48.274  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0008 Exception at 18955140h
+
+06/14/2019 at 10:06:19.962  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0018 Exception at 6f28d6ch
+
+06/14/2019 at 12:05:25.032  图形: Drawing1.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 76a12c92h
+
+06/14/2019 at 12:05:42.703  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 76a12c92h
+
+06/14/2019 at 12:06:07.282  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\测试 - 成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0018 Exception at 70cba9ch
+
+06/14/2019 at 12:07:54.261  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 76a12c92h
+
+06/14/2019 at 14:06:56.093  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\测试 2- 成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0018 Exception at 538a6fch
+
+06/14/2019 at 14:07:57.212  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\测试 2- 成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0018 Exception at 57caebch
+
+06/14/2019 at 14:09:56.116  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\测试 2- 成安规划单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 774f2c92h
+
+06/17/2019 at 09:36:59.628  图形: Drawing1.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 774f2c92h
+
+06/17/2019 at 09:37:29.815  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\最新\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled e06d7363h Exception at 75e32c92h
+
+06/17/2019 at 14:10:53.110  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\最新\单元图则\成安规划图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 7b73c18h
+
+06/17/2019 at 14:17:24.053  图形: Drawing1.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 19427cd5h
+
+06/17/2019 at 17:07:09.152  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\最新\单元图则\成安单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 19ac7cech
+
+06/17/2019 at 17:21:55.676  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\最新\单元图则\成安单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 19d59106h
+
+06/17/2019 at 17:33:03.313  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\最新\单元图则\成安单元图则01.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at 1b695300h
+
+06/18/2019 at 17:30:47.483  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\08-01至08-03地块分图图则(1).dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at f535328h
+
+06/18/2019 at 17:50:22.793  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\08-01至08-03地块分图图则(1).dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0014 Exception at f94223ah
+
+06/18/2019 at 17:51:40.991  图形: E:\liuhui work\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\单元图则\新\08-04至08-08地块分图图则.dwg
+>>>>>>> bff8eb726c464608947693a221ef2e4c82b52a09
+-------------
+
+
+内部错误:  !dbobji.cpp@6762: eNotOpenForWrite
+
+06/19/2019 at 16:29:58.853  图形: C:\Users\Administrator\Desktop\成安单元图则01.dwg
 -------------

@@ -14,8 +14,6 @@ namespace RegulatoryPost.FenTuZe
 {
     public class FenTuZe
     {
-      
-
         // 发送块参照方法
         public static void SendData(Dictionary<string, string> result, ArrayList uuid, ArrayList geom, ArrayList colorList, ArrayList type, ArrayList layerName, ArrayList tableName, 
             ArrayList attributeIndexList, System.Data.DataTable attributeList, ArrayList tuliList, string projectId, string chartName, ArrayList kgGuide, String srid, ArrayList parentId, ArrayList textContent, ArrayList blockContent)
@@ -73,7 +71,6 @@ namespace RegulatoryPost.FenTuZe
             result.Add("textContent", textContentString);
             // 块内容
             result.Add("blockContent", blockContentString);
-
 
             // 发送
             PostData(result);
@@ -154,7 +151,6 @@ namespace RegulatoryPost.FenTuZe
                     }
                 }
             }
-
             // 发送 结束
         }
 

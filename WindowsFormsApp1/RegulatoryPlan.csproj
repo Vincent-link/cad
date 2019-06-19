@@ -89,7 +89,9 @@
     <Compile Include="Method\PipeMethod.cs" />
     <Compile Include="Method\PolylineMethod.cs" />
     <Compile Include="Method\readAttributeList.cs" />
+    <Compile Include="Method\readDanAttributeList.cs" />
     <Compile Include="Method\RoadSectionMethod.cs" />
+    <Compile Include="Method\UnitPlanMethod.cs" />
     <Compile Include="Method\RoadMethod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

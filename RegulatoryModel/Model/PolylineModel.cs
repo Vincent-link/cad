@@ -148,11 +148,11 @@ namespace RegulatoryModel.Model
         /// <summary>
         /// 长边
         /// </summary>
-        public PointF MajorAxis { get; set; }
+        public double MajorAxis { get; set; }
         /// <summary>
         /// 短边
         /// </summary>
-        public PointF MinorAxis { get; set; }
+        public double MinorAxis { get; set; }
         public string Color { get; set; }
     }
 

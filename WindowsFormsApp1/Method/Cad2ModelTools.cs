@@ -41,83 +41,88 @@ namespace RegulatoryPlan.Model
         public static HatchModel Hatch2Model(Hatch dbText)
         {
             HatchModel dbModel = new HatchModel();
-        
-            int cont = dbText.NumberOfLoops;
+          
+                int cont = dbText.NumberOfLoops;
 
-            for (int i = 0; i < cont; i++)
+                for (int i = 0; i < cont; i++)
+                {
+                    dbModel.loopPoints.Add(i, new ColorAndPointItemModel());
+                    HatchLoop loop = dbText.GetLoopAt(i);
+
+                    ColorAndPointItemModel cpModel = new ColorAndPointItemModel();
+                    if (i == 0)
+                    {
+                        cpModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
+                    }
+                    else
+                    {
+                        cpModel.Color = "#FFFFFF";
+                        //  cpModel.ZIndex = "1";
+                    }
+                    if (loop.IsPolyline)
+                    {
+                        for (int j = 0; j < loop.Polyline.Count - 1; j++)
+                        {
+                            BulgeVertex vertex = loop.Polyline[j];
+                            BulgeVertex vertex1 = loop.Polyline[j + 1];
+                            if (vertex.Bulge != 0)
+                            {
+
+                                cpModel.loopPoints.AddRange(MethodCommand.GetArcPointsByBulge(vertex.Vertex, vertex1.Vertex, vertex.Bulge));
+                            }
+                            else
+                            {
+                                cpModel.loopPoints.Add(Point2d2Pointf(vertex.Vertex));
+                            }
+                        }
+                        if (dbText.NumberOfHatchLines > 0)
+                        {
+                            Line2dCollection cl = dbText.GetHatchLinesData();
+                        } //foreach (Line2d itemi in )
+                          //{
+
+                        //}
+
+                    }
+                    else
+                    {
+                        Curve2dCollection col_cur2d = loop.Curves;
+                        foreach (Curve2d item in col_cur2d)
+                        {
+                            Point2d[] M_point2d = item.GetSamplePoints(20);
+                            foreach (Point2d point in M_point2d)
+                            {
+                                cpModel.loopPoints.Add(Point2d2Pointf(point));
+                            }
+                        }
+                    }
+                    if (cpModel.loopPoints[0] != cpModel.loopPoints[cpModel.loopPoints.Count - 1])
+                    {
+                        cpModel.loopPoints.Add(cpModel.loopPoints[0]);
+                    }
+                    dbModel.loopPoints[i] = cpModel;
+                }
+
+                for (int i = 0; i < dbModel.loopPoints.Count; i++)
+                {
+
+                    for (int j = 0; j < dbModel.loopPoints.Count; j++)
+                    {
+                        if (i != j)
+                        {
+                            if (MethodCommand.PointsAllInPoints(dbModel.loopPoints[j].loopPoints, dbModel.loopPoints[i].loopPoints))
+                            {
+                                dbModel.loopPoints[j].ZIndex = "2";
+                            }
+                        }
+                    }
+                }
+            try
             {
-                dbModel.loopPoints.Add(i, new ColorAndPointItemModel());
-                HatchLoop loop = dbText.GetLoopAt(i);
-
-                 ColorAndPointItemModel cpModel = new ColorAndPointItemModel();
-                if (i==0)
-                {
-                    cpModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
-                }
-                else
-                {
-                    cpModel.Color = "#FFFFFF";
-                  //  cpModel.ZIndex = "1";
-                }
-                if (loop.IsPolyline)
-                {
-                    for (int j = 0; j < loop.Polyline.Count - 1; j++)
-                    {
-                        BulgeVertex vertex = loop.Polyline[j];
-                        BulgeVertex vertex1 = loop.Polyline[j + 1];
-                        if (vertex.Bulge != 0)
-                        {
-                           
-                            cpModel.loopPoints.AddRange(MethodCommand.GetArcPointsByBulge(vertex.Vertex, vertex1.Vertex, vertex.Bulge));
-                        }
-                        else
-                        {
-                            cpModel.loopPoints.Add(Point2d2Pointf(vertex.Vertex));
-                        }
-                    }
-                    if (dbText.NumberOfHatchLines > 0)
-                    {
-                        Line2dCollection cl = dbText.GetHatchLinesData();
-                    } //foreach (Line2d itemi in )
-                      //{
-
-                    //}
-
-                }
-                else
-                {
-                    Curve2dCollection col_cur2d = loop.Curves;
-                    foreach (Curve2d item in col_cur2d)
-                    {
-                        Point2d[] M_point2d = item.GetSamplePoints(20);
-                        foreach (Point2d point in M_point2d)
-                        {
-                            cpModel.loopPoints.Add(Point2d2Pointf(point));
-                        }
-                    }
-                }
-                if (cpModel.loopPoints[0] != cpModel.loopPoints[cpModel.loopPoints.Count - 1])
-                {
-                    cpModel.loopPoints.Add(cpModel.loopPoints[0]);
-                }
-                dbModel.loopPoints[i]=cpModel;
+                dbModel.Area = dbText.Area;
             }
-
-            for (int i = 0; i < dbModel.loopPoints.Count; i++)
-            {
-                
-                for (int j = 0; j < dbModel.loopPoints.Count; j++)
-                {
-                    if (i != j)
-                    {
-                        if (MethodCommand.PointsAllInPoints(dbModel.loopPoints[j].loopPoints, dbModel.loopPoints[i].loopPoints))
-                        {
-                            dbModel.loopPoints[j].ZIndex = "2";
-                        }
-                    }
-                }
-            }
-            dbModel.Area = dbText.Area;
+            catch
+            { }
             //   dbModel.Color =
             return dbModel;
         }
@@ -148,6 +153,24 @@ namespace RegulatoryPlan.Model
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
             dbModel.pointList = MethodCommand.GetArcPoints(line,line.Circumference);
             dbModel.Color= line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+            return dbModel;
+        }
+
+
+        public static CircleModel Ellipse2Model(Ellipse line)
+        {
+            CircleModel dbModel = new CircleModel();
+            dbModel.Center = Point3d2Pointf(line.Center);
+            //dbModel.MajorAxis= line.MajorRadius;
+            //dbModel.MinorAxis = line.MinorRadius;
+            MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);
+            MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
+            MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
+           
+            double length = line.RadiusRatio * (line.MinorRadius+line.MajorRadius);
+           dbModel.pointList= MethodCommand.GetArcPoints(line,length);
+            
+            dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
         }
 
@@ -233,5 +256,6 @@ namespace RegulatoryPlan.Model
         {
             return new System.Drawing.PointF((float)point2d.X, (float)point2d.Y);
         }
+     
     }
 }

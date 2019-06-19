@@ -18,6 +18,8 @@ namespace RegulatoryPlan.Command
                     break;
 
                 case DerivedTypeEnum.UnitPlan:
+                    UnitPlanMethod<UnitPlanModel> uMethod = new UnitPlanMethod<UnitPlanModel>();
+                    uMethod.GetAllUnitPlaneInfo(model as UnitPlanModel);
                     break;
                 case DerivedTypeEnum.PointsPlan:
                     break;

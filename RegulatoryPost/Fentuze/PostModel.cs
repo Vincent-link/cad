@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
-using RegulatoryModel.Model;
+
 using System.Collections;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using RegulatoryModel.Model;
 
 namespace RegulatoryPost.FenTuZe
 {
-  public  class PostModel
+    public class PostModel
     {
         public static void PostModelBase(ModelBase model)
         {
@@ -46,7 +47,7 @@ namespace RegulatoryPost.FenTuZe
 
 
                     string geoType = "";
-                   
+
 
                     foreach (object pf in roadModel)
                     {
@@ -108,7 +109,7 @@ namespace RegulatoryPost.FenTuZe
                         {
                             BlockInfoModel blm = pf as BlockInfoModel;
 
-                            if (blm.Arc != null && blm.Arc.Count>0)
+                            if (blm.Arc != null && blm.Arc.Count > 0)
                             {
                                 foreach (ArcModel arcModel in blm.Arc)
                                 {
@@ -118,48 +119,48 @@ namespace RegulatoryPost.FenTuZe
                                     {
                                         singlePoint.Add(Transform(arPt));
                                     }
-                                        geom.Add(singlePoint);
-                                        // 道路名称表，入库需要
-                                        row = attributeList.NewRow();
-                                        row["1"] = "";
-                                        attributeList.Rows.Add(row);
-                                        // 道路名称索引
-                                        attributeIndexList.Add("");
+                                    geom.Add(singlePoint);
+                                    // 道路名称表，入库需要
+                                    row = attributeList.NewRow();
+                                    row["1"] = "";
+                                    attributeList.Rows.Add(row);
+                                    // 道路名称索引
+                                    attributeIndexList.Add("");
                                     zIndex.Add(arcModel.ZIndex);
                                     // UUID
                                     Guid guid = new Guid();
-                                        guid = Guid.NewGuid();
-                                        string str = guid.ToString();
-                                        uuid.Add(str);
+                                    guid = Guid.NewGuid();
+                                    string str = guid.ToString();
+                                    uuid.Add(str);
 
-                                        // 实体颜色
-                                        colorList.Add(arcModel.Color);
-                                        // 实体类型
-                                        type.Add(geoType);
+                                    // 实体颜色
+                                    colorList.Add(arcModel.Color);
+                                    // 实体类型
+                                    type.Add(geoType);
 
-                                        // 实体所在图层名字
-                                        layerName.Add(layer.Name);
-                                        // 表名，默认a
-                                        tableName.Add("a");
+                                    // 实体所在图层名字
+                                    layerName.Add(layer.Name);
+                                    // 表名，默认a
+                                    tableName.Add("a");
 
-                                        // 图例
-                                        tuliList.Add("");
-                                        // 项目ID或叫城市ID
-                                        projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
-                                        // 图表名或者叫文件名
-                                        chartName = "123";
-                                        // 控规引导
-                                        kgGuide.Add("");
+                                    // 图例
+                                    tuliList.Add("");
+                                    // 项目ID或叫城市ID
+                                    projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                                    // 图表名或者叫文件名
+                                    chartName = "123";
+                                    // 控规引导
+                                    kgGuide.Add("");
 
-                                        //地理坐标系统编号
-                                        srid = "4326";
-                                        //配套设施所在地块集合
-                                        parentId.Add("");
-                                        // 文字内容(单行文字、多行文字、块参照等)
-                                        textContent.Add("");
-                                        // 块内容
-                                        blockContent.Add("");
-                                    }
+                                    //地理坐标系统编号
+                                    srid = "4326";
+                                    //配套设施所在地块集合
+                                    parentId.Add("");
+                                    // 文字内容(单行文字、多行文字、块参照等)
+                                    textContent.Add("");
+                                    // 块内容
+                                    blockContent.Add("");
+                                }
                             }
                             if (blm.Circle != null && blm.Circle.Count > 0)
                             {
@@ -220,8 +221,8 @@ namespace RegulatoryPost.FenTuZe
                                     blockContent.Add("");
                                 }
                             }
-                            
-                            if (blm.DbText != null )
+
+                            if (blm.DbText != null)
                             {
                                 foreach (DbTextModel circleModel in blm.DbText)
                                 {
@@ -276,7 +277,7 @@ namespace RegulatoryPost.FenTuZe
                             }
                             if (blm.DimensionPositon != null)
                             {
-                             
+
                             }
                             if (blm.Line != null && blm.Line.Count > 0)
                             {
@@ -284,58 +285,58 @@ namespace RegulatoryPost.FenTuZe
                                 {
                                     geoType = "polyline";
                                     ArrayList arrayList = new ArrayList();
-                                  
-                                   arrayList.Add(Transform(lineModel.StartPoint));
-                                   arrayList.Add(Transform(lineModel.EndPoint));
+
+                                    arrayList.Add(Transform(lineModel.StartPoint));
+                                    arrayList.Add(Transform(lineModel.EndPoint));
                                     geom.Add(arrayList);
                                     zIndex.Add(lineModel.ZIndex);
                                     // 道路名称表，入库需要
                                     row = attributeList.NewRow();
-                                        row["1"] = "";
-                                        attributeList.Rows.Add(row);
-                                        // 道路名称索引
-                                        attributeIndexList.Add("");
+                                    row["1"] = "";
+                                    attributeList.Rows.Add(row);
+                                    // 道路名称索引
+                                    attributeIndexList.Add("");
 
-                                        // UUID
-                                        Guid guid = new Guid();
-                                        guid = Guid.NewGuid();
-                                        string str = guid.ToString();
-                                        uuid.Add(str);
-
-
+                                    // UUID
+                                    Guid guid = new Guid();
+                                    guid = Guid.NewGuid();
+                                    string str = guid.ToString();
+                                    uuid.Add(str);
 
 
-                                        // 实体颜色
-                                        colorList.Add(layer.Color);
-                                        // 实体类型
-                                        type.Add(geoType);
 
-                                        // 实体所在图层名字
-                                        layerName.Add(layer.Name);
-                                        // 表名，默认a
-                                        tableName.Add("a");
 
-                                        // 图例
-                                        tuliList.Add("");
-                                        // 项目ID或叫城市ID
-                                        projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
-                                        // 图表名或者叫文件名
-                                        chartName = "123";
-                                        // 控规引导
-                                        kgGuide.Add("");
+                                    // 实体颜色
+                                    colorList.Add(layer.Color);
+                                    // 实体类型
+                                    type.Add(geoType);
 
-                                        //地理坐标系统编号
-                                        srid = "4326";
-                                        //配套设施所在地块集合
-                                        parentId.Add("");
-                                        // 文字内容(单行文字、多行文字、块参照等)
-                                        textContent.Add("");
-                                        // 块内容
-                                        blockContent.Add("");
-                                    }
-                                
+                                    // 实体所在图层名字
+                                    layerName.Add(layer.Name);
+                                    // 表名，默认a
+                                    tableName.Add("a");
+
+                                    // 图例
+                                    tuliList.Add("");
+                                    // 项目ID或叫城市ID
+                                    projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                                    // 图表名或者叫文件名
+                                    chartName = "123";
+                                    // 控规引导
+                                    kgGuide.Add("");
+
+                                    //地理坐标系统编号
+                                    srid = "4326";
+                                    //配套设施所在地块集合
+                                    parentId.Add("");
+                                    // 文字内容(单行文字、多行文字、块参照等)
+                                    textContent.Add("");
+                                    // 块内容
+                                    blockContent.Add("");
+                                }
+
                             }
-                            if (blm.PolyLine != null )
+                            if (blm.PolyLine != null)
                             {
                                 foreach (PolyLineModel arcModel in blm.PolyLine)
                                 {
@@ -351,12 +352,12 @@ namespace RegulatoryPost.FenTuZe
                                             geom.Add(arrayList);
                                         }
                                         else if (arPt is ArcModel)
-                                        {  
+                                        {
                                             ArrayList arrayList = new ArrayList();
                                             foreach (PointF arPtt in ((ArcModel)arPt).pointList)
                                             {
                                                 arrayList.Add(Transform(arPtt));
-                                                
+
                                             }
                                             geom.Add(arrayList);
                                         }
@@ -422,69 +423,69 @@ namespace RegulatoryPost.FenTuZe
                                         //    continue;
                                         //}
                                         ColorAndPointItemModel cpModel = arcModel.loopPoints[index];
-                                            foreach (PointF arPt in cpModel.loopPoints)
-                                            {
-                                                arrayList.Add(Transform(arPt));
-                                            }
-                                            zIndex.Add(cpModel.ZIndex);
-                                            if (arrayList.Count > 0)
-                                            {
-                                                geom.Add(arrayList);
-                                                // 道路名称表，入库需要
-                                                row = attributeList.NewRow();
-                                                row["1"] = "";
-                                                attributeList.Rows.Add(row);
-                                                // 道路名称索引
-                                                attributeIndexList.Add("");
-
-                                                // UUID
-                                                Guid guid = new Guid();
-                                                guid = Guid.NewGuid();
-                                                string str = guid.ToString();
-                                                uuid.Add(str);
-
-
-
-
-                                                // 实体颜色
-                                                colorList.Add(cpModel.Color);
-                                                // 实体类型
-                                                type.Add(geoType);
-
-                                                // 实体所在图层名字
-                                                layerName.Add(layer.Name);
-                                                // 表名，默认a
-                                                tableName.Add("a");
-
-                                                // 图例
-                                                tuliList.Add("");
-                                                // 项目ID或叫城市ID
-                                                projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
-                                                // 图表名或者叫文件名
-                                                chartName = "123";
-                                                // 控规引导
-                                                kgGuide.Add("");
-
-                                                //地理坐标系统编号
-                                                srid = "4326";
-                                                //配套设施所在地块集合
-                                                parentId.Add("");
-                                                // 文字内容(单行文字、多行文字、块参照等)
-                                                textContent.Add("");
-                                                // 块内容
-                                                blockContent.Add("");
-                                            }
+                                        foreach (PointF arPt in cpModel.loopPoints)
+                                        {
+                                            arrayList.Add(Transform(arPt));
                                         }
+                                        zIndex.Add(cpModel.ZIndex);
+                                        if (arrayList.Count > 0)
+                                        {
+                                            geom.Add(arrayList);
+                                            // 道路名称表，入库需要
+                                            row = attributeList.NewRow();
+                                            row["1"] = "";
+                                            attributeList.Rows.Add(row);
+                                            // 道路名称索引
+                                            attributeIndexList.Add("");
 
+                                            // UUID
+                                            Guid guid = new Guid();
+                                            guid = Guid.NewGuid();
+                                            string str = guid.ToString();
+                                            uuid.Add(str);
+
+
+
+
+                                            // 实体颜色
+                                            colorList.Add(cpModel.Color);
+                                            // 实体类型
+                                            type.Add(geoType);
+
+                                            // 实体所在图层名字
+                                            layerName.Add(layer.Name);
+                                            // 表名，默认a
+                                            tableName.Add("a");
+
+                                            // 图例
+                                            tuliList.Add("");
+                                            // 项目ID或叫城市ID
+                                            projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                                            // 图表名或者叫文件名
+                                            chartName = "123";
+                                            // 控规引导
+                                            kgGuide.Add("");
+
+                                            //地理坐标系统编号
+                                            srid = "4326";
+                                            //配套设施所在地块集合
+                                            parentId.Add("");
+                                            // 文字内容(单行文字、多行文字、块参照等)
+                                            textContent.Add("");
+                                            // 块内容
+                                            blockContent.Add("");
+                                        }
                                     }
-                                
+
+                                }
+
                             }
 
                         }
 
                     }
                 }
-              
+
             }
 
             // JSON化
@@ -688,7 +689,7 @@ namespace RegulatoryPost.FenTuZe
                         // 块内容
                         blockContent.Add("");
                     }
-                  
+
                 }
             }
 
@@ -750,6 +751,20 @@ namespace RegulatoryPost.FenTuZe
             FenTuZe.PostData(result);
         }
 
+        // 单元图则
+        public static void PostModelBase(UnitPlanModel model)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            foreach (LayerModel layer in model.allLines)
+            {
+                foreach (object unitPlanModel in layer.modelItemList)
+                {
+                    result = (Dictionary<string, string>)unitPlanModel;
+                }
+            }
+
+            FenTuZe.PostData(result);
+        }
         public static void PostModelBase(RoadNoSectionModel model)
         {
             ArrayList uuid = new ArrayList();
@@ -951,6 +966,7 @@ namespace RegulatoryPost.FenTuZe
             FenTuZe.PostData(result);
         }
 
+
         public static void PostModelBase(PipeModel model)
         {
             ArrayList uuid = new ArrayList();
@@ -1025,9 +1041,9 @@ namespace RegulatoryPost.FenTuZe
                     textContent.Add(roadModel.PipeText);
                     // 块内容
                     blockContent.Add("");
-                
-                //如果是道路多段线
-                if (roadModel.PipeType.ToLower() == "polyline")
+
+                    //如果是道路多段线
+                    if (roadModel.PipeType.ToLower() == "polyline")
                     {
                         // UUID
                         Guid guid = new Guid();
@@ -1039,7 +1055,7 @@ namespace RegulatoryPost.FenTuZe
                         ArrayList singlePoint = new ArrayList();
                         foreach (PointF point in roadModel.pipeList)
                         {
-                           
+
                             singlePoint.Add(Transform(point));
                         }
                         geom.Add(singlePoint);
@@ -1062,7 +1078,7 @@ namespace RegulatoryPost.FenTuZe
                         }
                         else
                         {
-                            roadModel.PipeText= roadModel.PipeText + "_S1";
+                            roadModel.PipeText = roadModel.PipeText + "_S1";
                             attributeIndexList.Add(roadModel.PipeText);
                         }
 
@@ -1216,5 +1232,6 @@ namespace RegulatoryPost.FenTuZe
 
             return output;
         }
+
     }
 }

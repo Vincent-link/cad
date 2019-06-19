@@ -45,7 +45,7 @@ namespace RegulatoryModel.Model
         /// 文本
         /// </summary>
         public List<DbTextModel> DbText { get; set; }
-
+ 
         /// <summary>
         /// 文本样式
         /// </summary>

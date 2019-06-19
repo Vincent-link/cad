@@ -105,9 +105,9 @@ namespace RegulatoryPlan.Method
             List<MText> textList = new List<MText>();
             Document doc = Application.DocumentManager.MdiActiveDocument;
             ObjectIdCollection ids = new ObjectIdCollection();
-
+            string LengedName =UI.MainForm.isOnlyModel?"图例名称":"图例";
             PromptSelectionResult ProSset = null;
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例框") };
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName,LengedName) };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
 
@@ -130,8 +130,8 @@ namespace RegulatoryPlan.Method
                         //{
                             DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
 
-                            if (ob is MText && (ob as MText).BlockName.ToLower() == "*model_space")
-                            {
+                            if (ob is MText && (((ob as MText).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel) || (!UI.MainForm.isOnlyModel)))
+                        {
                                 textList.Add(ob as MText);
                                // model.LegendPoints.Add(ad, PolylineMethod.GetPolyLineInfo(ob as Polyline));
                                 ad++;
@@ -154,7 +154,7 @@ namespace RegulatoryPlan.Method
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, MethodCommand.LegendLayer) };
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例") };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
 
@@ -189,13 +189,19 @@ namespace RegulatoryPlan.Method
                         //  {
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
                        // if (!aa.Contains((ob as Polyline).BlockName)) { aa.Add((ob as Polyline).BlockName); }
-                        if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
+                        if (ob is Polyline && (((ob as Polyline).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel) || (!UI.MainForm.isOnlyModel)))
                         {
-                            allLengenPolyine.Add((ob as Polyline));
-                            //  lengedList.Add(ob as Polyline);
+                            if (ob == null)
+                            {
+
+                            }
+                            else
+                            {
+                                allLengenPolyine.Add((ob as Polyline));
+                            }//  lengedList.Add(ob as Polyline);
                             //  model.LegendPoints.Add(ad, PolylineMethod.GetPolyLineInfoPt(ob as Polyline));
                             // ad++;
-                        } else if (ob is BlockReference && (ob as BlockReference).BlockName.ToLower() == "*model_space")
+                        } else if (ob is BlockReference && (((ob as BlockReference).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel)|| (!UI.MainForm.isOnlyModel)))
                         {
                             blockTableRecords.Add(ob as BlockReference);
                         }
@@ -341,40 +347,50 @@ namespace RegulatoryPlan.Method
         private void AnalysisBlcokInfo(BlockInfoModel plModel, DBObject ob)
         {
 
-          
-              
 
-                if (ob is Polyline)
-                {
 
-                    plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+            if (ob is Polyline)
+            {
 
-                }
-                else if (ob is BlockReference)
-                {
-                    plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
-                }
-                else if (ob is DBText)
-                {
-                    plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
-                }
-                else if (ob is MText)
-                {
-                    plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText));
-                }
-                else if (ob is Hatch)
-                {
+                plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
 
-                    plModel.Hatch.Add( AutoCad2ModelTools.Hatch2Model(ob as Hatch));
+            }
+            else if (ob is BlockReference)
+            {
+                plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
+            }
+            else if (ob is DBText)
+            {
+                plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
+            }
+            else if (ob is MText)
+            {
+                plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText));
+            }
+            else if (ob is Hatch)
+            {
+                plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch));
 
-                }
-                else if (ob is Circle)
-                {
+            }
+            else if (ob is Circle)
+            {
 
-                    plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+                plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
 
-                }
-                else if (ob is Entity)
+            }
+            else if (ob is Ellipse)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+
+            }
+            else if (ob is Line)
+            {
+
+                plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line));
+
+            }
+            else if (ob is Entity)
                 {
                     Entity ety = ob as Entity;
                     DBObjectCollection objs = new DBObjectCollection();
@@ -390,49 +406,68 @@ namespace RegulatoryPlan.Method
         }
         private BlockInfoModel AnalysisBlcokInfo(DBObject ob)
         {
+            
 
-            if (ob is Entity && (ob as Entity).BlockName.ToLower() == "*model_space")
+            if (ob is Entity && (((ob as Entity).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel) || (!UI.MainForm.isOnlyModel)))
             {
                 BlockInfoModel plModel = new BlockInfoModel();
-
-                if (ob is Polyline)
+                try
                 {
-
-                    plModel.PolyLine.Add( AutoCad2ModelTools.Polyline2Model(ob as Polyline));
-
-                }
-                else if (ob is BlockReference)
-                {
-                    plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
-                }
-                else if (ob is DBText)
-                {
-                    plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
-                }
-                else if (ob is MText)
-                {
-                    plModel.DbText.Add( AutoCad2ModelTools.DbText2Model(ob as MText));
-                }
-                else if (ob is Hatch)
-                {
- plModel.Hatch.Add( AutoCad2ModelTools.Hatch2Model(ob as Hatch));
-
-                }
-                else if (ob is Circle)
-                {
-
-                    plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
-
-                }
-                else if (ob is Entity)
-                {
-                    Entity ety = ob as Entity;
-                    DBObjectCollection objs = new DBObjectCollection();
-                    ety.Explode(objs);
-                    foreach (DBObject obj in objs)
+                    if (ob is Polyline)
                     {
-                        AnalysisBlcokInfo(plModel, obj);
+
+                        plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+
                     }
+                    else if (ob is BlockReference)
+                    {
+                        plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
+                    }
+                    else if (ob is DBText)
+                    {
+                        plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
+                    }
+                    else if (ob is MText)
+                    {
+                        plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText));
+                    }
+                    else if (ob is Hatch)
+                    {
+                        plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch));
+
+                    }
+                    else if (ob is Circle)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+
+                    }
+                    else if (ob is Ellipse)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+
+                    }
+                    else if (ob is Line)
+                    {
+
+                        plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line));
+
+                    }
+                    else if (ob is Entity)
+                    {
+                        Entity ety = ob as Entity;
+                        DBObjectCollection objs = new DBObjectCollection();
+                        ety.Explode(objs);
+                        foreach (DBObject obj in objs)
+                        {
+                            AnalysisBlcokInfo(plModel, obj);
+                        }
+                    }
+                }
+                catch
+                {
+
                 }
                 return plModel;
             }

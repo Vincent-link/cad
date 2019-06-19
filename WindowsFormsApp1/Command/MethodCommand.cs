@@ -15,7 +15,7 @@ namespace RegulatoryPlan.Command
 {
     public static class MethodCommand
     {
-        public static string LegendLayer = "图例框";
+        public static string LegendLayer = "图例";
 
         public   static string fileName = "";
         public    static string cityName = "";
@@ -194,10 +194,13 @@ namespace RegulatoryPlan.Command
                 }
 
                 thres = maxX - minX;
-                if (txt.Location.X < thres + maxX && txt.Location.Y > minY && txt.Location.Y < maxY)
+                if (txt.Location.X>maxX&& txt.Location.X < thres + maxX && txt.Location.Y > minY && txt.Location.Y < maxY)
                 {
+                    if (line.LayerName != null && line.LayerName == "公厕")
+                    { }
                     line.LayerName = txt.Text;
-                    return true;
+                    res = true;
+                    break;
                 }
             }
             return res;
@@ -269,7 +272,7 @@ namespace RegulatoryPlan.Command
 
             foreach (Polyline line in polylines)
             {
-                if (line.Area.ToString("F5") == maxArea.ToString("F5"))
+                if (line.Area.ToString("F0") == maxArea.ToString("F0"))
                 {
                     allPolines[0].Add(line);
                 }
@@ -605,7 +608,8 @@ namespace RegulatoryPlan.Command
 
             for (int i = 0; i < 20; i++)
             {
-                Point3d pt = cre.GetPointAtParameter(length*(i/20.0));
+                double dis=cre.GetParameterAtDistance(length * (i / 20.0));
+                Point3d pt = cre.GetPointAtParameter(dis);
                 points.Add(new PointF((float)pt.X, (float)pt.Y));
             }
             points.Add(points[0]);
@@ -835,6 +839,95 @@ namespace RegulatoryPlan.Command
                 return 1;  // 多边形内
             return -1;     // 多边形外
         }
+        //定数等分单条曲线
+        public static DBObjectCollection AveragesCurve(Curve cv, int n)
+        {
+            double ep = cv.EndParam;
+            double len = cv.GetDistanceAtParameter(ep);
+            double split = len / n;
+
+            DoubleCollection pas = new DoubleCollection();
+            if (cv.Closed)                //闭合曲线要先断开
+                pas.Add(cv.StartParam);
+
+            for (int i = 1; i < n; i++)
+            {
+                pas.Add(cv.GetParameterAtDistance(i * split));
+            }
+            cv.Erase();
+            return cv.GetSplitCurves(pas);
+        }
+        //等距等分单条曲线(dist<0反向等分)
+        public static DBObjectCollection AveragesCurve(Curve cv, Double dist)
+        {
+            double ep = cv.EndParam;
+            double len = cv.GetDistanceAtParameter(ep);
+            double dst = 0;
+            //从最后开始等分
+            if (dist < 0)
+            {
+                dist = -dist;
+                dst = (cv.GetDistanceAtParameter(cv.EndParam) % dist) - dist;
+            }
+
+            DoubleCollection pas = new DoubleCollection();
+            if (cv.Closed) pas.Add(cv.StartParam);//闭合曲线要先断开
+
+            while (true)
+            {
+                dst += dist;
+                if (dst >= len) break;
+                pas.Add(cv.GetParameterAtDistance(dst));
+            }
+
+            cv.Erase();
+            return cv.GetSplitCurves(pas);
+        }
+
+        /// <summary>
+        /// 多段线转curve2d
+        /// </summary>
+        /// <param name="pPoly"></param>
+        /// <returns></returns>
+     public   static Curve2d convertPolylineToGeCurve(Polyline pPoly)
+
+        {
+            List<Curve2d> geCurves = new List<Curve2d>();
+            Curve2d out_pGeCurve;
+            //  PointerArray geCurves;
+            Vector3d normal = pPoly.Normal;
+            // Is the polyline closed or open
+            int nSegs = -1;
+            if (pPoly.Closed)
+                nSegs = pPoly.NumberOfVertices;
+            else
+                nSegs = pPoly.NumberOfVertices - 1;
+
+            for (int i = 0; i < nSegs; i++)
+            {
+                if (pPoly.GetSegmentType(i) == SegmentType.Line)
+                {
+                    LineSegment2d line;
+                    line = pPoly.GetLineSegment2dAt(i);
+
+                    geCurves.Add(line);
+                }
+                else if (pPoly.GetSegmentType(i) == SegmentType.Arc)
+                {
+                    CircularArc2d arc;
+                    arc = pPoly.GetArcSegment2dAt(i);
+
+                    geCurves.Add(arc);
+                }
+            }// for
+            if (geCurves.Count == 1)
+                out_pGeCurve = (Curve2d)(geCurves[0]);
+            else
+                out_pGeCurve = new CompositeCurve2d(geCurves.ToArray());
+            return out_pGeCurve;
+        }
+
+   
     }
 }
         

@@ -73,17 +73,13 @@ namespace RegulatoryPlan.Method
 
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
 
-                        if (ob is DBText)
-                        {
-
                             if ((ob as DBText).BlockName.ToLower() == "*model_space")
                             {
 
                                 roadText.Add((ob as DBText));
-                                rt++;
                             }
                         }
-                    }
+                    
                     for (int i = 0; i < oids1.Length; i++)
                     {
 
