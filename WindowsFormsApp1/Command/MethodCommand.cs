@@ -228,7 +228,7 @@ namespace RegulatoryPlan.Command
                 cityName = city;
                 dp = derivedType;
                 num = 0;
-                Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docChange);
+                Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docAutoChange);
                 Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
                 Application.DocumentManager.DocumentActivated -= docChange;
                 Application.DocumentManager.MdiActiveDocument.CloseAndDiscard();
@@ -261,9 +261,30 @@ namespace RegulatoryPlan.Command
                 {
                     num++;
                     MainForm mf = new MainForm(cityName, dp,true);
-                   // mf.ShowDialog();
+                    mf.Show();
                    // mf.Close();
                     
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 文档发生改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void docAutoChange(object sender, DocumentCollectionEventArgs e)
+        {
+            try
+            {
+                if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
+                {
+                    num++;
+                    MainForm mf = new MainForm(cityName, dp);
+                    mf.ShowDialog();
+                    // mf.Close();
+
                 }
             }
             catch { }
@@ -621,7 +642,7 @@ namespace RegulatoryPlan.Command
         public static List<PointF> GetArcPoints(Curve cre,double length)
         {
             List<PointF> points = new List<PointF>();
-            length = cre.EndParam;
+          //  length = cre.EndParam;
 
             for (int i = 0; i < 20; i++)
             {
