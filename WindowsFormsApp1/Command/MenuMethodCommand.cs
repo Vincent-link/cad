@@ -46,15 +46,6 @@ namespace RegulatoryPlan.Command
             r.LayerSelect();
         }
 
-        // 按图层读取
-        [CommandMethod("单元图则")]
-        static public void Danc()
-        {
-            ModelBase model = new ModelBase();
-
-            UnitPlanMethod<UnitPlanModel> uMethod = new UnitPlanMethod<UnitPlanModel>();
-            uMethod.ManualSelect(model as UnitPlanModel);
-        }
 
     }
 }
