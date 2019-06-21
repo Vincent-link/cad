@@ -227,14 +227,17 @@ namespace RegulatoryPlan.Method
                                 {
                                     if (plModel.Hatch != null)
                                     {
+                                        HatchModel rem =new HatchModel();
                                         foreach (HatchModel hatchModel in plModel.Hatch)
                                         {
-                                            if (polyline.Closed&& hatchModel.Area ==polyline.Area)
+                                            if (polyline.Closed&& hatchModel.Area.ToString("F2") ==polyline.Area.ToString("F2"))
                                             {
                                                 legm.BackGround =hatchModel.loopPoints.Count>0? hatchModel.loopPoints[0].Color:"";
+                                                rem = hatchModel;
                                                 break;
                                             }
                                         }
+                                        plModel.Hatch.Remove(rem);
                                     }
                                     List<object> obj = new List<object>() { plModel };
                                     legm.GemoModels.Add(plModel);
