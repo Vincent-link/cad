@@ -35,7 +35,8 @@ namespace RegulatoryPlan.Menu
 
             //单级
             AcadPopupMenuItem pmi2 = pmParnet.AddMenuItem(pmParnet.Count + 1, "数据导出 ", "ShowMainForm\n");
-
+            //单级
+            AcadPopupMenuItem pmi3 = pmParnet.AddMenuItem(pmParnet.Count + 1, "一般数据检测 ", "AutoShowMainForm\n");
             //将创建的菜单加入到CAD的菜单中
             pmParnet.InsertInMenuBar(app.MenuBar.Count + 1);
         }

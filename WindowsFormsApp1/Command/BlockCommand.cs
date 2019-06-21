@@ -136,7 +136,7 @@ namespace RegulatoryPlan.Command
             Database db = doc.Database;
             using (Transaction trans = db.TransactionManager.StartTransaction())
             {
-                BlockTableRecord block = trans.GetObject(br.BlockTableRecord, OpenMode.ForWrite) as BlockTableRecord;
+                BlockTableRecord block = trans.GetObject(br.BlockTableRecord, OpenMode.ForRead) as BlockTableRecord;
                 foreach (ObjectId id in block)
                 {
                     Entity entity = trans.GetObject(id, OpenMode.ForRead) as Entity;

@@ -273,7 +273,17 @@ namespace RegulatoryModel.Command
         {
             return  JsonCommand.ToJson(key) + ":" + JsonCommand.ToJson(value) + ",";
         }
-   
+
+        public static string ToJson(string key, int value)
+        {
+            return JsonCommand.ToJson(key) + ":" + JsonCommand.ToJson(value.ToString()) + ",";
+        }
+        public static string ToJson(string key, float value)
+        {
+            return JsonCommand.ToJson(key) + ":" + JsonCommand.ToJson(value.ToString()) + ",";
+        }
+
+
         public static string ToJson(List<object> pfList)
         {
 

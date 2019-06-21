@@ -256,6 +256,34 @@ namespace RegulatoryPlan.Model
         {
             return new System.Drawing.PointF((float)point2d.X, (float)point2d.Y);
         }
-     
+
+        internal static CircleModel Polyline2DModel(Polyline2d line)
+        {
+            CircleModel dbModel = new CircleModel();
+
+
+            double length = line.Length;
+            dbModel.pointList = MethodCommand.GetArcPoints(line, length);
+
+            dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+            return dbModel;
+        }
+
+        internal static CircleModel Arc2Model(Arc line)
+        {
+            CircleModel dbModel = new CircleModel();
+            dbModel.Center = Point3d2Pointf(line.Center);
+            //dbModel.MajorAxis= line.MajorRadius;
+            //dbModel.MinorAxis = line.MinorRadius;
+            MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);
+            MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
+            MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
+          
+            double length = line.Length;
+            dbModel.pointList = MethodCommand.GetArcPoints(line, length);
+
+            dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+            return dbModel;
+        }
     }
 }

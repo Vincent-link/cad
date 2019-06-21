@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using Autodesk.AutoCAD.Runtime;
 using RegulatoryModel.Model;
 using RegulatoryPlan.Method;
@@ -21,6 +23,29 @@ namespace RegulatoryPlan.Command
                 MethodCommand.OpenFile(cf.openFile,cf.openCity,cf.derivedType);
                
             }
+            //MainForm form = new MainForm();
+            //form.ShowDialog();
+        }
+
+        [CommandMethod("AutoShowMainForm")]
+        public void AutoShowMain()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            
+
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string file = dialog.SelectedPath;
+                string[] files = Directory.GetFiles(file);
+                foreach (string item in files)
+                {
+                    if (Path.GetExtension(item).ToLower() == ".dwg")
+                    { MethodCommand.AutoOpenFile(item, "成安县", DerivedTypeEnum.None); }
+                }
+            }
+       
+
+            
             //MainForm form = new MainForm();
             //form.ShowDialog();
         }
