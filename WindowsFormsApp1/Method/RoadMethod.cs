@@ -210,6 +210,7 @@ namespace RegulatoryPlan.Method
             item.RoadWidth = line.ConstantWidth.ToString();
             item.RoadType = "polyline";
             item.ColorIndex = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+            item.roadList = PolylineMethod.GetPolyLineInfoPt(line);
             Document doc = Application.DocumentManager.MdiActiveDocument;
             Database db = doc.Database;
             using (Transaction tran = db.TransactionManager.StartTransaction())
@@ -225,12 +226,14 @@ namespace RegulatoryPlan.Method
                         }
                         Point2d pt = mText.AlignmentPoint.Convert2d(new Plane());
 
+                     
 
                         if (PolylineMethod.PtInPolyLine(pt, line.GetPoint2dAt(i), line.GetPoint2dAt(i + 1), 20) == 1)
                         {
                             item.RoadName = mText.TextString.Replace(" ", "").Replace("　", "");
                             item.RoadNameLocaiton = new List<System.Drawing.PointF>();
                             item.sectionList = new List<RoadSectionItemModel>();
+                       
                             double middleLen = MethodCommand.DistancePointToPoint(mText.Position, mText.AlignmentPoint);
                             double textLen = MethodCommand.GetEndLengthByTheorem(middleLen, mText.Height / 2) * 2;
                             double partLength = textLen / item.RoadName.Length;
@@ -246,7 +249,6 @@ namespace RegulatoryPlan.Method
                             break;
                         }
 
-                        item.roadList = PolylineMethod.GetPolyLineInfoPt(line);
                     }
                     //获取横截面
                   

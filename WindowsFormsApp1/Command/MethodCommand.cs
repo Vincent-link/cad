@@ -220,8 +220,23 @@ namespace RegulatoryPlan.Command
             }
             catch { }
         }
+        internal static void AutoOpenFile(string file, string city, DerivedTypeEnum derivedType)
+        {
+            try
+            {
+                fileName = file;
+                cityName = city;
+                dp = derivedType;
+                num = 0;
+                Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docChange);
+                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
+                Application.DocumentManager.DocumentActivated -= docChange;
+                Application.DocumentManager.MdiActiveDocument.CloseAndDiscard();
+            }
+            catch { }
+        }
 
-  
+
 
         public static void OpenFile(string file, string city)
         {
@@ -245,8 +260,10 @@ namespace RegulatoryPlan.Command
                 if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
                 {
                     num++;
-                    MainForm mf = new MainForm(cityName, dp);
-                    mf.Show();
+                    MainForm mf = new MainForm(cityName, dp,true);
+                   // mf.ShowDialog();
+                   // mf.Close();
+                    
                 }
             }
             catch { }

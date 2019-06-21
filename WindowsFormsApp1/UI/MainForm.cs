@@ -33,6 +33,16 @@ namespace RegulatoryPlan.UI
             this.lb_City.Text = cityName;
         }
 
+        public MainForm(string cityName, DerivedTypeEnum derivedType,bool auTo)
+        {
+            crtType = derivedType;
+            InitializeComponent();
+            InitPage();
+            AutoInitData();
+            this.lb_City.Text = cityName;
+            //this.Close();
+        }
+
         private void InitPage()
         {
             this.lb_DrawingName.Text = DrawingMethod.GetDrawingName();
@@ -110,6 +120,9 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.Road:
                     PostModel.PostModelBase(model as RoadNoSectionModel);
                     break;
+                case DerivedTypeEnum.None:
+                    PostModel.PostModelBase(model);
+                    break;
 
             }
         }
@@ -164,6 +177,12 @@ namespace RegulatoryPlan.UI
             int bimIndex = 0;
             int colIndex = 0;
             string colText = dataKey + "图形";
+            if (!tb.Columns.Contains(colText))
+            {
+                //  colNum++;
+                DataColumn dc = new DataColumn(colText);
+                tb.Columns.Add(dc);
+            }
             foreach (BlockInfoModel item in blList)
             {
 
@@ -171,14 +190,8 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (DbTextModel lineMode in item.DbText)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            //  colNum++;
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<DbTextModel>(lineMode, "文本");
-                        bimIndex++;
+                        dr[colText] += ReflectionClass.GetAllPropertyInfo<DbTextModel>(lineMode, "文本");
+                       
                     }
                 }
 
@@ -186,14 +199,7 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (PolyLineModel lineMode in item.PolyLine)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<PolyLineModel>(lineMode, "多段线");
-
-                        bimIndex++;
+                        dr[colText]+= ReflectionClass.GetAllPropertyInfo<PolyLineModel>(lineMode, "多段线");
                     }
                 }
 
@@ -201,28 +207,14 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (LineModel lineMode in item.Line)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<LineModel>(lineMode, "直线");
-
-                        bimIndex++;
+                        dr[colText] += ReflectionClass.GetAllPropertyInfo<LineModel>(lineMode, "直线");
                     }
                 }
                 if (item.Hatch != null)
                 {
                     foreach (HatchModel lineMode in item.Hatch)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<HatchModel>(lineMode, "填充");
-
-                        bimIndex++;
+                        dr[colText] += ReflectionClass.GetAllPropertyInfo<HatchModel>(lineMode, "填充");
                     }
 
 
@@ -232,14 +224,7 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (CircleModel lineMode in item.Circle)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<CircleModel>(lineMode, "圆");
-
-                        bimIndex++;
+                        dr[colText ] += ReflectionClass.GetAllPropertyInfo<CircleModel>(lineMode, "圆");
                     }
                 }
 
@@ -252,6 +237,12 @@ namespace RegulatoryPlan.UI
             int bimIndex = 0;
             int colIndex = 0;
             string colText = dataKey + "图形";
+            if (!tb.Columns.Contains(colText))
+            {
+                //  colNum++;
+                DataColumn dc = new DataColumn(colText );
+                tb.Columns.Add(dc);
+            }
             foreach (BlockInfoModel item in blList)
             {
 
@@ -259,13 +250,13 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (DbTextModel lineMode in item.DbText)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            //  colNum++;
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<DbTextModel>(lineMode, "文本");
+                        //if (!tb.Columns.Contains(colText + (bimIndex + 1)))
+                        //{
+                        //    //  colNum++;
+                        //    DataColumn dc = new DataColumn(colText + (bimIndex + 1));
+                        //    tb.Columns.Add(dc);
+                        //}
+                        dr[colText ] += ReflectionClass.GetAllPropertyInfo<DbTextModel>(lineMode, "文本");
                         bimIndex++; }
                 }
 
@@ -273,12 +264,12 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (PolyLineModel lineMode in item.PolyLine)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<PolyLineModel>(lineMode, "多段线");
+                        //if (!tb.Columns.Contains(colText + (bimIndex + 1)))
+                        //{
+                        //    DataColumn dc = new DataColumn(colText + (bimIndex + 1));
+                        //    tb.Columns.Add(dc);
+                        //}
+                        dr[colText ] += ReflectionClass.GetAllPropertyInfo<PolyLineModel>(lineMode, "多段线");
 
                         bimIndex++;
                     }
@@ -288,12 +279,12 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (LineModel lineMode in item.Line)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<LineModel>(lineMode, "直线");
+                        //if (!tb.Columns.Contains(colText + (bimIndex + 1)))
+                        //{
+                        //    DataColumn dc = new DataColumn(colText + (bimIndex + 1));
+                        //    tb.Columns.Add(dc);
+                        //}
+                        dr[colText ] += ReflectionClass.GetAllPropertyInfo<LineModel>(lineMode, "直线");
 
                         bimIndex++;
                     }
@@ -302,12 +293,12 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (HatchModel lineMode in item.Hatch)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<HatchModel>(lineMode, "填充");
+                        //if (!tb.Columns.Contains(colText + (bimIndex + 1)))
+                        //{
+                        //    DataColumn dc = new DataColumn(colText + (bimIndex + 1));
+                        //    tb.Columns.Add(dc);
+                        //}
+                        dr[colText ]+= ReflectionClass.GetAllPropertyInfo<HatchModel>(lineMode, "填充");
 
                         bimIndex++;
                     }
@@ -316,12 +307,12 @@ namespace RegulatoryPlan.UI
                 {
                     foreach (CircleModel lineMode in item.Circle)
                     {
-                        if (!tb.Columns.Contains(colText + (bimIndex + 1)))
-                        {
-                            DataColumn dc = new DataColumn(colText + (bimIndex + 1));
-                            tb.Columns.Add(dc);
-                        }
-                        dr[colText + (bimIndex + 1)] = ReflectionClass.GetAllPropertyInfo<CircleModel>(lineMode, "圆");
+                        //if (!tb.Columns.Contains(colText + (bimIndex + 1)))
+                        //{
+                        //    DataColumn dc = new DataColumn(colText + (bimIndex + 1));
+                        //    tb.Columns.Add(dc);
+                        //}
+                        dr[colText] += ReflectionClass.GetAllPropertyInfo<CircleModel>(lineMode, "圆");
 
                         bimIndex++;
                     }
@@ -350,13 +341,14 @@ namespace RegulatoryPlan.UI
             //  mb.AddSpecialLayerModel();
             DataTable tb = new DataTable();
             tb.Columns.Add("所在图层");
-            tb.Columns.Add("数据图层");
-            tb.Columns.Add("图例框顶点");
+      
             //tb.Columns.Add("图例文本");
             //tb.Columns.Add("图例线段");
 
             if (mb.LegendList != null)
             {
+                tb.Columns.Add("数据图层");
+                tb.Columns.Add("图例框顶点");
                 for (int i = 0; i < mb.LegendList.Count; i++)
                 {
                     DataRow dr = tb.NewRow();
@@ -421,6 +413,114 @@ namespace RegulatoryPlan.UI
 
             this.dataGridView1.DataSource = tb;
             model = mb;
+        }
+        private void AutoInitData()
+        {
+            
+                ModelBase mb = new ModelBase();
+            try
+            {
+                mb = ChangeToModel(mb);
+                isOnlyModel = mb.IsOnlyModel;
+                mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
+                ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
+                // mbm.GetLengedPoints(mb);
+                mbm.GetAllLengedGemo(mb);
+                mbm.GetExportLayers(mb);
+                LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
+                layerSpecial.AddSpecialLayerModel(mb);
+                //  mb.AddSpecialLayerModel();
+                DataTable tb = new DataTable();
+                tb.Columns.Add("所在图层");
+
+                //tb.Columns.Add("图例文本");
+                //tb.Columns.Add("图例线段");
+
+                if (mb.LegendList != null)
+                {
+                    tb.Columns.Add("数据图层");
+                    tb.Columns.Add("图例框顶点");
+                    for (int i = 0; i < mb.LegendList.Count; i++)
+                    {
+                        DataRow dr = tb.NewRow();
+                        dr[0] = MethodCommand.LegendLayer;
+
+                        dr["数据图层"] = mb.LegendList[i].LayerName;
+                        string peakPoint = "";
+
+                        foreach (PointF PT in mb.LegendList[i].BoxPointList)
+                        {
+                            peakPoint += "Point:" + PT.X + "," + PT.Y + ";";
+                        }
+                        dr["图例框顶点"] = peakPoint;
+                        AnalyBlockList(tb, dr, mb.LegendList[i].GemoModels, "图例");
+                        //for (int j = 0; j < mb.LegendList.Count; j++)
+                        //{
+                        //    if (colNum <= j + 1)
+                        //    {
+                        //        colNum++;
+                        //        DataColumn dc = new DataColumn("Point" + (j + 1));
+                        //        tb.Columns.Add(dc);
+                        //    }
+                        //    dr[j + 1] = "X:" + mb.LegendList[i][j].X + ",Y:" + mb.LegendList[i][j].Y;
+                        //}
+                        tb.Rows.Add(dr);
+                    }
+                }
+                if (mb.LayerList != null)
+                {
+                    TreeNode rotNode = new TreeNode("图层筛选");
+                    this.treeView1.Nodes.Add(rotNode);
+                    foreach (string layer in mb.LayerList)
+                    {
+                        TreeNode node = new TreeNode(layer);
+                        rotNode.Nodes.Add(node);
+                    }
+                    this.treeView1.ExpandAll();
+                }
+                if (mb is RoadModel)
+                {
+                    if (mb is RoadSectionModel)
+                    {
+                        LayerModel spModel = (mb as RoadSectionModel).allLines[(mb as RoadSectionModel).allLines.Count - 1];
+                        GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                    }
+                    else
+                    {
+                        LayerModel spModel = (mb as RoadNoSectionModel).allLines[(mb as RoadNoSectionModel).allLines.Count - 1];
+                        GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                    }
+                }
+                else if (mb is PipeModel)
+                {
+                    LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
+                    GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                }
+                else if (mb is UnitPlanModel)
+                {
+                    LayerModel spModel = (mb as UnitPlanModel).allLines[(mb as UnitPlanModel).allLines.Count - 1];
+                    GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                }
+
+                this.dataGridView1.DataSource = tb;
+                model = mb;
+                if (treeView1.Nodes.Count > 0)
+                {
+                    treeView1.Nodes[0].Checked = true;
+                }
+            }
+            catch
+            {
+                System.IO.FileStream fs = new System.IO.FileStream(@"C:\Users\Administrator\Desktop\测试结果.txt", System.IO.FileMode.Create);
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(fs);
+                //开始写入
+                sw.WriteLine(mb.DocName);
+                //清空缓冲区
+                sw.Flush();
+                //关闭流
+                sw.Close();
+                fs.Close();
+            }
         }
 
         private void GetLineDataRowInfo(Dictionary<int, List<object>> list, DataTable tb, string layerName)
@@ -684,10 +784,11 @@ namespace RegulatoryPlan.UI
                 }
                 if (e.Node.Parent== null)
                 {
+                    bool isChe= e.Node.Checked;
                     foreach (TreeNode itemNode in e.Node.Nodes)
                     {
-                        itemNode.Checked = e.Node.Checked;
-                        CheckedNode(itemNode, tb);
+                        itemNode.Checked = isChe;
+                       // CheckedNode(itemNode, tb);
                     }
                 }
                 else

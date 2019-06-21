@@ -14,7 +14,7 @@ namespace RegulatoryModel.Model
 
         public RoadSectionModel()
         {
-            RoadNameLayer = "路名";
+            RoadNameLayer = "TX-道路名";
             RoadLineLayer = "RD-中线";
             RoadSectionLayer = "横断面符号";
             this.specailLayers = new List<string>() {RoadLineLayer,RoadNameLayer};

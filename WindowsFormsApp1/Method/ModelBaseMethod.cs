@@ -213,6 +213,7 @@ namespace RegulatoryPlan.Method
                     {
                         LengedModel legm = new LengedModel();
                         legm.GemoModels = new List<BlockInfoModel>();
+                      
                        legm.BoxPointList=PolylineMethod.GetPolyLineInfoPt(polyline);
                        List<ObjectId> ois = GetCrossObjectIds(doc.Editor,polyline,sfilter,tran);
                         
@@ -224,6 +225,17 @@ namespace RegulatoryPlan.Method
                                 BlockInfoModel plModel = AnalysisBlcokInfo(ob);
                                 if (plModel != null)
                                 {
+                                    if (plModel.Hatch != null)
+                                    {
+                                        foreach (HatchModel hatchModel in plModel.Hatch)
+                                        {
+                                            if (polyline.Closed&& hatchModel.Area ==polyline.Area)
+                                            {
+                                                legm.BackGround =hatchModel.loopPoints.Count>0? hatchModel.loopPoints[0].Color:"";
+                                                break;
+                                            }
+                                        }
+                                    }
                                     List<object> obj = new List<object>() { plModel };
                                     legm.GemoModels.Add(plModel);
                                    
@@ -390,6 +402,16 @@ namespace RegulatoryPlan.Method
                 plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line));
 
             }
+            else if (ob is Arc)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+
+            }
+            else if (ob is Polyline2d)
+            {
+                plModel.Circle.Add(AutoCad2ModelTools.Polyline2DModel(ob as Polyline2d));
+            }
             else if (ob is Entity)
                 {
                     Entity ety = ob as Entity;
@@ -417,6 +439,12 @@ namespace RegulatoryPlan.Method
                     {
 
                         plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+
+                    }
+                   else if (ob is Arc)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
 
                     }
                     else if (ob is BlockReference)
@@ -454,6 +482,10 @@ namespace RegulatoryPlan.Method
                         plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line));
 
                     }
+                    else if (ob is Polyline2d)
+                    {
+                        plModel.Circle.Add(AutoCad2ModelTools.Polyline2DModel(ob as Polyline2d));
+                    }
                     else if (ob is Entity)
                     {
                         Entity ety = ob as Entity;
@@ -464,6 +496,7 @@ namespace RegulatoryPlan.Method
                             AnalysisBlcokInfo(plModel, obj);
                         }
                     }
+                   
                 }
                 catch
                 {
