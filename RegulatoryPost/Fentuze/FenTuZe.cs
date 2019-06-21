@@ -82,9 +82,10 @@ namespace RegulatoryPost.FenTuZe
 
             // 发送 开始
             string[] baseAddresses = new string[] {
-                //"http://172.18.84.102:8080/CIM/", // 測試
-              // "http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
-                "http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
+                "http://172.18.84.102:8080/CIM/", // 測試
+               //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
+                //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
+
             };
 
             foreach (var baseAddress in baseAddresses)

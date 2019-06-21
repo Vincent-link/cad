@@ -184,9 +184,6 @@ namespace RegulatoryPlan.Method
             Editor ed = doc.Editor;
             Database db = doc.Database;
 
-            // 声明DataColumn、DataRow变量
-
-
             // 增加一个规划控制要求dataTable
             ArrayList controlList = new ArrayList();
 

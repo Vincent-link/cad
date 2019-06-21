@@ -46,6 +46,7 @@ namespace RegulatoryPost.FenTuZe
             {
                 foreach (LayerModel layer in model.allLines)
                 {
+
                     foreach (List<object> roadModel in layer.pointFs.Values)
                     {
 
@@ -2751,6 +2752,14 @@ namespace RegulatoryPost.FenTuZe
             //output[1] = Math.Round(point.Y, 7);
 
             return output;
+        }
+
+        public static string GetUUID()
+        {
+            Guid guid = new Guid();
+            guid = Guid.NewGuid();
+            string str = guid.ToString();
+            return str;
         }
 
     }
