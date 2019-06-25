@@ -229,7 +229,7 @@ namespace RegulatoryPlan.Command
                 dp = derivedType;
                 num = 0;
                 Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docAutoChange);
-                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
+                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file,false);
                 Application.DocumentManager.DocumentActivated -= docChange;
                 Application.DocumentManager.MdiActiveDocument.CloseAndDiscard();
             }
@@ -260,7 +260,8 @@ namespace RegulatoryPlan.Command
                 if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
                 {
                     num++;
-                    MainForm mf = new MainForm(cityName, dp,true);
+                //    
+                    MainForm mf = new MainForm(cityName, dp);
                     mf.Show();
                    // mf.Close();
                     
@@ -281,14 +282,64 @@ namespace RegulatoryPlan.Command
                 if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
                 {
                     num++;
-                    MainForm mf = new MainForm(cityName, dp);
-                    mf.ShowDialog();
+                    MainForm mf = new MainForm(cityName, dp,true);
+                    mf.Show();
                     // mf.Close();
 
                 }
             }
             catch { }
         }
+
+        /// <summary>
+                /// 根据图形边界显示视图
+                /// </summary>
+                /// <param name="ed"></param>
+        public static void ZoomExtens( Editor ed)
+        {
+            Database db = ed.Document.Database;
+            //更新当前模型空间的范围
+            db.UpdateExt(true);
+            //根据当前图形的界限范围对视图进行缩放
+            if (db.Extmax.X < db.Extmin.X)
+            {
+                Plane plane = new Plane();
+                Point3d pt1 = new Point3d(plane, db.Limmin);
+                Point3d pt2 = new Point3d(plane, db.Limmax);
+                ZoomWindow(ed,pt1, pt2);
+            }
+            else
+            {
+                ZoomWindow(ed,db.Extmin, db.Extmax);
+            }
+        }    /// <summary>
+                     /// 实现视图的窗口缩放
+                     /// </summary>
+                     /// <param name="ed"></param>
+                     /// <param name="pt1">窗口角点</param>
+                     /// <param name="pt2">窗口角点</param>
+        public static void ZoomWindow( Editor ed, Point3d pt1, Point3d pt2)
+        {
+            //创建一临时的直线用于获取两点表示的范围
+            using (Line line = new Line(pt1, pt2))
+            {
+                //获取两点表示的范围
+                Extents3d extents = new Extents3d(line.GeometricExtents.MinPoint, line.GeometricExtents.MaxPoint);
+                //获取范围内的最小值点及最大值点
+                Point2d minPt = new Point2d(extents.MinPoint.X, extents.MinPoint.Y);
+                Point2d maxPt = new Point2d(extents.MaxPoint.X, extents.MaxPoint.Y);
+                //得到当前视图
+                ViewTableRecord view = ed.GetCurrentView();
+                //设置视图的中心点、高度和宽度
+                view.CenterPoint = minPt + (maxPt - minPt) / 2;
+                view.Height = maxPt.Y - minPt.Y;
+                view.Width = maxPt.X - minPt.X;
+                //更新当前视图
+                ed.SetCurrentView(view);
+            }
+        }
+
+
         /// <summary>
         /// 查询面积最大的多段线,key=0 图例框，key=1 其他多段线
         /// </summary>
