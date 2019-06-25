@@ -1,19 +1,10 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Geometry;
-using Newtonsoft.Json;
 using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
-using RegulatoryPlan.Model;
-using RegulatoryPost.FenTuZe;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Text;
-using System.Windows.Forms;
 
 namespace RegulatoryPlan.Method
 {
@@ -21,42 +12,26 @@ namespace RegulatoryPlan.Method
     {
         public void GetAllUnitPlaneInfo(T model)
         {
-            ArrayList uuid = new ArrayList();
-            ArrayList geom = new ArrayList();   // 坐标点集合
-            ArrayList colorList = new ArrayList();       // 颜色集合
-            ArrayList type = new ArrayList();       // 类型集合
+            LayerModel lm = new LayerModel();
 
-            ArrayList layerName = new ArrayList();
-            ArrayList tableName = new ArrayList(); // 表名
+            // 坐标点图层 特殊处理
+            ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
+            //lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
+
+            // 获取图表数据（特殊数据）
             System.Data.DataTable attributeList = new System.Data.DataTable();  // 属性集合
-            ArrayList attributeIndexList = new ArrayList(); //属性索引集合
-
-            ArrayList tuliList = new ArrayList(); //图例集合
-            string projectId = ""; //项目ID
-            string chartName = ""; //表名称
             ArrayList kgGuide = new ArrayList();//控规引导
 
-            string srid = ""; //地理坐标系统编号
-            ArrayList parentId = new ArrayList(); //配套设施所在地块集合
-            ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
-            ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
-
-            Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
-
-
-            // 遍历所有实体
             ReadDanAttributeList<ModelBase> attributeListObj = new ReadDanAttributeList<ModelBase>();
-
-            // 图例
-            tuliList.Add("");
-
             // 属性
             attributeList = attributeListObj.AttributeList();
-
             // 控规要求
             kgGuide = attributeListObj.ControlList();
 
-            LayerModel lm = new LayerModel();
+            if (lm.modelItemList == null)
+            {
+                lm.modelItemList = new List<object>();
+            }
 
             if (model.allLines == null)
             {

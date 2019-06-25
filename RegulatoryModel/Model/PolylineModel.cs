@@ -34,6 +34,8 @@ namespace RegulatoryModel.Model
         /// 顶点坐标
         /// </summary>
         public ArrayList Vertices { get; set; }
+
+
     }
     /// <summary>
     /// 直线模型

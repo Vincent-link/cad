@@ -22,6 +22,8 @@ namespace RegulatoryPlan.Command
                     uMethod.GetAllUnitPlaneInfo(model as UnitPlanModel);
                     break;
                 case DerivedTypeEnum.PointsPlan:
+                    PointsPlanMethod<PointsPlanModel> pMethod = new PointsPlanMethod<PointsPlanModel>();
+                    pMethod.GetAllPointsPlaneInfo(model as PointsPlanModel);
                     break;
                 case DerivedTypeEnum.Power10Kv:
                     break;

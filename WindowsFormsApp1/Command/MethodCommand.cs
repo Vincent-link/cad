@@ -20,6 +20,186 @@ namespace RegulatoryPlan.Command
         public   static string fileName = "";
         public    static string cityName = "";
         static DerivedTypeEnum dp = DerivedTypeEnum.None;
+
+
+        public static BlockInfoModel AnalysisBlcokInfo(DBObject ob)
+        {
+
+
+            if (ob is Entity && (((ob as Entity).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel) || (!UI.MainForm.isOnlyModel)))
+            {
+                BlockInfoModel plModel = new BlockInfoModel();
+                try
+                {
+                    if (ob is Polyline)
+                    {
+
+                        plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+
+                    }
+                    else if (ob is Arc)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+
+                    }
+                    else if (ob is BlockReference)
+                    {
+                        plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
+                    }
+                    else if (ob is DBText)
+                    {
+                        plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
+                    }
+                    else if (ob is MText)
+                    {
+                        plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText));
+                    }
+                    else if (ob is Hatch)
+                    {
+                        plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch));
+
+                    }
+                    else if (ob is Circle)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+
+                    }
+                    else if (ob is Ellipse)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+
+                    }
+                    else if (ob is Line)
+                    {
+
+                        plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line));
+
+                    }
+                    else if (ob is Polyline2d)
+                    {
+                        plModel.Circle.Add(AutoCad2ModelTools.Polyline2DModel(ob as Polyline2d));
+                    }
+                    else if (ob is Entity)
+                    {
+                        Entity ety = ob as Entity;
+                        DBObjectCollection objs = new DBObjectCollection();
+                        ety.Explode(objs);
+                        foreach (DBObject obj in objs)
+                        {
+                            AnalysisBlcokInfo(plModel, obj);
+                        }
+                    }
+
+                }
+                catch
+                {
+
+                }
+                return plModel;
+            }
+            return null;
+        }
+        public static void AnalysisBlcokInfo(BlockInfoModel plModel, DBObject ob)
+        {
+
+
+
+            if (ob is Polyline)
+            {
+
+                plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline));
+
+            }
+            else if (ob is BlockReference)
+            {
+                plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference);
+            }
+            else if (ob is DBText)
+            {
+                plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText));
+            }
+            else if (ob is MText)
+            {
+                plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText));
+            }
+            else if (ob is Hatch)
+            {
+                plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch));
+
+            }
+            else if (ob is Circle)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle));
+
+            }
+            else if (ob is Ellipse)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+
+            }
+            else if (ob is Line)
+            {
+
+                plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line));
+
+            }
+            else if (ob is Arc)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+
+            }
+            else if (ob is Polyline2d)
+            {
+                plModel.Circle.Add(AutoCad2ModelTools.Polyline2DModel(ob as Polyline2d));
+            }
+            else if (ob is Entity)
+            {
+                Entity ety = ob as Entity;
+                DBObjectCollection objs = new DBObjectCollection();
+                ety.Explode(objs);
+                foreach (DBObject obj in objs)
+                {
+                    AnalysisBlcokInfo(plModel, obj);
+                }
+            }
+
+
+
+        }
+        /// <summary>
+        /// 获取图层中的实体
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static ObjectIdCollection GetObjectIdsAtLayer(string name)
+        {
+            //string names = System.Text.RegularExpressions.Regex.Unescape(name);
+            //System.Text.RegularExpressions.Regex.Escape(name);
+            ObjectIdCollection ids = new ObjectIdCollection();
+            PromptSelectionResult ProSset = null;
+            //LayerName (int)DxfCode.LayerName
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, name) };
+            SelectionFilter sfilter = new SelectionFilter(filList);
+            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            ProSset = ed.SelectAll(sfilter);
+            if (ProSset.Status == PromptStatus.OK)
+            {
+                SelectionSet sst = ProSset.Value;
+                ObjectId[] oids = sst.GetObjectIds();
+                for (int i = 0; i < oids.Length; i++)
+                {
+                    ids.Add(oids[i]);
+                }
+            }
+            return ids;
+        }
+
         public static bool FindDBTextIsInPolyine(MText txt, List<Polyline> lineList)
         {
             bool res = false;
@@ -260,7 +440,6 @@ namespace RegulatoryPlan.Command
                 if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
                 {
                     num++;
-                //    
                     MainForm mf = new MainForm(cityName, dp);
                     mf.Show();
                    // mf.Close();
@@ -282,8 +461,8 @@ namespace RegulatoryPlan.Command
                 if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
                 {
                     num++;
-                    MainForm mf = new MainForm(cityName, dp,true);
-                    mf.Show();
+                    MainForm mf = new MainForm(cityName, dp, true);
+                    mf.ShowDialog();
                     // mf.Close();
 
                 }
@@ -1016,7 +1195,200 @@ namespace RegulatoryPlan.Command
             return out_pGeCurve;
         }
 
-   
+
+        public static List<ObjectId> GetCrossObjectIds(Point3dCollection p3c, Editor ed)
+        {
+            List<ObjectId> ooids = new List<ObjectId>();
+
+            PromptSelectionResult psr = ed.SelectCrossingPolygon(p3c);
+            if (psr.Status == PromptStatus.OK)
+            {
+                SelectionSet sst = psr.Value;
+                ObjectId[] oids = sst.GetObjectIds();
+
+                foreach (ObjectId item in oids)
+                {
+                    ooids.Add(item);
+                }
+
+            }
+
+            return ooids;
+        }
+
+        public static string GetAttrIndex(List<PointF> pointFs)
+        {
+            // 属性索引
+            // 获取每个hatch对应的用地代码
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            string word = "";
+            List<ObjectId> idArray2 = new List<ObjectId>();
+
+             Point3dCollection col_point3d = new Point3dCollection();
+            foreach (PointF pf in pointFs)
+            {
+                col_point3d.Add(new Point3d(pf.X, pf.Y, 0));
+            }
+
+            List<string> layers = new List<string>() { "地块编码", "用地代码"};
+            foreach (string layerName in layers)
+            { 
+                TypedValue[] tvs2 =
+                    new TypedValue[1] {
+                        new TypedValue(
+                            (int)DxfCode.LayerName,
+                            layerName
+                        )
+                    };
+
+                SelectionFilter sf2 = new SelectionFilter(tvs2);
+                PromptSelectionResult psr2 = doc.Editor.SelectAll(sf2);
+                SelectionSet SS2 = psr2.Value;
+
+                if (psr2.Status == PromptStatus.OK)
+                {
+                    ObjectId[] idArray3 = SS2.GetObjectIds();
+                    for (int j = 0; j < idArray3.Length; j++)
+                    {
+                        idArray2.Add(idArray3[j]);
+                    }
+                }
+            }
+            if (idArray2 != null)
+            {
+                using (Transaction trans = doc.Database.TransactionManager.StartTransaction())
+                {
+                    for (int j = 0; j < idArray2.Count; j++)
+                    {
+                        Entity ent1 = (Entity)idArray2[j].GetObject(OpenMode.ForRead);
+
+                        if (ent1 is BlockReference)
+                        {
+                            List<string> tagList = new List<string>();
+
+                            if (IsInPolygon((ent1 as BlockReference).Position, col_point3d))
+                            {
+                                foreach (ObjectId rt in ((BlockReference)ent1).AttributeCollection)
+                                {
+                                    DBObject dbObj = trans.GetObject(rt, OpenMode.ForRead) as DBObject;
+                                    AttributeReference acAttRef = dbObj as AttributeReference;
+
+                                    tagList.Add(acAttRef.TextString);
+
+                                    //MessageBox.Show("Tag: " + acAttRef.Tag + "\n" +
+                                    //                "Value: " + acAttRef.TextString + "\n");
+                                }
+                            }
+                            // 如果地块编码属性只有两个属性值，attributeIndexList，如果少于2个或者多于2个都视为异常，添加空。
+                            if (tagList.Count == 2)
+                            {
+                                word = tagList[0] + "_" + tagList[1];
+                            }
+                        }
+
+                        if (ent1 is DBText)
+                        {
+                            if (IsInPolygon((ent1 as DBText).Position, col_point3d))
+                            {
+                                word = ((DBText)ent1).TextString;
+                            }
+                        }
+                        if (ent1 is MText)
+                        {
+                            if (IsInPolygon((ent1 as MText).Location, col_point3d))
+                            {
+                                word = ((MText)ent1).Text;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //string word = "";
+
+            //List<ObjectId> idArray = GetCrossObjectIds(col_point3d, doc.Editor);
+
+            //for (int i = 0; i < idArray.Count; i++)
+            //{
+            //    Entity ent1 = (Entity)idArray[i].GetObject(OpenMode.ForRead);
+            //    if (ent1 is DBText)
+            //    {
+            //        word = ((DBText)ent1).TextString;
+
+            //    }
+            //    if (ent1 is MText)
+            //    {
+            //        word = ((MText)ent1).Text;
+            //    }
+            //    if (ent1 is BlockReference)
+            //    {
+            //        List<string> tagList = new List<string>();
+            //        using (Transaction trans = doc.Database.TransactionManager.StartTransaction())
+            //        {
+            //            BlockReference ent2 = (BlockReference)ent1;
+            //            if (IsInPolygon(ent2.Position, col_point3d))
+            //            {
+            //                foreach (ObjectId rt in ((BlockReference)ent1).AttributeCollection)
+            //                {
+            //                    DBObject dbObj = trans.GetObject(rt, OpenMode.ForRead) as DBObject;
+            //                    AttributeReference acAttRef = dbObj as AttributeReference;
+
+            //                    tagList.Add(acAttRef.TextString);
+
+            //                    //MessageBox.Show("Tag: " + acAttRef.Tag + "\n" +
+            //                    //                "Value: " + acAttRef.TextString + "\n");
+            //                }
+            //            }
+            //        }
+
+            //        // 如果地块编码属性只有两个属性值，attributeIndexList，如果少于2个或者多于2个都视为异常，添加空。
+            //        if (tagList.Count == 2)
+            //        {
+            //            word = tagList[0] + "_" + tagList[1];
+            //        }
+
+            //    }
+            //}
+
+            return word;
+
+        }
+
+        // 判断点是否在闭合多段线内
+        public static bool IsInPolygon(Point3d checkPoint, Point3dCollection col_point2d)
+        {
+            bool inside = false;
+            int pointCount = col_point2d.Count;
+            Point3d p1, p2;
+            for (int i = 0, j = pointCount - 1; i < pointCount; j = i, i++)//第一个点和最后一个点作为第一条线，之后是第一个点和第二个点作为第二条线，之后是第二个点与第三个点，第三个点与第四个点...
+            {
+                p1 = col_point2d[i];
+                p2 = col_point2d[j];
+                if (checkPoint.Y < p2.Y)
+                {//p2在射线之上
+                    if (p1.Y <= checkPoint.Y)
+                    {//p1正好在射线中或者射线下方
+                        if ((checkPoint.Y - p1.Y) * (p2.X - p1.X) > (checkPoint.X - p1.X) * (p2.Y - p1.Y))//斜率判断,在P1和P2之间且在P1P2右侧
+                        {
+                            //射线与多边形交点为奇数时则在多边形之内，若为偶数个交点时则在多边形之外。
+                            //由于inside初始值为false，即交点数为零。所以当有第一个交点时，则必为奇数，则在内部，此时为inside=(!inside)
+                            //所以当有第二个交点时，则必为偶数，则在外部，此时为inside=(!inside)
+                            inside = (!inside);
+                        }
+                    }
+                }
+                else if (checkPoint.Y < p1.Y)
+                {
+                    //p2正好在射线中或者在射线下方，p1在射线上
+                    if ((checkPoint.Y - p1.Y) * (p2.X - p1.X) < (checkPoint.X - p1.X) * (p2.Y - p1.Y))//斜率判断,在P1和P2之间且在P1P2右侧
+                    {
+                        inside = (!inside);
+                    }
+                }
+            }
+            return inside;
+        }
+
     }
 }
         

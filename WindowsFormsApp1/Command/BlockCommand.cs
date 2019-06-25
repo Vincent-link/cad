@@ -68,34 +68,7 @@ namespace RegulatoryPlan.Command
             result.Add("#BlockReference#");
             return result;
         }
-        /// <summary>
-        /// 获取图层中的实体
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static ObjectIdCollection GetObjectIdsAtLayer(string name)
-        {
-            //string names = System.Text.RegularExpressions.Regex.Unescape(name);
-            //System.Text.RegularExpressions.Regex.Escape(name);
-            ObjectIdCollection ids = new ObjectIdCollection();
-            PromptSelectionResult ProSset = null;
-            //LayerName (int)DxfCode.LayerName
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, name) };
-            SelectionFilter sfilter = new SelectionFilter(filList);
-            Editor ed = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-            ProSset = ed.SelectAll(sfilter);
-            if (ProSset.Status == PromptStatus.OK)
-            {
-                SelectionSet sst = ProSset.Value;
-                ObjectId[] oids = sst.GetObjectIds();
-                for (int i = 0; i < oids.Length; i++)
-                {
-                    ids.Add(oids[i]);
-                }
-            }
-            return ids;
-        }
-
+ 
         /// <summary>
         /// 获取图层下的快参照
         /// </summary>

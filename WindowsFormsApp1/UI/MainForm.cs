@@ -76,7 +76,7 @@ namespace RegulatoryPlan.UI
                     PostModel.PostModelBase(model as UnitPlanModel);
                     break;
                 case DerivedTypeEnum.PointsPlan:
-                    PostModel.PostModelBase(model);
+                    PostModel.PostModelBase(model as PointsPlanModel);
                     break;
                 case DerivedTypeEnum.Power10Kv:
                     PostModel.PostModelBase(model as Power10kvModel);
@@ -142,7 +142,7 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.UnitPlan:
                     return new UnitPlanModel();
                 case DerivedTypeEnum.PointsPlan:
-                    break;
+                    return new PointsPlanModel();
                 case DerivedTypeEnum.Power10Kv:
                     return new Power10kvModel();
                 case DerivedTypeEnum.Power35kv:

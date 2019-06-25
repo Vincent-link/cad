@@ -5,6 +5,7 @@ using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using static RegulatoryPlan.Command.MethodCommand;
 
@@ -75,6 +76,9 @@ namespace RegulatoryPlan.Model
                                 cpModel.loopPoints.Add(Point2d2Pointf(vertex.Vertex));
                             }
                         }
+                        // 读取单元图则颜色填充内的用地代码
+                        dbModel.AttrIndex = MethodCommand.GetAttrIndex(cpModel.loopPoints);
+
                         if (dbText.NumberOfHatchLines > 0)
                         {
                             Line2dCollection cl = dbText.GetHatchLinesData();
@@ -244,6 +248,7 @@ namespace RegulatoryPlan.Model
                     polylineModel.Vertices.Add(line);
                 }
             }
+           
             return polylineModel;
         }
 
