@@ -16,7 +16,7 @@ namespace RegulatoryPlan.Method
 
             // 坐标点图层 特殊处理
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
-            //lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
+            lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
 
             // 获取图表数据（特殊数据）
             System.Data.DataTable attributeList = new System.Data.DataTable();  // 属性集合

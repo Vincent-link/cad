@@ -26,10 +26,11 @@ namespace RegulatoryPlan.Method
             System.Data.DataTable attributeList = new System.Data.DataTable();  // 指标集合
             ArrayList kgGuide = new ArrayList();//控规引导
 
+            AttrAndKgGuide ag = new AttrAndKgGuide();
             // 属性
-            attributeList = AttributeList();
+            attributeList = ag.AttributeList();
             // 控规要求
-            kgGuide = KgGuide();
+            kgGuide = ag.KgGuide();
 
             if (lm.modelItemList == null)
             {
@@ -41,6 +42,7 @@ namespace RegulatoryPlan.Method
                 model.allLines = new List<LayerModel>();
             }
             model.allLines.Add(lm);
+
             lm.modelItemList.Add(attributeList);
             lm.modelItemList.Add(kgGuide);
 
@@ -55,6 +57,7 @@ namespace RegulatoryPlan.Method
                 LayerModel lm = new LayerModel();
                 Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
                 ObjectIdCollection ids = new ObjectIdCollection();
+                lm.Name = layerName;
 
                 PromptSelectionResult ProSset = null;
                 TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
@@ -121,11 +124,6 @@ namespace RegulatoryPlan.Method
                                 lm.modelItemList = new List<object>();
                             }
                             
-                            if (model.allLines == null)
-                            {
-                                model.allLines = new List<LayerModel>();
-                            }
-                            model.allLines.Add(lm);
                             lm.modelItemList.Add(pointsPlanItem);
                          
 
@@ -133,7 +131,11 @@ namespace RegulatoryPlan.Method
                     }
 
 
-
+                    if (model.allLines == null)
+                    {
+                        model.allLines = new List<LayerModel>();
+                    }
+                    model.allLines.Add(lm);
 
 
                 }
@@ -194,8 +196,10 @@ namespace RegulatoryPlan.Method
             return retureValue;
         }
 
+    }
 
-
+    public class AttrAndKgGuide
+    {
         public System.Data.DataTable AttributeList()
         {
             Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
@@ -480,9 +484,5 @@ namespace RegulatoryPlan.Method
             distance = Math.Sqrt(Math.Pow((point01X - point02X), 2) + Math.Pow((point01Y - point02Y), 2));
             return distance;
         }
-
-
-
-
     }
 }

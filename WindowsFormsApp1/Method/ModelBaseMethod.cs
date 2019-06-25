@@ -222,7 +222,7 @@ namespace RegulatoryPlan.Method
                             foreach (ObjectId lengGemo in ois)
                             {
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
-                                BlockInfoModel plModel = AnalysisBlcokInfo(ob);
+                                BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
                                 if (plModel != null)
                                 {
                                     if (plModel.Hatch != null)
@@ -340,7 +340,7 @@ namespace RegulatoryPlan.Method
                     {
 
                         DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
-                        BlockInfoModel plModel = AnalysisBlcokInfo(ob);
+                        BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
                         if (plModel != null)
                         {
                             List<object> obj = new List<object>() { plModel };

@@ -80,7 +80,7 @@ namespace RegulatoryPlan.Command
             Database db = Application.DocumentManager.MdiActiveDocument.Database;
             BlockReference _br = null;
             Transaction trans = null;
-            var list = GetObjectIdsAtLayer(layerName);
+            var list = MethodCommand.GetObjectIdsAtLayer(layerName);
             using (trans = db.TransactionManager.StartTransaction())
             {
                 if (list != null && list.Count > 0)
