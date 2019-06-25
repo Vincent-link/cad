@@ -91,6 +91,7 @@
     <Compile Include="Method\readAttributeList.cs" />
     <Compile Include="Method\readDanAttributeList.cs" />
     <Compile Include="Method\RoadSectionMethod.cs" />
+    <Compile Include="Method\PointsPlanMethod.cs" />
     <Compile Include="Method\UnitPlanMethod.cs" />
     <Compile Include="Method\RoadMethod.cs" />
     <Compile Include="Program.cs" />

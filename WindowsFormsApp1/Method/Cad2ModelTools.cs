@@ -5,6 +5,7 @@ using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using static RegulatoryPlan.Command.MethodCommand;
 
@@ -75,6 +76,9 @@ namespace RegulatoryPlan.Model
                                 cpModel.loopPoints.Add(Point2d2Pointf(vertex.Vertex));
                             }
                         }
+                        // 读取单元图则颜色填充内的用地代码
+                        dbModel.AttrIndex = MethodCommand.GetAttrIndex(cpModel.loopPoints);
+
                         if (dbText.NumberOfHatchLines > 0)
                         {
                             Line2dCollection cl = dbText.GetHatchLinesData();
@@ -244,6 +248,19 @@ namespace RegulatoryPlan.Model
                     polylineModel.Vertices.Add(line);
                 }
             }
+            // 读取分图则闭合多段线内的用地代码
+            List<PointF> pfs = new List<PointF>();
+            if (polylineModel.Closed is true)
+            {
+                int vn2 = polyLine.NumberOfVertices;  //lwp已知的多段线
+                for (int i = 0; i < vn2; i++)
+                {
+                    Point2d pt = polyLine.GetPoint2dAt(i);
+                    PointF pf = new PointF((float)pt.X, (float)pt.Y);
+                    pfs.Add(pf);
+                }
+            }
+            polylineModel.AttrIndex = MethodCommand.GetAttrIndex(pfs);
             return polylineModel;
         }
 

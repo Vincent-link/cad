@@ -4,15 +4,15 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
-    public class UnitPlanModel : ModelBase
+    public class PointsPlanModel : ModelBase
     {
         public static string unitPlanNameLayer = "";
         public static string unitPlanLineLayer = "坐标";
-        public UnitPlanModel()
+        public PointsPlanModel()
         {
             this.IsOnlyModel = false;
             this.specailLayers = new List<string>() { unitPlanNameLayer, unitPlanLineLayer };
-            this.DerivedType = DerivedTypeEnum.UnitPlan;
+            this.DerivedType = DerivedTypeEnum.PointsPlan;
         }
     }
 }
