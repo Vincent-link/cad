@@ -111,6 +111,12 @@ namespace RegulatoryPlan.UI
                 case 16:
                     crtType = DerivedTypeEnum.Road;
                     break;
+                case 17:
+                    crtType = DerivedTypeEnum.CenterCityUseLandPlan;
+                    break;
+                case 18:
+                    crtType = DerivedTypeEnum.UseLandNumber;
+                    break;
 
             }    
             return crtType;

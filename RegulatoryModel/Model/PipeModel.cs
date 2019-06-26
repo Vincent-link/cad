@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
-   public class PipeModel:ModelBase
+   public class PipeModel:AttributeBaseModel
     {
         
         string pipeInfo ;
@@ -32,18 +32,21 @@ namespace RegulatoryModel.Model
         string pipeType="polyline";
         string pipeText;
         string colorIndex;
-        string pipeWidth;
+        PipeItemStyleModel style=new PipeItemStyleModel();
+        //string pipeWidth;
         PointF txtLocation;
         string pipeLayer;
         public List<PointF> pipeList;
+      
 
         public string PipeLength { get => pipeLength; set => pipeLength = value; }
         public string PipeText{ get => pipeText; set => pipeText = value; }
         public string PipeType { get => pipeType; set => pipeType = value; }
         public string ColorIndex { get => colorIndex; set => colorIndex = value; }
-        public string PipeWidth { get => pipeWidth; set => pipeWidth = value; }
+      //  public string PipeWidth { get => pipeWidth; set => pipeWidth = value; }
         public PointF TxtLocation { get => txtLocation; set => txtLocation = value; }
         public string PipeLayer { get => pipeLayer; set => pipeLayer = value; }
+        public PipeItemStyleModel Style { get => style; set => style = value; }
 
         public override string ItemToJson()
         {
@@ -57,5 +60,18 @@ namespace RegulatoryModel.Model
             }
             return outJson + "}";
         }
+    }
+
+    public class PipeItemStyleModel
+    { 
+        string textHeight;
+        string lineWidth;
+        string lineScale;
+        string lineType;
+
+        public string TextHeight { get => textHeight; set => textHeight = value; }
+        public string LineWidth { get => lineWidth; set => lineWidth = value; }
+        public string LineScale { get => lineScale; set => lineScale = value; }
+        public string LineType { get => lineType; set => lineType = value; }
     }
 }

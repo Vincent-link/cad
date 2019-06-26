@@ -44,10 +44,14 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Command\JsonCommand.cs" />
     <Compile Include="Command\ReflectionClass.cs" />
+    <Compile Include="Model\AttributeBaseModel.cs" />
     <Compile Include="Model\BlockInfoModel.cs" />
     <Compile Include="Model\BuildingIntegratedModel.cs" />
+    <Compile Include="Model\UseLandNumber.cs" />
+    <Compile Include="Model\CenterCityUseLandPlan.cs" />
     <Compile Include="Model\CommandItemModel.cs" />
     <Compile Include="Model\CommunicationModel.cs" />
+    <Compile Include="Model\CityDesignModel.cs" />
     <Compile Include="Model\FiveLineModel.cs" />
     <Compile Include="Model\FuelGasModel.cs" />
     <Compile Include="Model\GemoTypeModel.cs" />

@@ -123,6 +123,12 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.None:
                     PostModel.PostModelBase(model);
                     break;
+                case DerivedTypeEnum.UseLandNumber:
+                    PostModel.PostModelBase(model as AttributeBaseModel);
+                    break;
+                case DerivedTypeEnum.CenterCityUseLandPlan:
+                    PostModel.PostModelBase(model as AttributeBaseModel);
+                    break;
 
             }
         }
@@ -138,7 +144,6 @@ namespace RegulatoryPlan.UI
                     return new SewageModel();
                 case DerivedTypeEnum.BuildingIntegrated:
                     return new BuildingIntegratedModel();
-
                 case DerivedTypeEnum.UnitPlan:
                     return new UnitPlanModel();
                 case DerivedTypeEnum.PointsPlan:
@@ -167,6 +172,10 @@ namespace RegulatoryPlan.UI
                     return new ReuseWaterModel();
                 case DerivedTypeEnum.Road:
                     return new RoadNoSectionModel();
+                case DerivedTypeEnum.CenterCityUseLandPlan:
+                    return new CenterCityUseLandPlanModel();
+                case DerivedTypeEnum.UseLandNumber:
+                    return new UseLandNumberModel();
             }
             return new ModelBase();
 
@@ -332,16 +341,20 @@ namespace RegulatoryPlan.UI
             mb = ChangeToModel(mb);
             isOnlyModel = mb.IsOnlyModel;
             mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
-            ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
-            // mbm.GetLengedPoints(mb);
-            mbm.GetAllLengedGemo(mb);
-            mbm.GetExportLayers(mb);
-            LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
-            layerSpecial.AddSpecialLayerModel(mb);
+           
+           
+           
+                ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
+                // mbm.GetLengedPoints(mb);
+                mbm.GetAllLengedGemo(mb);
+                mbm.GetExportLayers(mb);
+                LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
+                layerSpecial.AddSpecialLayerModel(mb);
+
             //  mb.AddSpecialLayerModel();
             DataTable tb = new DataTable();
             tb.Columns.Add("所在图层");
-      
+
             //tb.Columns.Add("图例文本");
             //tb.Columns.Add("图例线段");
 
@@ -704,7 +717,7 @@ namespace RegulatoryPlan.UI
                             dr["管线类型"] = road.PipeType == null ? "" : road.PipeType;
                             dr["管道信息位置"] = "X:" + road.TxtLocation.X + ",Y:" + road.TxtLocation.Y;
                             dr["管线长度"] = road.PipeLength == null ? "" : road.PipeLength;
-                            dr["管线宽度"] = road.PipeWidth == null ? "" : road.PipeWidth;
+                            dr["管线宽度"] = road.Style.LineWidth == null ? "" : road.Style.LineWidth;
                             dr["管线颜色"] = road.ColorIndex;
                             for (int j = 0; j < road.pipeList.Count; j++)
                             {

@@ -99,7 +99,7 @@ namespace RegulatoryPlan.Method
             try
             {
                 item.PipeLength = line.Length.ToString();
-                item.PipeWidth = line.ConstantWidth.ToString();
+                item.Style.LineWidth= line.ConstantWidth.ToString();
                 item.ColorIndex = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 Database db = doc.Database;

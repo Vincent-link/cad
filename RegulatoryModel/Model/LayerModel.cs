@@ -11,6 +11,7 @@ namespace RegulatoryModel.Model
     {
         private string name;
         private string color;
+        private bool isHaveAttribute;
         public Dictionary<int,List<object>> pointFs;//图例框识别的模型
         public List<object> modelItemList;//特殊图层的模型
         private string jsonStr;
@@ -48,5 +49,9 @@ namespace RegulatoryModel.Model
 
         public string Color { get => color; set => color = value; }
         public string Name { get => name; set => name = value; }
+        /// <summary>
+        /// 是否有特殊属性
+        /// </summary>
+        public bool IsHaveAttribute { get => isHaveAttribute; set => isHaveAttribute = value; }
     }
 }

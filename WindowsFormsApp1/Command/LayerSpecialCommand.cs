@@ -11,11 +11,14 @@ namespace RegulatoryPlan.Command
 
         public void AddSpecialLayerModel(T model)
         {
+
+            //ModelBaseMethod<ModelBase> baseMethod = new ModelBaseMethod<ModelBase>();
+            //baseMethod.GetAllLengedGemo(model);
             switch (model.DerivedType)
             {
-                case DerivedTypeEnum.BuildingIntegrated:
-                   
-                    break;
+                //case DerivedTypeEnum.BuildingIntegrated:
+                    
+                //    break;
 
                 case DerivedTypeEnum.UnitPlan:
                     UnitPlanMethod<UnitPlanModel> uMethod = new UnitPlanMethod<UnitPlanModel>();
@@ -41,22 +44,22 @@ namespace RegulatoryPlan.Command
                     PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>();
                     pipeMethod4.GetAllPipeInfo(model as PipeModel);
                     break;
-                case DerivedTypeEnum.Communication:
-                    break;
+                //case DerivedTypeEnum.Communication:
+                //    break;
                 case DerivedTypeEnum.TheRoadSection:
                     RoadMethod<RoadSectionModel> mMethod = new RoadMethod<RoadSectionModel>();
                     mMethod.GetAllRoadInfo(model as RoadSectionModel);
                     break;
-                case DerivedTypeEnum.PipeLine:
-                    break;
+                //case DerivedTypeEnum.PipeLine:
+                //    break;
                 case DerivedTypeEnum.Sewage:
                     PipeMethod<PipeModel> pipeMethod = new PipeMethod<PipeModel>();
                     pipeMethod.GetAllPipeInfo(model as PipeModel);
                     break;
-                case DerivedTypeEnum.FiveLine:
-                    break;
-                case DerivedTypeEnum.LimitFactor:
-                    break;
+                //case DerivedTypeEnum.FiveLine:
+                //    break;
+                //case DerivedTypeEnum.LimitFactor:
+                //    break;
                 case DerivedTypeEnum.RainWater:
                     PipeMethod<PipeModel> pipeMethod5 = new PipeMethod<PipeModel>();
                     pipeMethod5.GetAllPipeInfo(model as PipeModel);
@@ -69,9 +72,17 @@ namespace RegulatoryPlan.Command
                     RoadMethod<RoadNoSectionModel> mMethod1 = new RoadMethod<RoadNoSectionModel>();
                     mMethod1.GetAllRoadInfo(model as RoadNoSectionModel);
                     break;
-
+                case DerivedTypeEnum.CenterCityUseLandPlan:
+                    CenterCityUseLandMethod<CenterCityUseLandPlanModel> ccul = new CenterCityUseLandMethod<CenterCityUseLandPlanModel>(model as CenterCityUseLandPlanModel);
+                    break;
+                case DerivedTypeEnum.CityDesign:
+                    break;
+                case DerivedTypeEnum.UseLandNumber:
+                    break;
             }
         }
+
+   
 
 
     }

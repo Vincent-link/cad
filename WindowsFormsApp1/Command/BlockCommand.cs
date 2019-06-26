@@ -80,7 +80,7 @@ namespace RegulatoryPlan.Command
             Database db = Application.DocumentManager.MdiActiveDocument.Database;
             BlockReference _br = null;
             Transaction trans = null;
-            var list = GetObjectIdsAtLayer(layerName);
+            var list =MethodCommand.GetObjectIdsAtLayer(layerName);
             using (trans = db.TransactionManager.StartTransaction())
             {
                 if (list != null && list.Count > 0)
@@ -144,5 +144,103 @@ namespace RegulatoryPlan.Command
             //扩展数据
             return item;
         }
+
+        public static BlockInfoModel AnalysisEntryAndExitbr(BlockReference br,AttributeModel attModel)
+        {
+            BlockInfoModel item = new BlockInfoModel();
+
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Editor ed = doc.Editor;
+            Database db = doc.Database;
+            using (Transaction trans = db.TransactionManager.StartTransaction())
+            {
+                BlockTableRecord block = trans.GetObject(br.BlockTableRecord, OpenMode.ForRead) as BlockTableRecord;
+                foreach (ObjectId id in block)
+                {
+                    Entity entity = trans.GetObject(id, OpenMode.ForRead) as Entity;
+                    if (entity is DBText)
+                    {
+                        DBText dbText = entity as DBText;
+                        item.DbText.Add(AutoCad2ModelTools.DbText2Model(dbText,attModel)); ;
+                    }
+                    else if (entity is Polyline)
+                    {
+                        Polyline polyLine = entity as Polyline;
+                        item.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(polyLine,attModel));
+                    }
+                    else if (entity is Line)
+                    {
+                        item.Line.Add(AutoCad2ModelTools.Line2Model(entity as Line,attModel));
+                    }
+                    else if (entity is Hatch)
+                    {
+                        item.Hatch.Add(AutoCad2ModelTools.Hatch2Model(entity as Hatch,attModel));
+
+
+                    }
+                    else if (entity is Circle)
+                    {
+                        item.Circle.Add(AutoCad2ModelTools.Circle2Model(entity as Circle,attModel));
+                    }
+
+                }
+            }
+
+            //扩展数据
+            return item;
+        }
+
+        /////  
+        ///// 根据当前文档和块名取得当前块的引用 
+        /////  
+        //public dbx.AcadBlockReference GetBlockReference(dbx.AxDbDocument thisDrawing, string blkName)
+        //{
+        //    dbx.AcadBlockReference blkRef = null;
+        //    bool found = false;
+        //    try
+        //    {
+        //        foreach (dbx.AcadEntity entity in thisDrawing.ModelSpace)
+        //        {
+        //            if (entity.EntityName == "AcDbBlockReference")
+        //            {
+        //                blkRef = (dbx.AcadBlockReference)entity;
+        //                //System.Windows.Forms.MessageBox.Show(blkRef.Name); 
+        //                if (blkRef.Name.ToLower() == blkName.ToLower())
+        //                {
+        //                    found = true;
+        //                    break;
+        //                }
+        //            }//end of entity.EntityName=="AcDbBlockReference" 
+        //        }// end of foreach thisDrawing.ModelSpace 
+        //    }//end of try 
+        //    catch (Exception e)
+        //    {
+        //        System.Windows.Forms.MessageBox.Show("图形中有未知的错误，格式不正确或图形数据库需要修愎。系统错误提示：" + e.Message, "信息", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+        //        thisDrawing = null;
+        //    }//end of catch 
+        //    if (!found) blkRef = null;
+        //    return blkRef;
+        //}//end of function GetBlockReference 
+        ///  
+        /// 根据给定的块引用(dbx.AcadBlockReference)和属性名返回属性值 
+        ///  
+        public static object GetValueByAttributeName(BlockReference blkRef, string AttributeName,Transaction trans)
+        {
+           AttributeCollection Atts =blkRef.AttributeCollection;
+            object attValue = null;
+            for (int i = 0; i<Atts.Count;i++)
+            {
+                AttributeReference attRef= trans.GetObject(Atts[i], OpenMode.ForRead) as AttributeReference;
+          
+                if (attRef.Tag == AttributeName)
+                {
+                    attValue = attRef.TextString;
+                    break;
+                }
+            }//end of for i 
+            return attValue;
+        }// end of function 
+
+
     }
 }
