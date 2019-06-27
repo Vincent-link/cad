@@ -139,7 +139,8 @@
             "再生水规划",
             "道路",
             "中心城区用地规划",
-            "用地编码"});
+            "用地编码",
+            "中心城区居住用地规划"});
             this.comboBox1.Location = new System.Drawing.Point(67, 66);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(221, 20);

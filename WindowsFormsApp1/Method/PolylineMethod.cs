@@ -65,11 +65,11 @@ namespace RegulatoryPlan.Method
                     SelectionSet sst = ProSset.Value;
                     ObjectId[] oids = sst.GetObjectIds();
                     int ad = 0;
-                    List<string> aa = new List<string>();
+                  //  List<string> aa = new List<string>();
                     for (int i = 0; i < oids.Length; i++)
                     {
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
-                        if (!aa.Contains((ob as Polyline).BlockName)) { aa.Add((ob as Polyline).BlockName); }
+                        //if (!aa.Contains((ob as Polyline).BlockName)) { aa.Add((ob as Polyline).BlockName); }
                         if (ob is Polyline && (ob as Polyline).BlockName.ToLower() == "*model_space")
                         {
                             list.Add(ob as Polyline);

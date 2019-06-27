@@ -33,15 +33,15 @@ namespace RegulatoryPlan.Command
                 case DerivedTypeEnum.Power35kv:
                     break;
                 case DerivedTypeEnum.WaterSupply:
-                    PipeMethod<PipeModel> pipeMethod1 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod1 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod1.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.HeatSupply:
-                    PipeMethod<PipeModel> pipeMethod2 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod2 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod2.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.FuelGas:
-                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod4.GetAllPipeInfo(model as PipeModel);
                     break;
                 //case DerivedTypeEnum.Communication:
@@ -53,19 +53,23 @@ namespace RegulatoryPlan.Command
                 //case DerivedTypeEnum.PipeLine:
                 //    break;
                 case DerivedTypeEnum.Sewage:
-                    PipeMethod<PipeModel> pipeMethod = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod.GetAllPipeInfo(model as PipeModel);
+                    break;
+                case DerivedTypeEnum.Communication:
+                    PipeMethod<PipeModel> pipeComMethod = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeComMethod.GetAllPipeInfo(model as PipeModel);
                     break;
                 //case DerivedTypeEnum.FiveLine:
                 //    break;
                 //case DerivedTypeEnum.LimitFactor:
                 //    break;
                 case DerivedTypeEnum.RainWater:
-                    PipeMethod<PipeModel> pipeMethod5 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod5 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod5.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.ReuseWater:
-                    PipeMethod<PipeModel> pipeMethod6 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod6 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod6.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.Road:
@@ -78,6 +82,10 @@ namespace RegulatoryPlan.Command
                 case DerivedTypeEnum.CityDesign:
                     break;
                 case DerivedTypeEnum.UseLandNumber:
+                    UsePlanNumberMethod<UseLandNumberModel> upnm = new UsePlanNumberMethod<UseLandNumberModel>(model as UseLandNumberModel);
+                    break;
+                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                    CenterCityLifeUseLandMethod<CenterCityLifeUseLandPlanModel> cclul = new CenterCityLifeUseLandMethod<CenterCityLifeUseLandPlanModel>(model as CenterCityLifeUseLandPlanModel);
                     break;
             }
         }

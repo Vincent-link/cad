@@ -154,35 +154,97 @@ namespace RegulatoryPlan.Command
             Database db = doc.Database;
             using (Transaction trans = db.TransactionManager.StartTransaction())
             {
+                Dictionary<AttributeItemType, string> dicList = new Dictionary<AttributeItemType, string>();
+                foreach (AttributeItemModel itemm in attModel.attributeItems)
+                {
+
+                    switch (itemm.AtItemType)
+                    {
+                        case AttributeItemType.UseLandNumber:
+                            dicList.Add(AttributeItemType.UseLandNumber, GetValueByAttributeName(br, "用地代码", trans));
+                            break;
+                        case AttributeItemType.LotNumber:
+                            dicList.Add(AttributeItemType.LotNumber, GetValueByAttributeName(br, "地块编号", trans));
+                            break;
+
+                    }
+                }
+               
                 BlockTableRecord block = trans.GetObject(br.BlockTableRecord, OpenMode.ForRead) as BlockTableRecord;
                 foreach (ObjectId id in block)
                 {
                     Entity entity = trans.GetObject(id, OpenMode.ForRead) as Entity;
+                    object result = null;
                     if (entity is DBText)
                     {
                         DBText dbText = entity as DBText;
-                        item.DbText.Add(AutoCad2ModelTools.DbText2Model(dbText,attModel)); ;
+                        result= AutoCad2ModelTools.DbText2Model(dbText, attModel);
+                        item.DbText.Add(result as DbTextModel) ;
+                    }
+                    if (entity is MText)
+                    {
+                        MText dbText = entity as MText;
+                        result = AutoCad2ModelTools.DbText2Model(dbText, attModel);
+                        item.DbText.Add(result as DbTextModel);
                     }
                     else if (entity is Polyline)
                     {
                         Polyline polyLine = entity as Polyline;
-                        item.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(polyLine,attModel));
+                        result = AutoCad2ModelTools.Polyline2Model(polyLine, attModel);
+                        item.PolyLine.Add(result as PolyLineModel);
                     }
                     else if (entity is Line)
                     {
-                        item.Line.Add(AutoCad2ModelTools.Line2Model(entity as Line,attModel));
+                        result = AutoCad2ModelTools.Line2Model(entity as Line, attModel);
+                        item.Line.Add(result as LineModel);
                     }
                     else if (entity is Hatch)
                     {
-                        item.Hatch.Add(AutoCad2ModelTools.Hatch2Model(entity as Hatch,attModel));
-
-
+                        result = AutoCad2ModelTools.Hatch2Model(entity as Hatch, attModel);
+                        item.Hatch.Add(result as HatchModel);
                     }
                     else if (entity is Circle)
                     {
-                        item.Circle.Add(AutoCad2ModelTools.Circle2Model(entity as Circle,attModel));
+                        result = AutoCad2ModelTools.Circle2Model(entity as Circle, attModel);
+                        item.Circle.Add(result as CircleModel);
                     }
-
+                  
+                    if (result is PolyLineModel)
+                    {
+                        foreach (GemoTypeModel gemoType in (result as PolyLineModel).Vertices)
+                        {
+                            foreach (AttributeItemModel atm in (gemoType as GemoTypeModel).attItemList)
+                            {
+                                if (dicList.ContainsKey(atm.AtItemType))
+                                {
+                                    atm.AtValue = dicList[atm.AtItemType];
+                                }
+                            }
+                        }
+                    }
+                    else if (result is HatchModel)
+                    {
+                        foreach (GemoTypeModel gemoType in (result as HatchModel).loopPoints.Values)
+                        {
+                            foreach (AttributeItemModel atm in (result as GemoTypeModel).attItemList)
+                            {
+                                if (dicList.ContainsKey(atm.AtItemType))
+                                {
+                                    atm.AtValue = dicList[atm.AtItemType];
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (AttributeItemModel atm in (result as GemoTypeModel).attItemList)
+                        {
+                            if (dicList.ContainsKey(atm.AtItemType))
+                            {
+                                atm.AtValue = dicList[atm.AtItemType];
+                            }
+                        }
+                    }
                 }
             }
 
@@ -224,10 +286,10 @@ namespace RegulatoryPlan.Command
         ///  
         /// 根据给定的块引用(dbx.AcadBlockReference)和属性名返回属性值 
         ///  
-        public static object GetValueByAttributeName(BlockReference blkRef, string AttributeName,Transaction trans)
+        public static string GetValueByAttributeName(BlockReference blkRef, string AttributeName,Transaction trans)
         {
            AttributeCollection Atts =blkRef.AttributeCollection;
-            object attValue = null;
+            string attValue = null;
             for (int i = 0; i<Atts.Count;i++)
             {
                 AttributeReference attRef= trans.GetObject(Atts[i], OpenMode.ForRead) as AttributeReference;

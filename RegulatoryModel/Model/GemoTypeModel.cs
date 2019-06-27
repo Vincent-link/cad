@@ -9,7 +9,7 @@ namespace RegulatoryModel.Model
         private string geoType;
         private string zIndex="0";
         private string attrIndex = "";
-       public Dictionary<AttributeItemModel, string> attItemList;
+       public List<AttributeItemModel> attItemList=new List<AttributeItemModel>();
 
         public string GeoType { get => geoType; set => geoType = value; }
         public string ZIndex { get => zIndex; set => zIndex = value; }

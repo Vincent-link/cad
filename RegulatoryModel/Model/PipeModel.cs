@@ -8,22 +8,80 @@ namespace RegulatoryModel.Model
 {
    public class PipeModel:AttributeBaseModel
     {
-        
+        public PipeModel()
+        {
+            this.attributes = new List<AttributeModel>()
+            {
+                new AttributeModel()
+        {
+            LayerName = "*管线",
+                     attributeItems = new List<AttributeItemModel>()
+                     {
+                         new AttributeItemModel()
+                         {
+                               TargetName ="线条宽度",
+                              AtGroupType= AttributeGroupType.Graph,
+                              AtItemType=AttributeItemType.Overallwidth,
+                         },
+                           new AttributeItemModel()
+                         {
+                               TargetName ="线型比例",
+                              AtGroupType= AttributeGroupType.Entity,
+                              AtItemType=AttributeItemType.LineScale,
+                         },
+                            new AttributeItemModel()
+                         {
+                              TargetName ="管线线型",
+                              AtGroupType= AttributeGroupType.Entity,
+                              AtItemType=AttributeItemType.LineType,
+                         },
+                     }
+                },
+                 new AttributeModel()
+        {
+                    LayerName = "*管径",
+                     attributeItems = new List<AttributeItemModel>()
+                     {
+                         new AttributeItemModel()
+                         {
+                              TargetName ="文字高度",
+                              AtGroupType= AttributeGroupType.Txt,
+                              AtItemType=AttributeItemType.TxtHeight,
+                         }
+                     }
+                },
+                   new AttributeModel()
+        {
+            LayerName = "*管长",
+                     attributeItems = new List<AttributeItemModel>()
+                     {
+                      new AttributeItemModel()
+                         {    TargetName="文字高度",
+
+                              AtGroupType= AttributeGroupType.Txt,
+                              AtItemType=AttributeItemType.TxtHeight,
+                         } }
+                }
+                 
+            };
+            ///// <summary>
+        }
         string pipeInfo ;
         //string pipePlanLine;
         //string pipeActualityLine;
         List<string> pipeNameList;
 
         public string PipeInfo { get => pipeInfo; set => pipeInfo = value; }
-        ///// <summary>
-        ///// 规划图层
-        ///// </summary>
-        //public string PipePlanLine { get => pipePlanLine; set => pipePlanLine = value; }
-        ///// <summary>
-        ///// 现状图层
-        ///// </summary>
-        //public string PipeActualityLine { get => pipeActualityLine; set => pipeActualityLine = value; }
-    }
+
+     
+    ///// 规划图层
+    ///// </summary>
+    //public string PipePlanLine { get => pipePlanLine; set => pipePlanLine = value; }
+    ///// <summary>
+    ///// 现状图层
+    ///// </summary>
+    //public string PipeActualityLine { get => pipeActualityLine; set => pipeActualityLine = value; }
+}
 
     public class PipeItemModel : CommandItemModel
     {

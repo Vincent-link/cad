@@ -750,7 +750,7 @@ namespace RegulatoryPlan.Command
                 foreach (ObjectId id in layerTable)
                 {
                     LayerTableRecord ltr = (LayerTableRecord)trans.GetObject(id, OpenMode.ForRead);
-                    if (allLayers.Contains(ltr.Name))
+        
                     allLayers.Add(ltr.Name);
                 }
                 
@@ -779,6 +779,56 @@ namespace RegulatoryPlan.Command
                     colorStr = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
 
                 }
+            }
+            return colorStr;
+        }
+
+        /// <summary>
+        /// 根据图层名获取图层线型
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLayerLineTypeByID(ObjectId layerId)
+        {
+            string colorStr = "";
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+            using (Transaction Trans = db.TransactionManager.StartTransaction())
+            {
+                LayerTableRecord ltr = Trans.GetObject(layerId, OpenMode.ForRead) as LayerTableRecord;
+                if (ltr != null)
+                {
+                    LinetypeTableRecord re= Trans.GetObject(ltr.LinetypeObjectId, OpenMode.ForRead) as LinetypeTableRecord;
+                    colorStr =re.Name;
+                }
+            }
+            return colorStr;
+        }
+
+        /// <summary>
+        /// 根据图层名获取图层线型
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLayerLineTypeByID(Entity entity)
+        {
+            
+            string colorStr = "";
+            if (entity.Linetype.ToString() == "BYLAYER")
+            {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                Database db = doc.Database;
+                using (Transaction Trans = db.TransactionManager.StartTransaction())
+                {
+                    LayerTableRecord ltr = Trans.GetObject(entity.LayerId, OpenMode.ForRead) as LayerTableRecord;
+                    if (ltr != null)
+                    {
+                        LinetypeTableRecord re = Trans.GetObject(ltr.LinetypeObjectId, OpenMode.ForRead) as LinetypeTableRecord;
+                        colorStr = re.Name;
+                    }
+                }
+            }
+            else
+            {
+                colorStr = entity.Linetype.ToString();   
             }
             return colorStr;
         }

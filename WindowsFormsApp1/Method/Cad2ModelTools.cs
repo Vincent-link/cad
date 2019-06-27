@@ -288,7 +288,7 @@ namespace RegulatoryPlan.Model
         public static DbTextModel DbText2Model(DBText dbText,AttributeModel atModel)
         {
             DbTextModel dbModel = new DbTextModel();
-            dbModel.attItemList = new Dictionary<AttributeItemModel, string>();
+            dbModel.attItemList = new List<AttributeItemModel>();
             dbModel.Height = dbText.Height;
             //dbModel.Position = new System.Drawing.PointF((float)dbText.Position.X, (float)dbText.Position.Y);
             dbModel.Position = Point3d2Pointf(dbText.Position);
@@ -318,12 +318,13 @@ namespace RegulatoryPlan.Model
                         attValue = dbText.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = dbText.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(dbText);
                         break;
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;
@@ -339,6 +340,7 @@ namespace RegulatoryPlan.Model
             //      dbModel.ThickNess = dbText.TextHeight;
             dbModel.Text = dbText.Text;
             dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
+         
             foreach (AttributeItemModel item in atModel.attributeItems)
             {
                 string attValue = "";
@@ -361,12 +363,13 @@ namespace RegulatoryPlan.Model
                         attValue = dbText.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = dbText.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(dbText);
                         break;
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;
@@ -436,7 +439,7 @@ namespace RegulatoryPlan.Model
                 {
                     cpModel.loopPoints.Add(cpModel.loopPoints[0]);
                 }
-                cpModel.attItemList = new Dictionary<AttributeItemModel, string>();
+                cpModel.attItemList = new List<AttributeItemModel>();
                 foreach (AttributeItemModel item in atModel.attributeItems)
                 {
                     string attValue = "";
@@ -462,7 +465,7 @@ namespace RegulatoryPlan.Model
                             attValue = dbText.LinetypeScale.ToString();
                             break;
                         case AttributeItemType.LineType:
-                            attValue = dbText.Linetype.ToString();
+                            attValue = GetLayerLineTypeByID(dbText);
                             break;
                         case AttributeItemType.Overallwidth:
                             break;
@@ -473,7 +476,8 @@ namespace RegulatoryPlan.Model
                     }
                     if (!string.IsNullOrEmpty(attValue))
                     {
-                        cpModel.attItemList.Add(item, attValue);
+                        item.AtValue = attValue;
+                       cpModel.attItemList.Add(item);
                     }
                 }
                 dbModel.loopPoints[i] = cpModel;
@@ -541,7 +545,7 @@ namespace RegulatoryPlan.Model
                         attValue = line.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = line.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
                     
@@ -553,7 +557,8 @@ namespace RegulatoryPlan.Model
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;
@@ -594,7 +599,7 @@ namespace RegulatoryPlan.Model
                         attValue = line.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = line.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
                         break;
@@ -605,7 +610,8 @@ namespace RegulatoryPlan.Model
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;
@@ -651,7 +657,7 @@ namespace RegulatoryPlan.Model
                         attValue = line.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = line.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
                         break;
@@ -662,7 +668,8 @@ namespace RegulatoryPlan.Model
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;
@@ -735,7 +742,7 @@ namespace RegulatoryPlan.Model
                                 attValue = polyLine.LinetypeScale.ToString();
                                 break;
                             case AttributeItemType.LineType:
-                                attValue = polyLine.Linetype.ToString();
+                                attValue = GetLayerLineTypeByID(polyLine);
                                 break;
                             case AttributeItemType.Overallwidth:
                                 attValue = polyLine.ConstantWidth.ToString();
@@ -747,7 +754,8 @@ namespace RegulatoryPlan.Model
                         }
                         if (!string.IsNullOrEmpty(attValue))
                         {
-                            arc.attItemList.Add(item, attValue);
+                            item.AtValue = attValue;
+                            arc.attItemList.Add(item);
                         }
                     }
                     polylineModel.Vertices.Add(arc);
@@ -800,7 +808,7 @@ namespace RegulatoryPlan.Model
                                 attValue = polyLine.LinetypeScale.ToString();
                                 break;
                             case AttributeItemType.LineType:
-                                attValue = polyLine.Linetype.ToString();
+                                attValue = GetLayerLineTypeByID(polyLine);
                                 break;
                             case AttributeItemType.Overallwidth:
                                 attValue = polyLine.ConstantWidth.ToString();
@@ -811,7 +819,8 @@ namespace RegulatoryPlan.Model
 
                         }
 
-                        line.attItemList.Add(item, attValue);
+                        item.AtValue = attValue;
+                       line.attItemList.Add(item);
                     }
                     polylineModel.Vertices.Add(line);
                 }
@@ -856,7 +865,7 @@ namespace RegulatoryPlan.Model
                         attValue = line.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = line.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
                         attValue = line.ConstantWidth.ToString();
@@ -868,7 +877,8 @@ namespace RegulatoryPlan.Model
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;
@@ -913,7 +923,7 @@ namespace RegulatoryPlan.Model
                         attValue = line.LinetypeScale.ToString();
                         break;
                     case AttributeItemType.LineType:
-                        attValue = line.Linetype.ToString();
+                        attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
                    
@@ -925,7 +935,8 @@ namespace RegulatoryPlan.Model
                 }
                 if (!string.IsNullOrEmpty(attValue))
                 {
-                    dbModel.attItemList.Add(item, attValue);
+                    item.AtValue = attValue;
+                    dbModel.attItemList.Add(item);
                 }
             }
             return dbModel;

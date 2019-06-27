@@ -25,7 +25,11 @@ namespace RegulatoryModel.Model
         /// <summary>
         /// 其他
         /// </summary>
-        Other
+        Other,
+        /// <summary>
+        /// 属性
+        /// </summary>
+        Property
     }
 
     public enum AttributeItemType
@@ -62,7 +66,15 @@ namespace RegulatoryModel.Model
         /// <summary>
         /// 图层名
         /// </summary>
-            LayerName
+            LayerName,
+            /// <summary>
+            /// 地块编码
+            /// </summary>
+            LotNumber,
+            /// <summary>
+            /// 用地代码
+            /// </summary>
+            UseLandNumber
     }
 
     public class AttributeBaseModel:ModelBase

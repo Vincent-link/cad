@@ -129,7 +129,9 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.CenterCityUseLandPlan:
                     PostModel.PostModelBase(model as AttributeBaseModel);
                     break;
-
+                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                    PostModel.PostModelBase(model as AttributeBaseModel);
+                    break;
             }
         }
         DerivedTypeEnum crtType;
@@ -176,6 +178,8 @@ namespace RegulatoryPlan.UI
                     return new CenterCityUseLandPlanModel();
                 case DerivedTypeEnum.UseLandNumber:
                     return new UseLandNumberModel();
+                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                    return new CenterCityLifeUseLandPlanModel();
             }
             return new ModelBase();
 
@@ -341,17 +345,13 @@ namespace RegulatoryPlan.UI
             mb = ChangeToModel(mb);
             isOnlyModel = mb.IsOnlyModel;
             mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
-           
-           
-           
-                ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
-                // mbm.GetLengedPoints(mb);
-                mbm.GetAllLengedGemo(mb);
-                mbm.GetExportLayers(mb);
-                LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
-                layerSpecial.AddSpecialLayerModel(mb);
 
-            //  mb.AddSpecialLayerModel();
+            ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
+            // mbm.GetLengedPoints(mb);
+            mbm.GetAllLengedGemo(mb);
+            mbm.GetExportLayers(mb);
+            LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
+            layerSpecial.AddSpecialLayerModel(mb);
             DataTable tb = new DataTable();
             tb.Columns.Add("所在图层");
 
@@ -573,7 +573,7 @@ namespace RegulatoryPlan.UI
 
         private void GetSpecialDataRowInfo(List<object> list, DataTable tb, string layerName)
         {
-            if (list.Count > 0)
+            if (list!=null&&list.Count > 0)
             {
                 if (list[0] is RoadInfoItemModel)
                 {
