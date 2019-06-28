@@ -24,7 +24,7 @@ namespace RegulatoryPlan.Method
                 {
                     LayerModel lyModel = new LayerModel();
                     List<BlockInfoModel> list = new List<BlockInfoModel>();
-
+                    lyModel.Name = layerName;
                     Document doc = Application.DocumentManager.MdiActiveDocument;
                     ObjectIdCollection ids = new ObjectIdCollection();
 

@@ -17,9 +17,8 @@ namespace RegulatoryPlan.Command
     {
         public static string LegendLayer = "图例";
 
-        public   static string fileName = "";
-        public    static string cityName = "";
-        static DerivedTypeEnum dp = DerivedTypeEnum.None;
+  
+        
 
 
         public static BlockInfoModel AnalysisBlcokInfo(DBObject ob)
@@ -40,7 +39,7 @@ namespace RegulatoryPlan.Command
                     else if (ob is Arc)
                     {
 
-                        plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+                        plModel.Arc.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
 
                     }
                     else if (ob is BlockReference)
@@ -69,7 +68,7 @@ namespace RegulatoryPlan.Command
                     else if (ob is Ellipse)
                     {
 
-                        plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+                        plModel.Ellipse.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
 
                     }
                     else if (ob is Line)
@@ -114,15 +113,11 @@ namespace RegulatoryPlan.Command
                 {
                     if (ob is Polyline)
                     {
-
                         plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline,attModel));
-
                     }
                     else if (ob is Arc)
                     {
-
                         plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc, attModel));
-
                     }
                     else if (ob is BlockReference)
                     {
@@ -139,13 +134,10 @@ namespace RegulatoryPlan.Command
                     else if (ob is Hatch)
                     {
                         plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch,attModel));
-
                     }
                     else if (ob is Circle)
                     {
-
                         plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle,attModel));
-
                     }
                     else if (ob is Ellipse)
                     {
@@ -220,7 +212,7 @@ namespace RegulatoryPlan.Command
             else if (ob is Ellipse)
             {
 
-                plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+                plModel.Ellipse.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
 
             }
             else if (ob is Line)
@@ -232,7 +224,7 @@ namespace RegulatoryPlan.Command
             else if (ob is Arc)
             {
 
-                plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+                plModel.Arc.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
 
             }
             else if (ob is Polyline2d)
@@ -538,89 +530,8 @@ namespace RegulatoryPlan.Command
             return res;
         }
 
-        internal static void OpenFile(string file, string city, DerivedTypeEnum derivedType)
-        {
-            try
-            {
-                fileName = file;
-                cityName = city;
-                dp = derivedType;
-                num = 0;
-                Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docChange);
-                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
-                Application.DocumentManager.DocumentActivated -= docChange;
-            }
-            catch { }
-        }
-        internal static void AutoOpenFile(string file, string city, DerivedTypeEnum derivedType)
-        {
-            try
-            {
-                fileName = file;
-                cityName = city;
-                dp = derivedType;
-                num = 0;
-                Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docAutoChange);
-                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file,false);
-                Application.DocumentManager.DocumentActivated -= docChange;
-                Application.DocumentManager.MdiActiveDocument.CloseAndDiscard();
-            }
-            catch { }
-        }
-
-
-
-        public static void OpenFile(string file, string city)
-        {
-            fileName = file;
-            cityName = city;
-            num = 0;
-            Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docChange);
-            Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
-            Application.DocumentManager.DocumentActivated -= docChange;
-        }
-        public static int num = 0;
-        /// <summary>
-        /// 文档发生改变
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void docChange(object sender, DocumentCollectionEventArgs e)
-        {
-            try
-            {
-                if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
-                {
-                    num++;
-                    MainForm mf = new MainForm(cityName, dp);
-                    mf.Show();
-                   // mf.Close();
-                    
-                }
-            }
-            catch { }
-        }
-
-        /// <summary>
-        /// 文档发生改变
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void docAutoChange(object sender, DocumentCollectionEventArgs e)
-        {
-            try
-            {
-                if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
-                {
-                    num++;
-                    MainForm mf = new MainForm(cityName, dp, true);
-                    mf.ShowDialog();
-                    // mf.Close();
-
-                }
-            }
-            catch { }
-        }
+       
+  
 
         /// <summary>
                 /// 根据图形边界显示视图

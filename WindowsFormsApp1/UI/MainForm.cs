@@ -60,7 +60,7 @@ namespace RegulatoryPlan.UI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            MethodCommand.num--;
+            CadHelper.Instance.num--;
             this.Close();
         }
 
@@ -133,6 +133,7 @@ namespace RegulatoryPlan.UI
                     PostModel.PostModelBase(model as AttributeBaseModel);
                     break;
             }
+          //  PostModel.PostModelBase1(model);
         }
         DerivedTypeEnum crtType;
 
@@ -344,7 +345,7 @@ namespace RegulatoryPlan.UI
 
             mb = ChangeToModel(mb);
             isOnlyModel = mb.IsOnlyModel;
-            mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
+            mb.DocName = System.IO.Path.GetFileNameWithoutExtension(CadHelper.fileName);
 
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
             // mbm.GetLengedPoints(mb);
@@ -415,8 +416,12 @@ namespace RegulatoryPlan.UI
             }
             else if (mb is PipeModel)
             {
-                LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
-                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                try
+                {
+                    LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
+                    GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                }
+                catch { }
             }
             else if (mb is UnitPlanModel)
             {
@@ -435,7 +440,7 @@ namespace RegulatoryPlan.UI
             {
                 mb = ChangeToModel(mb);
                 isOnlyModel = mb.IsOnlyModel;
-                mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
+                mb.DocName = System.IO.Path.GetFileNameWithoutExtension(CadHelper.fileName);
                 ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
                 // mbm.GetLengedPoints(mb);
                 mbm.GetAllLengedGemo(mb);

@@ -29,8 +29,12 @@ namespace RegulatoryPlan.Command
                     pMethod.GetAllPointsPlaneInfo(model as PointsPlanModel);
                     break;
                 case DerivedTypeEnum.Power10Kv:
+                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeMethod4.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.Power35kv:
+                    PipeMethod<PipeModel> pipeMethod3 = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeMethod3.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.WaterSupply:
                     PipeMethod<PipeModel> pipeMethod1 = new PipeMethod<PipeModel>(model as PipeModel);
@@ -41,8 +45,8 @@ namespace RegulatoryPlan.Command
                     pipeMethod2.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.FuelGas:
-                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>(model as PipeModel);
-                    pipeMethod4.GetAllPipeInfo(model as PipeModel);
+                    PipeMethod<PipeModel> pipeMethod51 = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeMethod51.GetAllPipeInfo(model as PipeModel);
                     break;
                 //case DerivedTypeEnum.Communication:
                 //    break;

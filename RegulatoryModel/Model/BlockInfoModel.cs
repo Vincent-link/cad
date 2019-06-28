@@ -36,9 +36,13 @@ namespace RegulatoryModel.Model
         /// </summary>
         public List<CircleModel> Circle { get; set; }
         /// <summary>
-        /// 圆
+        /// 弧
         /// </summary>
         public List<ArcModel> Arc { get; set; }
+        /// <summary>
+        /// 椭圆
+        /// </summary>
+        public List<EllipseModel> Ellipse { get; set; }
         public List<HatchModel> Hatch { get; set; }
 
         /// <summary>

@@ -151,6 +151,7 @@ namespace RegulatoryPlan.Model
             CircleModel dbModel = new CircleModel();
             dbModel.Center= Point3d2Pointf(line.Center);
             dbModel.Radius =line.Radius;
+            dbModel.GeoType = "Circle";
             MyPoint spt = new MyPoint(line.StartPoint.X,line.StartPoint.Y);
             MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
@@ -160,18 +161,19 @@ namespace RegulatoryPlan.Model
         }
 
 
-        public static CircleModel Ellipse2Model(Ellipse line)
+        public static EllipseModel Ellipse2Model(Ellipse line)
         {
-            CircleModel dbModel = new CircleModel();
+            EllipseModel dbModel = new EllipseModel();
             dbModel.Center = Point3d2Pointf(line.Center);
-            //dbModel.MajorAxis= line.MajorRadius;
-            //dbModel.MinorAxis = line.MinorRadius;
+            dbModel.MajorAxis= line.MajorRadius;
+            dbModel.MinorAxis = line.MinorRadius;
+            dbModel.GeoType = "Ellipse";
             MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);
             MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
            
             double length = line.RadiusRatio * (line.MinorRadius+line.MajorRadius);
-           dbModel.pointList= MethodCommand.GetArcPoints(line,length);
+            dbModel.pointList= MethodCommand.GetArcPoints(line,length);
             
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
@@ -265,10 +267,15 @@ namespace RegulatoryPlan.Model
             return dbModel;
         }
 
-        internal static CircleModel Arc2Model(Arc line)
+        internal static ArcModel Arc2Model(Arc line)
         {
-            CircleModel dbModel = new CircleModel();
+           ArcModel dbModel = new ArcModel();
             dbModel.Center = Point3d2Pointf(line.Center);
+            dbModel.EndAngel = line.EndAngle;
+            dbModel.EndPoint = MethodCommand.Point3d2Pointf(line.EndPoint);
+            dbModel.Startangel = line.StartAngle;
+            dbModel.StartPoint = MethodCommand.Point3d2Pointf(line.StartPoint);
+            dbModel.GeoType = "Arc";
             //dbModel.MajorAxis= line.MajorRadius;
             //dbModel.MinorAxis = line.MinorRadius;
             MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);

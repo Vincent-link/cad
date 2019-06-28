@@ -25,8 +25,8 @@ namespace RegulatoryPlan.Method
                 {
                     LayerModel lyModel = new LayerModel();
                     List<BlockInfoModel> list = new List<BlockInfoModel>();
-
-                    Document doc = Application.DocumentManager.MdiActiveDocument;
+                    lyModel.Name = layerName;
+                   // Document doc = Application.DocumentManager.MdiActiveDocument;
                     ObjectIdCollection ids = new ObjectIdCollection();
 
                     PromptSelectionResult ProSset = null;
@@ -35,14 +35,14 @@ namespace RegulatoryPlan.Method
                     LayoutManager layoutMgr = LayoutManager.Current;
 
                     string ss = layoutMgr.CurrentLayout;
-                    ProSset = doc.Editor.SelectAll(sfilter);
+                    ProSset = CadHelper.Instance.Editor.SelectAll(sfilter);
                     //  List<ObjectId> idss=  GetEntitiesInModelSpace();
-                    Database db = doc.Database;
+                //    Database db = doc.Database;
                     List<BlockReference> blockTableRecords = new List<BlockReference>();
                     if (ProSset.Status == PromptStatus.OK)
                     {
                         lyModel.pointFs = new Dictionary<int, List<object>>();
-                        using (Transaction tran = db.TransactionManager.StartTransaction())
+                        using (Transaction tran = CadHelper.Instance.Database.TransactionManager.StartTransaction())
                         {
                             SelectionSet sst = ProSset.Value;
 
@@ -51,7 +51,7 @@ namespace RegulatoryPlan.Method
                             int ad = 0;
                             List<string> aa = new List<string>();
 
-                            LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
+                            LayerTable lt = (LayerTable)CadHelper.Instance.Database.LayerTableId.GetObject(OpenMode.ForRead);
                             foreach (ObjectId layerId in lt)
                             {
                                 LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
