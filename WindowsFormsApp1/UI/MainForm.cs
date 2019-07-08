@@ -106,7 +106,7 @@ namespace RegulatoryPlan.UI
                     PostModel.PostModelBase(model as SewageModel);
                     break;
                 case DerivedTypeEnum.FiveLine:
-                    PostModel.PostModelBase(model as FiveLineModel);
+                    PostModel.PostModelBase(model as UnitPlanModel);
                     break;
                 case DerivedTypeEnum.LimitFactor:
                     PostModel.PostModelBase(model as LimitFactorModel);
@@ -158,7 +158,7 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.PipeLine:
                     return new PipeLineModel();
                 case DerivedTypeEnum.FiveLine:
-                    return new FiveLineModel();
+                    return new UnitPlanModel();
                 case DerivedTypeEnum.LimitFactor:
                     return new LimitFactorModel();
                 case DerivedTypeEnum.RainWater:
@@ -405,11 +405,6 @@ namespace RegulatoryPlan.UI
                 LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
                 GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
             }
-            else if (mb is UnitPlanModel)
-            {
-                LayerModel spModel = (mb as UnitPlanModel).allLines[(mb as UnitPlanModel).allLines.Count - 1];
-                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
-            }
 
             this.dataGridView1.DataSource = tb;
             model = mb;
@@ -496,11 +491,7 @@ namespace RegulatoryPlan.UI
                     LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
                     GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
                 }
-                else if (mb is UnitPlanModel)
-                {
-                    LayerModel spModel = (mb as UnitPlanModel).allLines[(mb as UnitPlanModel).allLines.Count - 1];
-                    GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
-                }
+
 
                 this.dataGridView1.DataSource = tb;
                 model = mb;

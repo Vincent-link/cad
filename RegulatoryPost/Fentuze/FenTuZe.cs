@@ -84,18 +84,13 @@ namespace RegulatoryPost.FenTuZe
             string[] baseAddresses = new string[] {
                 "http://172.18.84.102:8080/CIM/", // 測試
                 //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
-                //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
+               //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
             };
 
             foreach (var baseAddress in baseAddresses)
             {
-                string resultString = JsonConvert.SerializeObject(result);
-                using (StreamWriter file = new StreamWriter(@"C:\Users\Public\Documents\WriteLines2.json", false))
-                {
-                    file.WriteLine(resultString);
-                }
-
                 Dictionary<string, string> resultAll = new Dictionary<string, string>();
+                string resultString = JsonConvert.SerializeObject(result);
                 resultAll.Add("result", resultString);
 
                 var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
@@ -120,14 +115,32 @@ namespace RegulatoryPost.FenTuZe
                     file.WriteLine(builder);
                 }
 
-                MessageBox.Show(builder.ToString());
+                //MessageBox.Show(builder.ToString());
 
                 //string parsedContent = "srid=4326&attrlist=[\"chColor:51\"]&factorid=[\"b73e3fce-8314-4d5b-8e2b-0a3e8844b28b\"]&type=polygon&geom={\"rings\":[[[60145.4546169,33387.5339155],[59895.3137297,33437.8260557],[59885.7661656,33285.0286724],[59885.4849623,33280.5283488],[59902.1499232,33259.5545569],[59906.5973667,33258.8114325],[60127.4437563,33221.9101578],[60145.4546169,33387.5339155]]]}&name=123";
                 Byte[] bytes = Encoding.UTF8.GetBytes(builder.ToString());
 
-                Stream newStream = http.GetRequestStream();
-                newStream.Write(bytes, 0, bytes.Length);
-                newStream.Close();
+                try
+                {
+                    Stream newStream = http.GetRequestStream();
+                    newStream.Write(bytes, 0, bytes.Length);
+                    newStream.Close();
+                }
+                catch(Exception e)
+                {
+                    string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+                    using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
+                    {
+                        logFile.WriteLine(DateTime.Now);
+                        logFile.WriteLine(result["chartName"] + "，" + e.Message);
+                        logFile.WriteLine("\n");
+                        logFile.Flush();
+                        logFile.Close();
+                    }
+                    //MessageBox.Show(e.Message);
+                }
+
+                string content = "";
 
                 try
                 {
@@ -135,25 +148,28 @@ namespace RegulatoryPost.FenTuZe
 
                     var stream = response.GetResponseStream();
                     var sr = new StreamReader(stream, Encoding.UTF8);
-                    var content = sr.ReadToEnd();
+                    content = sr.ReadToEnd();
 
-                    MessageBox.Show(content);
+                    //MessageBox.Show(content);
                 }
-                catch (WebException ex)
+                catch (Exception e)
                 {
-                    if (ex.Status == WebExceptionStatus.ProtocolError)
+                    string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+                    using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
                     {
-                        var response = ex.Response as HttpWebResponse;
-                        if (response != null)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
+                        logFile.WriteLine(DateTime.Now);
+                        logFile.WriteLine(result["chartName"] + "，" + e.Message);
+                        logFile.WriteLine("\n");
+                        logFile.Flush();
+                        logFile.Close();
                     }
+
+                    //MessageBox.Show(e.Message);
                 }
+
             }
             // 发送 结束
         }
-
        
     }
 

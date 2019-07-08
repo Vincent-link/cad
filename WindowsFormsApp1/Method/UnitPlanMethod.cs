@@ -18,15 +18,18 @@ namespace RegulatoryPlan.Method
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
             lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
 
+            LayerModel lm2 = new LayerModel();
+
+            lm2 = mbm.GetAllLayerGemo(model, "控制单元范围");
+
             // 获取图表数据（特殊数据）
             System.Data.DataTable attributeList = new System.Data.DataTable();  // 属性集合
             ArrayList kgGuide = new ArrayList();//控规引导
 
-            ReadDanAttributeList<ModelBase> attributeListObj = new ReadDanAttributeList<ModelBase>();
             // 属性
-            attributeList = attributeListObj.AttributeList();
+            attributeList = AttributeList();
             // 控规要求
-            kgGuide = attributeListObj.ControlList();
+            kgGuide = ControlList();
 
             if (lm.modelItemList == null)
             {
@@ -38,9 +41,354 @@ namespace RegulatoryPlan.Method
                 model.allLines = new List<LayerModel>();
             }
             model.allLines.Add(lm);
+            model.allLines.Add(lm2);
+
             lm.modelItemList.Add(attributeList);
             lm.modelItemList.Add(kgGuide);
         }
+
+        public System.Data.DataTable AttributeList()
+        {
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Editor ed = doc.Editor;
+            Database db = doc.Database;
+
+            // 声明DataColumn、DataRow变量
+            System.Data.DataColumn column;
+            System.Data.DataRow row;
+
+            // 增加一个用地构成表（用地代码）dataTable
+            System.Data.DataTable table = new System.Data.DataTable("用地构成");
+
+            TypedValue[] tvs = new TypedValue[1] { new TypedValue( (int)DxfCode.LayerName, "用地构成" ) };
+
+            SelectionFilter sf = new SelectionFilter(tvs);
+            PromptSelectionResult psr = ed.SelectAll(sf);
+
+            if (psr.Status == PromptStatus.OK)
+            {
+                SelectionSet SS = psr.Value;
+                ObjectId[] idArray = SS.GetObjectIds();
+
+                using (Transaction acTrans = db.TransactionManager.StartTransaction())
+                {
+
+                    List<string> compositionTableIndex = new List<string>() { "R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41", "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1" };
+
+                    //List<string> compositionTableIndex = new List<string>();
+
+                    //List<Entity> mtexts = new List<Entity>();
+                    //for (int j = 0; j < idArray.Length; j++)
+                    //{
+                    //    Entity ent2 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
+                    //    if (ent2 is MText)
+                    //    {
+                    //        mtexts.Add(ent2);
+                    //    }
+                    //}
+                    /////找出索引
+                    //for (int j = 0; j < mtexts.Count; j++)
+                    //{
+                    //    Entity ent2 = (Entity)mtexts[j];
+
+                    //    // 找一个参照物——主导功能
+                    //    if (((MText)mtexts[j]).Text == "R")
+                    //    {
+                    //        for (int z = 0; z < mtexts.Count; z++)
+                    //        {
+                    //            // 读取数组里的实体
+                    //            Entity ent3 = (Entity)mtexts[z];
+
+                    //            if (ent3 is MText && ((MText)ent2).Location.X - 800 < ((MText)ent3).Location.X && ((MText)ent3).Location.X < ((MText)ent2).Location.X + 800 && ((MText)ent2).Location.Y >= ((MText)ent3).Location.Y)
+                    //            {
+                    //                compositionTableIndex.Add(((MText)ent3).Text);
+                    //            }
+                    //        }
+                    //        break;
+                    //    }
+
+                    //}
+
+                    // 增加表格表头名称   
+                    table.Columns.Add(new System.Data.DataColumn(("用地代码"), typeof(string)));
+                    table.Columns.Add(new System.Data.DataColumn(("用地名称"), typeof(string)));
+                    table.Columns.Add(new System.Data.DataColumn(("面积"), typeof(string)));
+                    table.Columns.Add(new System.Data.DataColumn(("占建设用地比例"), typeof(string)));
+
+                    //table.Columns.Add(new System.Data.DataColumn(("col"),typeof(string)));
+                    //table.NewRow().ItemArray = new string[] { "",""};
+
+                    int[] keysArr = new int[10];
+                    string[] valuesArr = new string[10];
+
+                    // 用地代码循环
+                    for (int w = 0; w < compositionTableIndex.Count; w++)
+                    {
+
+                        // 循环所有实体
+                        for (int j = 0; j < idArray.Length; j++)
+                        {
+                            Entity ent1 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
+
+                            ArrayList rowList = new ArrayList();
+                            Hashtable columnList = new Hashtable();
+
+                            // 找出所有用地代码的关联属性
+                            if (ent1 is MText && ((MText)ent1).Text == compositionTableIndex[w])
+                            {
+
+                                //ed.WriteMessage("\nFound X：{0} \n Y：{1} of {2}", ((MText)ent1).Location.X, ((MText)ent1).Location.Y, ((MText)ent1).Text);
+
+                                // 增加一个排序列表，把实体对应的距离和文本内容放进去
+                                SortedList eSListRes = new SortedList();
+
+                                // 循环所有实体
+                                for (int c = 0; c < idArray.Length; c++)
+                                {
+                                    // 读取数组里的实体
+                                    Entity ent2 = (Entity)idArray[c].GetObject(OpenMode.ForRead);
+
+                                    // 如果为多行文本，以ent2为参考点，在y轴方向，在+400~-400范围内的，x轴方向，大于x轴的实体
+                                    if (ent2 is MText)
+                                    {
+                                        if (((MText)ent1).Location.Y - 400 < ((MText)ent2).Location.Y && ((MText)ent2).Location.Y < ((MText)ent1).Location.Y + 400 && ((MText)ent1).Location.X <= ((MText)ent2).Location.X)
+                                        {
+                                            int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent1).Location, ((MText)ent2).Location);
+
+                                            eSListRes.Add(eDistance, ((MText)ent2).Text);
+                                        }
+                                    }
+
+                                    // 如果为单行文本，以ent2为参考点，在y轴方向，在+400~-400范围内的，x轴方向，大于x轴的实体
+                                    if (ent2 is DBText)
+                                    {
+                                        if (((MText)ent1).Location.Y - 400 < ((DBText)ent2).Position.Y && ((DBText)ent2).Position.Y < ((MText)ent1).Location.Y + 400 && ((MText)ent1).Location.X <= ((DBText)ent2).Position.X)
+                                        {
+                                            int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent1).Location, ((DBText)ent2).Position);
+
+                                            eSListRes.Add(eDistance, ((DBText)ent2).TextString);
+                                        }
+                                    }
+                                    //dResString = dResString + "\n" + GetDistance(((MText)ent1).Location.X, ((MText)ent1).Location.Y, ((MText)ent2).Location.X, ((MText)ent2).Location.Y);
+                                }
+
+                                // 获取与用地代码相关的距离和属性
+                                int b = 0;
+                                int a = 0;
+
+                                // 距离
+                                ICollection key = eSListRes.Keys;
+                                foreach (int k in key)
+                                {
+                                    keysArr[b] = k;
+                                    b++;
+                                }
+                                // 属性值
+                                ICollection value = eSListRes.Values;
+                                foreach (string v in value)
+                                {
+                                    valuesArr[a] = v;
+                                    a++;
+                                }
+
+                                // 把获取的属性值按照距离大小排序，距离最近的放在第一位，以此类推
+                                string temp = "";
+                                for (int m = 0; m < keysArr.Length; m++)
+                                {
+                                    for (int q = 0; q < keysArr.Length - m - 1; q++)
+                                    {
+                                        if (keysArr[q] > keysArr[q + 1])
+                                        {
+                                            temp = valuesArr[q];
+                                            valuesArr[q] = valuesArr[q + 1];
+                                            valuesArr[q + 1] = temp;
+                                        }
+                                    }
+                                }
+
+                                row = table.NewRow();
+                                row["用地代码"] = valuesArr[0];
+                                row["用地名称"] = valuesArr[1];
+                                row["面积"] = valuesArr[2];
+                                row["占建设用地比例"] = valuesArr[3];
+                                table.Rows.Add(row);
+
+                                //if (valuesArr[4] != null && System.Text.RegularExpressions.Regex.IsMatch(valuesArr[4], @"^[+-]?\d*[.]?\d*$"))
+                                //{
+                                //    columnList.Add("index", valuesArr[5]);
+                                //    columnList.Add("value1", valuesArr[6]);
+                                //    columnList.Add("value2", valuesArr[7]);
+                                //    columnList.Add("value3", valuesArr[8]);
+                                //}
+                                //else if (valuesArr[4] != null)
+                                //{
+                                //    columnList.Add("index", valuesArr[4]);
+                                //    columnList.Add("value1", valuesArr[5]);
+                                //    columnList.Add("value2", valuesArr[6]);
+                                //    columnList.Add("value3", valuesArr[7]);
+                                //}
+
+                                //rowList.Add(columnList);
+
+                                //foreach (Hashtable rowL in rowList)
+                                //{
+                                //    row = table.NewRow();
+                                //    row["用地代码"] = rowL["index"];
+                                //    row["用地名称"] = rowL["value1"];
+                                //    row["面积"] = rowL["value2"];
+                                //    row["占建设用地比例"] = rowL["value3"];
+                                //    table.Rows.Add(row);
+                                //}
+
+                            } // 找出所有用地代码的关联属性
+
+
+                        } // 循环整个实体群组结束
+
+                    } // 用地代码循环结束
+
+                }
+
+            }
+            return table;
+
+        } // form 结束
+
+        public ArrayList ControlList()
+        {
+            Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Editor ed = doc.Editor;
+            Database db = doc.Database;
+
+            // 增加一个规划控制要求
+            ArrayList controlList = new ArrayList();
+
+            TypedValue[] tvs =
+                new TypedValue[1] {
+                new TypedValue(
+                    (int)DxfCode.LayerName,
+                    "控制要求"
+                )
+                };
+
+            SelectionFilter sf = new SelectionFilter(tvs);
+            PromptSelectionResult psr = ed.SelectAll(sf);
+
+            if (psr.Status == PromptStatus.OK)
+            {
+                SelectionSet SS = psr.Value;
+                ObjectId[] idArray = SS.GetObjectIds();
+
+                using (Transaction acTrans = db.TransactionManager.StartTransaction())
+                {
+                    //string[] requirementsIndex = { "主导功能", "规    模", "居    住", "工    业", "绿    地", "商业设施", "交通设施", "市政设施", "公共服务设施", "公共安全设施", "开发用地控制", "城市设计", "地下空间" };
+                    List<string> requirementsIndex = new List<string>();
+                    List<Entity> entities = new List<Entity>();
+
+                    // 找出索引
+                    for (int j = 0; j < idArray.Length; j++)
+                    {
+                        // 读取数组里的实体
+                        Entity ent2 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
+
+                        // 找一个参照物——主导功能
+                        if (ent2 is MText && (((MText)ent2).Text == "主导功能" || ((MText)ent2).Text == "城市红线"))
+                        {
+
+                            for (int z = 0; z < idArray.Length; z++)
+                            {
+                                // 读取数组里的实体
+                                Entity ent3 = (Entity)idArray[z].GetObject(OpenMode.ForRead);
+
+                                if (ent3 is MText && (((MText)ent2).Location.X - 1000 < ((MText)ent3).Location.X && ((MText)ent3).Location.X < ((MText)ent2).Location.Y + 1000 && ((MText)ent2).Location.Y >= ((MText)ent3).Location.Y))
+                                {
+                                    requirementsIndex.Add(((MText)ent3).Text);
+                                    entities.Add(ent3);
+                                }
+                            }
+
+                            // 如果是城市红线，重新排序
+                            if (ent2 is MText && ((MText)ent2).Text == "城市红线")
+                            {
+                                for (int b = 0; b < entities.Count; b++)
+                                {
+                                    for (int c = 0; c < entities.Count - 1; c++)
+                                    {
+                                        // 找出多Row文本
+                                        double entbMin = ((MText)entities[b]).Location.Y - ((MText)entities[b]).ActualHeight;
+                                        double entcMin = ((MText)entities[c]).Location.Y - ((MText)entities[c]).ActualHeight;
+                                        if (((MText)entities[b]).Location.Y > ((MText)entities[c]).Location.Y && entbMin < entcMin && ((MText)entities[b]).Location.X < ((MText)entities[c]).Location.X)
+                                        {
+                                            for (int d = 0; d < requirementsIndex.Count; d++)
+                                            {
+                                                // 把城市黄线从索引中去掉
+                                                if (requirementsIndex[d] == ((MText)entities[b]).Text)
+                                                {
+                                                    requirementsIndex.RemoveAt(d);
+                                                }
+                                                // 把多行里的每一行文字加上“城市黄线”
+                                                if (requirementsIndex[d] == ((MText)entities[c]).Text)
+                                                {
+                                                    requirementsIndex[d] = "城市黄线" + ((MText)entities[c]).Text;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } // 索引重新排序结束
+                        } // 找一个参照物结束
+                    } // 找出索引结束
+
+
+                    // 输出最终结果的字符串
+                    Dictionary<string, string> controlListOne = new Dictionary<string, string>();
+
+                    //table.Columns.Add(new System.Data.DataColumn(("col"),typeof(string)));
+                    //table.NewRow().ItemArray = new string[] { "",""};
+
+                    // 规划要求表 循环开始
+                    for (int r = 0; r < requirementsIndex.Count; r++)
+                    {
+                        // 循环所有实体
+                        for (int j = 0; j < entities.Count; j++)
+                        {
+                            // 如果为多行文本，以ent2为参考点，在y轴方向，在+400~-400范围内的，x轴方向，大于x轴的实体
+                            if (entities[j] is MText && requirementsIndex[r].Contains(((MText)entities[j]).Text))
+                            {
+                                for (int z = 0; z < idArray.Length; z++)
+                                {
+                                    // 读取数组里的实体
+                                    Entity ent3 = (Entity)idArray[z].GetObject(OpenMode.ForRead);
+
+                                    if (ent3 is MText && ((MText)entities[j]).Location.Y - 700 < ((MText)ent3).Location.Y && ((MText)ent3).Location.Y < ((MText)entities[j]).Location.Y + 700 && ((MText)entities[j]).Location.X < ((MText)ent3).Location.X)
+                                    {
+                                        controlListOne.Add(requirementsIndex[r], ((MText)ent3).Text);
+                                    }
+                                }
+
+                            } // 查找每个索引对应的实体结束
+
+                            // 如果为单行文本，以ent2为参考点，在y轴方向，在+400~-400范围内的，x轴方向，大于x轴的实体
+                            //if (ent2 is DBText && ((DBText)ent2).Text == requirementsIndex[r])
+                            //{
+                            //    if (((MText)ent1).Location.Y - 400 < ((DBText)ent2).Position.Y && ((DBText)ent2).Position.Y < ((MText)ent1).Location.Y + 400 && ((MText)ent1).Location.X < ((DBText)ent2).Position.X)
+                            //    {
+                            //        row = table2.NewRow();
+                            //        table2.Rows.Add(row);
+                            //    }
+                            //}
+                            //dResString = dResString + "\n" + GetDistance(((MText)ent1).Location.X, ((MText)ent1).Location.Y, ((MText)ent2).Location.X, ((MText)ent2).Location.Y);
+
+                        } // 循环所有实体结束
+
+                    } // 规划要求索引循环结束
+                    controlList.Add("规划控制要求");
+                    controlList.Add(controlListOne);
+
+                } // 事务结束
+            }
+            return controlList;
+        } // form 结束
 
         /// <summary>
         /// 对实体进行写属性

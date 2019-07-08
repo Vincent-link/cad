@@ -2,13 +2,13 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
+using Newtonsoft.Json;
 using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace RegulatoryPlan.Method
 {
@@ -18,19 +18,14 @@ namespace RegulatoryPlan.Method
         {
             LayerModel lm = new LayerModel();
 
-            // 坐标点图层 特殊处理
-            ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
-            //lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
-
             // 获取图表数据（特殊数据）
-            System.Data.DataTable attributeList = new System.Data.DataTable();  // 指标集合
-            ArrayList kgGuide = new ArrayList();//控规引导
+            // 指标集合
+            System.Data.DataTable attributeList = AttributeList();
+            // 控规引导
+            ArrayList kgGuide = KgGuide();
 
-            AttrAndKgGuide ag = new AttrAndKgGuide();
-            // 属性
-            attributeList = ag.AttributeList();
-            // 控规要求
-            kgGuide = ag.KgGuide();
+            //string attributeLists = JsonConvert.SerializeObject(attributeList);
+            //MessageBox.Show(attributeLists);
 
             if (lm.modelItemList == null)
             {
@@ -47,10 +42,11 @@ namespace RegulatoryPlan.Method
             lm.modelItemList.Add(kgGuide);
 
             //地块图层
-           GetAllYDBMGemo(model,"地块界限");
+            GetAllYDBMGemo(model, "地块界限");
+            GetAllDimensioning(model, "尺寸标注");
         }
 
-        public  void  GetAllYDBMGemo(T model, string layerName)
+        public void GetAllYDBMGemo(T model, string layerName)
         {
             if (model != null)
             {
@@ -143,6 +139,95 @@ namespace RegulatoryPlan.Method
             }
         }
 
+        public void GetAllDimensioning(T model, string layerName)
+        {
+            if (model != null)
+            {
+                LayerModel lm = new LayerModel();
+                Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+                ObjectIdCollection ids = new ObjectIdCollection();
+                lm.Name = layerName;
+
+                PromptSelectionResult ProSset = null;
+                TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
+                SelectionFilter sfilter = new SelectionFilter(filList);
+                LayoutManager layoutMgr = LayoutManager.Current;
+
+                string ss = layoutMgr.CurrentLayout;
+                ProSset = doc.Editor.SelectAll(sfilter);
+                //  List<ObjectId> idss=  GetEntitiesInModelSpace();
+                Database db = doc.Database;
+                List<BlockReference> blockTableRecords = new List<BlockReference>();
+                if (ProSset.Status == PromptStatus.OK)
+                {
+                    // lyModel.pointFs = new Dictionary<int, List<object>>();
+                    using (Transaction tran = db.TransactionManager.StartTransaction())
+                    {
+                        SelectionSet sst = ProSset.Value;
+
+                        ObjectId[] oids = sst.GetObjectIds();
+
+                        int ad = 0;
+                        List<string> aa = new List<string>();
+
+                        LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
+                        foreach (ObjectId layerId in lt)
+                        {
+                            LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
+                            if (ltr.Name == layerName)
+                            {
+                                //    lyModel.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                            }
+                        }
+
+                        int i = 0;
+                        foreach (ObjectId lengGemo in oids)
+                        {
+
+                            DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
+                            PointsPlanItemModel pointsPlanItem = new PointsPlanItemModel();
+
+                            Entity ety = ob as Entity;
+                            DBObjectCollection objs = new DBObjectCollection();
+                            ety.Explode(objs);
+
+                            foreach (DBObject obj in objs)
+                            {
+                                if (obj is DBText)
+                                {
+                                    pointsPlanItem.RoadWidth = (obj as DBText).TextString;
+                                }
+                                if (obj is MText)
+                                {
+                                    pointsPlanItem.RoadWidth = (obj as MText).Text;
+                                }
+                            }
+
+                            //BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
+                            //pointsPlanItem.Geom = plModel;
+
+                            if (lm.modelItemList == null)
+                            {
+                                lm.modelItemList = new List<object>();
+                            }
+
+                            lm.modelItemList.Add(pointsPlanItem);
+
+                        }
+                    }
+
+
+                    if (model.allLines == null)
+                    {
+                        model.allLines = new List<LayerModel>();
+                    }
+                    model.allLines.Add(lm);
+
+
+                }
+
+            }
+        }
         /// <summary>
         /// 对实体进行写属性
         /// </summary>
@@ -150,56 +235,7 @@ namespace RegulatoryPlan.Method
         /// <param name="appName">外部数据名</param>
         /// <param name="proStr">属性</param>
         /// <returns>true: 成功 false: 失败</returns>
-        public bool AddXdata(ObjectId objId, string appName, string proStr)
-        {
-            bool retureValue = false;
-            try
-            {
-                using (Database db = HostApplicationServices.WorkingDatabase)
-                {
-                    using (Transaction trans = db.TransactionManager.StartTransaction())
-                    {
-                        RegAppTable rAt = (RegAppTable)trans.GetObject(db.RegAppTableId, OpenMode.ForWrite);
 
-                        RegAppTableRecord rAtr;
-                        ObjectId rAtrId = ObjectId.Null;
-
-                        TypedValue tvName = new TypedValue
-                        (DxfCode.ExtendedDataRegAppName.GetHashCode(), appName);
-                        TypedValue tvPro = new TypedValue
-                        (DxfCode.ExtendedDataAsciiString.GetHashCode(), proStr);
-
-                        ResultBuffer rb = new ResultBuffer(tvName, tvPro);
-                        if (rAt.Has(appName))
-                        {
-                            rAtrId = rAt[appName];
-                        }
-                        else
-                        {
-                            rAtr = new RegAppTableRecord();
-                            rAtr.Name = appName;
-                            rAtrId = rAt.Add(rAtr);
-                            trans.AddNewlyCreatedDBObject(rAtr, true);
-                        }
-
-                        Entity en = (Entity)trans.GetObject(objId, OpenMode.ForWrite);
-                        en.XData = rb;
-                        trans.Commit();
-                        retureValue = true;
-                    }
-                }
-            }
-            catch
-            {
-                retureValue = false;
-            }
-            return retureValue;
-        }
-
-    }
-
-    public class AttrAndKgGuide
-    {
         public System.Data.DataTable AttributeList()
         {
             Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
@@ -210,7 +246,6 @@ namespace RegulatoryPlan.Method
 
             // 增加一个个体指标dataTable，个体指标必须在同一图层上，且固定一个图层名，比如“个体指标”
             System.Data.DataTable table = new System.Data.DataTable("控制指标");
-            DataGridView songsDataGridView = new DataGridView();
 
             TypedValue[] tvs =
                 new TypedValue[1] {
@@ -289,7 +324,7 @@ namespace RegulatoryPlan.Method
                             {
                                 Entity ent4 = (Entity)biaotou[s];
 
-                                int eDistance = (int)GetDistance(((MText)ent4).Location.X, ((MText)ent4).Location.Y, ((MText)ent3).Location.X, ((MText)ent3).Location.Y);
+                                int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent4).Location, ((MText)ent3).Location);
                                 //MessageBox.Show(eDistance.ToString());
 
                                 eSListRes.Add(eDistance, ((MText)ent4).Text);
@@ -351,7 +386,7 @@ namespace RegulatoryPlan.Method
                             Entity ent4 = (Entity)idArray[i].GetObject(OpenMode.ForRead);
                             if (ent4 is MText && ((MText)ent3).Location.X < ((MText)ent4).Location.X && ((MText)ent3).Location.Y - 3.5 < ((MText)ent4).Location.Y && ((MText)ent4).Location.Y < ((MText)ent3).Location.Y + 3.5)
                             {
-                                int eDistance = (int)GetDistance(((MText)ent4).Location.X, ((MText)ent4).Location.Y, ((MText)ent3).Location.X, ((MText)ent3).Location.Y);
+                                int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent4).Location, ((MText)ent3).Location);
 
                                 //MessageBox.Show(eDistance.ToString());
                                 eSListRes.Add(eDistance, ((MText)ent4).Text);
@@ -409,7 +444,6 @@ namespace RegulatoryPlan.Method
                 } // 事务结束
             }
 
-            songsDataGridView.DataSource = table;
             // 用地构成表
             //InitializeComponent(songsDataGridView);
 
@@ -433,7 +467,7 @@ namespace RegulatoryPlan.Method
                 new TypedValue[1] {
                     new TypedValue(
                         (int)DxfCode.LayerName,
-                        "控规引导"
+                        "控制引导"
                     )
                 };
 
@@ -476,13 +510,5 @@ namespace RegulatoryPlan.Method
 
             //fen.SendData(table, kgGuide);
         } // form 结束
-
-        // 求两点间距离函数
-        private double GetDistance(double point01X, double point01Y, double point02X, double point02Y)
-        {
-            double distance;
-            distance = Math.Sqrt(Math.Pow((point01X - point02X), 2) + Math.Pow((point01Y - point02Y), 2));
-            return distance;
-        }
     }
 }

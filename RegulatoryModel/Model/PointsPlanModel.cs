@@ -21,6 +21,8 @@ namespace RegulatoryModel.Model
     public class PointsPlanItemModel
     {
         public string Num { get; set; }
+        public string RoadWidth { get; set; }
+
         public BlockInfoModel Geom {get;set;}
  
     }

@@ -82,6 +82,8 @@
     <Compile Include="Command\MethodCommand.cs" />
     <Compile Include="Menu\ICommad.cs" />
     <Compile Include="Menu\TitelMenuCommand.cs" />
+    <Compile Include="Method\AutoDeleteLayers.cs" />
+    <Compile Include="Method\AutoSendFiles.cs" />
     <Compile Include="Method\Cad2ModelTools.cs" />
     <Compile Include="Method\DrawingMethod.cs" />
     <Compile Include="Method\FenTuZeMethod.cs" />

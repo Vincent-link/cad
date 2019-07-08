@@ -30,25 +30,74 @@ namespace RegulatoryPlan.Command
         [CommandMethod("AutoShowMainForm")]
         public void AutoShowMain()
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//等于true表示可以选择多个文件
 
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string file = dialog.SelectedPath;
-                string[] files = Directory.GetFiles(file);
-                foreach (string item in files)
+                foreach (string item in dialog.FileNames)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { MethodCommand.AutoOpenFile(item, "成安县", DerivedTypeEnum.None); }
+                    { MethodCommand.AutoOpenFile(item, "成安县", DerivedTypeEnum.PointsPlan); }
                 }
             }
-       
 
-            
+
+
             //MainForm form = new MainForm();
             //form.ShowDialog();
         }
+        [CommandMethod("AutoDeleteLayer", CommandFlags.Session)]
+        public void AutoDeleteLayer()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//等于true表示可以选择多个文件
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string item in dialog.FileNames)
+                {
+                    if (Path.GetExtension(item).ToLower() == ".dwg")
+                    { AutoDeleteLayers.AutoDeleteLayer(item); }
+
+                    //{ MethodCommand.AutoOpenFile(item, "成安县", DerivedTypeEnum.None); }
+
+                }
+            }
+        }
+
+        [CommandMethod("SendPointPlans", CommandFlags.Session)]
+        public void SendPointPlans()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//等于true表示可以选择多个文件
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string item in dialog.FileNames)
+                {
+                    if (Path.GetExtension(item).ToLower() == ".dwg")
+                    { AutoSendFiles.AutoOpenPointPlanFile(item, DerivedTypeEnum.PointsPlan); }
+                }
+            }
+        }
+
+        [CommandMethod("SendUnitPlans", CommandFlags.Session)]
+        public void SendUnitPlans()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//等于true表示可以选择多个文件
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string item in dialog.FileNames)
+                {
+                    if (Path.GetExtension(item).ToLower() == ".dwg")
+                    { AutoSendFiles.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan); }
+                }
+            }
+        }
+
         [CommandMethod("测试发送")]
         public void SendTestInfo()
         {

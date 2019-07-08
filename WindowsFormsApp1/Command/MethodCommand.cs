@@ -395,7 +395,7 @@ namespace RegulatoryPlan.Command
                 dp = derivedType;
                 num = 0;
                 Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docChange);
-                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
+                Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file, false);
                 Application.DocumentManager.DocumentActivated -= docChange;
             }
             catch { }
@@ -414,19 +414,80 @@ namespace RegulatoryPlan.Command
                 Application.DocumentManager.MdiActiveDocument.CloseAndDiscard();
             }
             catch { }
-        }
-
-
-
-        public static void OpenFile(string file, string city)
+        }        
+        // 获取所有图层
+        public static List<ObjectId> LayersToList(Database db)
         {
-            fileName = file;
-            cityName = city;
-            num = 0;
-            Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docChange);
-            Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file);
-            Application.DocumentManager.DocumentActivated -= docChange;
+            List<ObjectId> lstlay = new List<ObjectId>();
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                LayerTable lt = tr.GetObject(db.LayerTableId, OpenMode.ForRead) as LayerTable;
+                foreach (ObjectId layerId in lt)
+                {
+                    try
+                    {
+                        LayerTableRecord layer = tr.GetObject(layerId, OpenMode.ForWrite) as LayerTableRecord;
+                        if (layer.IsOff)
+                        {
+                            lstlay.Add(layerId);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        System.Windows.Forms.MessageBox.Show(e.Message);
+                    }
+                }
+                tr.Commit();
+            }
+            return lstlay;
         }
+        // 添加扩展数据
+        public static bool AddXdata(ObjectId objId, string appName, string proStr)
+        {
+            bool retureValue = false;
+            try
+            {
+                using (Database db = HostApplicationServices.WorkingDatabase)
+                {
+                    using (Transaction trans = db.TransactionManager.StartTransaction())
+                    {
+                        RegAppTable rAt = (RegAppTable)trans.GetObject(db.RegAppTableId, OpenMode.ForWrite);
+
+                        RegAppTableRecord rAtr;
+                        ObjectId rAtrId = ObjectId.Null;
+
+                        TypedValue tvName = new TypedValue
+                        (DxfCode.ExtendedDataRegAppName.GetHashCode(), appName);
+                        TypedValue tvPro = new TypedValue
+                        (DxfCode.ExtendedDataAsciiString.GetHashCode(), proStr);
+
+                        ResultBuffer rb = new ResultBuffer(tvName, tvPro);
+                        if (rAt.Has(appName))
+                        {
+                            rAtrId = rAt[appName];
+                        }
+                        else
+                        {
+                            rAtr = new RegAppTableRecord();
+                            rAtr.Name = appName;
+                            rAtrId = rAt.Add(rAtr);
+                            trans.AddNewlyCreatedDBObject(rAtr, true);
+                        }
+
+                        Entity en = (Entity)trans.GetObject(objId, OpenMode.ForWrite);
+                        en.XData = rb;
+                        trans.Commit();
+                        retureValue = true;
+                    }
+                }
+            }
+            catch
+            {
+                retureValue = false;
+            }
+            return retureValue;
+        }
+
         public static int num = 0;
         /// <summary>
         /// 文档发生改变
@@ -446,7 +507,10 @@ namespace RegulatoryPlan.Command
                     
                 }
             }
-            catch { }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>
@@ -517,7 +581,6 @@ namespace RegulatoryPlan.Command
                 ed.SetCurrentView(view);
             }
         }
-
 
         /// <summary>
         /// 查询面积最大的多段线,key=0 图例框，key=1 其他多段线

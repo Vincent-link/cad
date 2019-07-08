@@ -1380,7 +1380,7 @@ namespace RegulatoryPost.FenTuZe
             FenTuZe.PostData(result);
         }
         public static void PostModelBase(PointsPlanModel model)
-        {
+         {
             ArrayList uuid = new ArrayList();
             ArrayList geom = new ArrayList();   // 坐标点集合
             ArrayList colorList = new ArrayList();       // 颜色集合
@@ -1551,9 +1551,20 @@ namespace RegulatoryPost.FenTuZe
                                         {
                                             geoType = "polyline";
                                             ArrayList arrayList = new ArrayList();
-                                            arrayList.Add(Transform(lineModel.StartPoint));
-                                            arrayList.Add(Transform(lineModel.EndPoint));
+
+                                            if (((LineModel)lineModel).StartPoint == ((LineModel)lineModel).EndPoint)
+                                            {
+                                                geoType = "point";
+                                                arrayList.Add(Transform(((LineModel)lineModel).StartPoint));
+                                            }
+                                            else
+                                            {
+                                                arrayList.Add(Transform(lineModel.StartPoint));
+                                                arrayList.Add(Transform(lineModel.EndPoint));
+                                            }
+
                                             geom.Add(arrayList);
+
                                             zIndex.Add(lineModel.ZIndex);
                                             // 索引
                                             attributeIndexList.Add("");
@@ -1584,24 +1595,38 @@ namespace RegulatoryPost.FenTuZe
                                             geoType = "polyline";
                                             foreach (object arPt in arcModel.Vertices)
                                             {
-                                                if (arPt is LineModel)
-                                                {
-                                                    ArrayList arrayList = new ArrayList();
+                                                ArrayList arrayList = new ArrayList();
 
+                                                if (arPt is LineModel && ((LineModel)arPt).StartPoint == ((LineModel)arPt).EndPoint)
+                                                {
+                                                    geoType = "point";
+                                                    arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                }
+
+
+                                                if (arPt is LineModel && ((LineModel)arPt).StartPoint != ((LineModel)arPt).EndPoint)
+                                                {
                                                     arrayList.Add(Transform(((LineModel)arPt).StartPoint));
                                                     arrayList.Add(Transform(((LineModel)arPt).EndPoint));
-                                                    geom.Add(arrayList);
                                                 }
                                                 else if (arPt is ArcModel)
                                                 {
-                                                    ArrayList arrayList = new ArrayList();
-                                                    foreach (PointF arPtt in ((ArcModel)arPt).pointList)
+                                                    if (((ArcModel)arPt).pointList[0] == ((ArcModel)arPt).pointList[1])
                                                     {
-                                                        arrayList.Add(Transform(arPtt));
-
+                                                        geoType = "point";
+                                                        arrayList.Add(Transform(((ArcModel)arPt).pointList[0]));
                                                     }
-                                                    geom.Add(arrayList);
+                                                    else
+                                                    {
+                                                        foreach (PointF arPtt in ((ArcModel)arPt).pointList)
+                                                        {
+                                                            arrayList.Add(Transform(arPtt));
+                                                        }
+                                                    }
+
                                                 }
+                                                geom.Add(arrayList);
+
                                                 zIndex.Add(arcModel.ZIndex);
                                                 attributeIndexList.Add(arcModel.AttrIndex);
                                                 uuid.Add(GetUUID());
@@ -1714,7 +1739,6 @@ namespace RegulatoryPost.FenTuZe
                                                     foreach (PointF arPtt in ((ArcModel)arPt).pointList)
                                                     {
                                                         arrayList.Add(Transform(arPtt));
-
                                                     }
                                                     geom.Add(arrayList);
                                                 }
@@ -1736,6 +1760,42 @@ namespace RegulatoryPost.FenTuZe
                                         }
                                     }
                                 }
+
+                                //if (ppim.RoadWidth != null)
+                                //{
+                                //    if (ppim.Geom.DbText!= null)
+                                //    {
+
+                                //        foreach (DbTextModel circleModel in ppim.Geom.DbText)
+                                //        {
+                                //            geoType = "text";
+                                //            geom.Add(new ArrayList() { Transform(circleModel.Position) });
+                                //            // 道路名称索引
+                                //            attributeIndexList.Add("");
+                                //            // UUID
+                                //            uuid.Add(GetUUID());
+                                //            zIndex.Add(circleModel.ZIndex);
+
+                                //            // 实体颜色
+                                //            colorList.Add(circleModel.Color);
+                                //            // 实体类型
+                                //            type.Add(geoType);
+                                //            // 实体所在图层名字
+                                //            layerName.Add(layer.Name);
+                                //            // 表名，默认a
+                                //            tableName.Add("a");
+
+                                //            //配套设施所在地块集合
+                                //            parentId.Add("");
+                                //            // 文字内容(单行文字、多行文字、块参照等)
+                                //            textContent.Add("");
+                                //            // 块内容
+                                //            blockContent.Add("");
+
+                                //        }
+                                //    }
+                                //}
+
                             }
 
                         }
@@ -1863,7 +1923,7 @@ namespace RegulatoryPost.FenTuZe
                                 if (pf is PointF)
                                 {
                                     ArrayList singlePoint = new ArrayList();
-                                    geoType = "polyline";
+                                    geoType = "point";
                                     singlePoint.Add(Transform((PointF)pf));
 
                                     geom.Add(singlePoint);
@@ -1996,6 +2056,7 @@ namespace RegulatoryPost.FenTuZe
                                             ArrayList arrayList = new ArrayList();
                                             arrayList.Add(Transform(lineModel.StartPoint));
                                             arrayList.Add(Transform(lineModel.EndPoint));
+
                                             geom.Add(arrayList);
                                             zIndex.Add(lineModel.ZIndex);
                                             // 索引
@@ -2029,10 +2090,12 @@ namespace RegulatoryPost.FenTuZe
                                             {
                                                 if (arPt is LineModel)
                                                 {
-                                                    ArrayList arrayList = new ArrayList();
 
-                                                    arrayList.Add(Transform(((LineModel)arPt).StartPoint));
-                                                    arrayList.Add(Transform(((LineModel)arPt).EndPoint));
+                                                    ArrayList arrayList = new ArrayList();
+                                                        
+                                                        arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                        arrayList.Add(Transform(((LineModel)arPt).EndPoint));
+
                                                     geom.Add(arrayList);
                                                 }
                                                 else if (arPt is ArcModel)
@@ -2103,7 +2166,7 @@ namespace RegulatoryPost.FenTuZe
 
                                                     attributeIndexList.Add(arcModel.AttrIndex);
                                                     uuid.Add(GetUUID());
-                                                    colorList.Add(arcModel.Color);
+                                                    colorList.Add(cpModel.Color);
 
                                                     type.Add(geoType);
                                                     layerName.Add(layer.Name);
