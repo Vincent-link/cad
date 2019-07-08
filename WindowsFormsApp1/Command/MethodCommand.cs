@@ -17,9 +17,8 @@ namespace RegulatoryPlan.Command
     {
         public static string LegendLayer = "图例";
 
-        public   static string fileName = "";
-        public    static string cityName = "";
-        static DerivedTypeEnum dp = DerivedTypeEnum.None;
+  
+        
 
 
         public static BlockInfoModel AnalysisBlcokInfo(DBObject ob)
@@ -40,7 +39,7 @@ namespace RegulatoryPlan.Command
                     else if (ob is Arc)
                     {
 
-                        plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+                        plModel.Arc.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
 
                     }
                     else if (ob is BlockReference)
@@ -69,7 +68,7 @@ namespace RegulatoryPlan.Command
                     else if (ob is Ellipse)
                     {
 
-                        plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+                        plModel.Ellipse.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
 
                     }
                     else if (ob is Line)
@@ -90,6 +89,80 @@ namespace RegulatoryPlan.Command
                         foreach (DBObject obj in objs)
                         {
                             AnalysisBlcokInfo(plModel, obj);
+                        }
+                    }
+
+                }
+                catch
+                {
+
+                }
+                return plModel;
+            }
+            return null;
+        }
+
+        public static BlockInfoModel AnalysisBlcokInfo(DBObject ob,AttributeModel attModel)
+        {
+
+
+            if (ob is Entity && (((ob as Entity).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel) || (!UI.MainForm.isOnlyModel)))
+            {
+                BlockInfoModel plModel = new BlockInfoModel();
+                try
+                {
+                    if (ob is Polyline)
+                    {
+                        plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline,attModel));
+                    }
+                    else if (ob is Arc)
+                    {
+                        plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc, attModel));
+                    }
+                    else if (ob is BlockReference)
+                    {
+                        plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference, attModel);
+                    }
+                    else if (ob is DBText)
+                    {
+                        plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText, attModel));
+                    }
+                    else if (ob is MText)
+                    {
+                        plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText,attModel));
+                    }
+                    else if (ob is Hatch)
+                    {
+                        plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch,attModel));
+                    }
+                    else if (ob is Circle)
+                    {
+                        plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle,attModel));
+                    }
+                    else if (ob is Ellipse)
+                    {
+
+                        plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse,attModel));
+
+                    }
+                    else if (ob is Line)
+                    {
+
+                        plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line,attModel));
+
+                    }
+                    else if (ob is Polyline2d)
+                    {
+                        plModel.Circle.Add(AutoCad2ModelTools.Polyline2DModel(ob as Polyline2d,attModel));
+                    }
+                    else if (ob is Entity)
+                    {
+                        Entity ety = ob as Entity;
+                        DBObjectCollection objs = new DBObjectCollection();
+                        ety.Explode(objs);
+                        foreach (DBObject obj in objs)
+                        {
+                            AnalysisBlcokInfo(plModel, obj, attModel);
                         }
                     }
 
@@ -139,7 +212,7 @@ namespace RegulatoryPlan.Command
             else if (ob is Ellipse)
             {
 
-                plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
+                plModel.Ellipse.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse));
 
             }
             else if (ob is Line)
@@ -151,7 +224,7 @@ namespace RegulatoryPlan.Command
             else if (ob is Arc)
             {
 
-                plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
+                plModel.Arc.Add(AutoCad2ModelTools.Arc2Model(ob as Arc));
 
             }
             else if (ob is Polyline2d)
@@ -166,6 +239,77 @@ namespace RegulatoryPlan.Command
                 foreach (DBObject obj in objs)
                 {
                     AnalysisBlcokInfo(plModel, obj);
+                }
+            }
+
+
+
+        }
+
+        public static void AnalysisBlcokInfo(BlockInfoModel plModel, DBObject ob,AttributeModel attModel)
+        {
+
+
+
+            if (ob is Polyline)
+            {
+
+                plModel.PolyLine.Add(AutoCad2ModelTools.Polyline2Model(ob as Polyline, attModel));
+
+            }
+            else if (ob is BlockReference)
+            {
+                plModel = BlockCommand.AnalysisEntryAndExitbr(ob as BlockReference, attModel);
+            }
+            else if (ob is DBText)
+            {
+                plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as DBText, attModel));
+            }
+            else if (ob is MText)
+            {
+                plModel.DbText.Add(AutoCad2ModelTools.DbText2Model(ob as MText, attModel));
+            }
+            else if (ob is Hatch)
+            {
+                plModel.Hatch.Add(AutoCad2ModelTools.Hatch2Model(ob as Hatch, attModel));
+
+            }
+            else if (ob is Circle)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Circle2Model(ob as Circle, attModel));
+
+            }
+            else if (ob is Ellipse)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Ellipse2Model(ob as Ellipse, attModel));
+
+            }
+            else if (ob is Line)
+            {
+
+                plModel.Line.Add(AutoCad2ModelTools.Line2Model(ob as Line, attModel));
+
+            }
+            else if (ob is Arc)
+            {
+
+                plModel.Circle.Add(AutoCad2ModelTools.Arc2Model(ob as Arc, attModel));
+
+            }
+            else if (ob is Polyline2d)
+            {
+                plModel.Circle.Add(AutoCad2ModelTools.Polyline2DModel(ob as Polyline2d, attModel));
+            }
+            else if (ob is Entity)
+            {
+                Entity ety = ob as Entity;
+                DBObjectCollection objs = new DBObjectCollection();
+                ety.Explode(objs);
+                foreach (DBObject obj in objs)
+                {
+                    AnalysisBlcokInfo(plModel, obj, attModel);
                 }
             }
 
@@ -534,6 +678,7 @@ namespace RegulatoryPlan.Command
             catch { }
         }
 
+
         /// <summary>
                 /// 根据图形边界显示视图
                 /// </summary>
@@ -642,8 +787,34 @@ namespace RegulatoryPlan.Command
                 return colorStr;
             }
         }
+        /// <summary>
+        /// 获取所有图层
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllLayer()
+        {
+            List<string> allLayers = new List<string>();
+     
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+            using (Transaction trans = db.TransactionManager.StartTransaction())
+            {
+                //以读模式打开图层表
+                LayerTable layerTable;
+                layerTable = trans.GetObject(db.LayerTableId, OpenMode.ForRead) as LayerTable;
 
-    
+                foreach (ObjectId id in layerTable)
+                {
+                    LayerTableRecord ltr = (LayerTableRecord)trans.GetObject(id, OpenMode.ForRead);
+        
+                    allLayers.Add(ltr.Name);
+                }
+                
+
+            }
+            return allLayers;
+        }
+
         /// <summary>
         /// 根据图层名获取图层颜色
         /// </summary>
@@ -664,6 +835,56 @@ namespace RegulatoryPlan.Command
                     colorStr = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
 
                 }
+            }
+            return colorStr;
+        }
+
+        /// <summary>
+        /// 根据图层名获取图层线型
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLayerLineTypeByID(ObjectId layerId)
+        {
+            string colorStr = "";
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+            using (Transaction Trans = db.TransactionManager.StartTransaction())
+            {
+                LayerTableRecord ltr = Trans.GetObject(layerId, OpenMode.ForRead) as LayerTableRecord;
+                if (ltr != null)
+                {
+                    LinetypeTableRecord re= Trans.GetObject(ltr.LinetypeObjectId, OpenMode.ForRead) as LinetypeTableRecord;
+                    colorStr =re.Name;
+                }
+            }
+            return colorStr;
+        }
+
+        /// <summary>
+        /// 根据图层名获取图层线型
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLayerLineTypeByID(Entity entity)
+        {
+            
+            string colorStr = "";
+            if (entity.Linetype.ToString() == "BYLAYER")
+            {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                Database db = doc.Database;
+                using (Transaction Trans = db.TransactionManager.StartTransaction())
+                {
+                    LayerTableRecord ltr = Trans.GetObject(entity.LayerId, OpenMode.ForRead) as LayerTableRecord;
+                    if (ltr != null)
+                    {
+                        LinetypeTableRecord re = Trans.GetObject(ltr.LinetypeObjectId, OpenMode.ForRead) as LinetypeTableRecord;
+                        colorStr = re.Name;
+                    }
+                }
+            }
+            else
+            {
+                colorStr = entity.Linetype.ToString();   
             }
             return colorStr;
         }
@@ -1220,7 +1441,7 @@ namespace RegulatoryPlan.Command
         /// </summary>
         /// <param name="pPoly"></param>
         /// <returns></returns>
-     public   static Curve2d convertPolylineToGeCurve(Polyline pPoly)
+        public   static Curve2d convertPolylineToGeCurve(Polyline pPoly)
 
         {
             List<Curve2d> geCurves = new List<Curve2d>();
@@ -1278,7 +1499,11 @@ namespace RegulatoryPlan.Command
 
             return ooids;
         }
-
+        /// <summary>
+        /// 获取用地编码-分图则
+        /// </summary>
+        /// <param name="pointFs"></param>
+        /// <returns></returns>
         public static string GetAttrIndex(List<PointF> pointFs)
         {
             // 属性索引
@@ -1451,7 +1676,15 @@ namespace RegulatoryPlan.Command
             }
             return inside;
         }
+        public static System.Drawing.PointF Point2d2Pointf(Point2d point2d)
+        {
+            return new System.Drawing.PointF((float)point2d.X, (float)point2d.Y);
+        }
 
+        public static System.Drawing.PointF Point3d2Pointf(Point3d point2d)
+        {
+            return new System.Drawing.PointF((float)point2d.X, (float)point2d.Y);
+        }
     }
 }
         

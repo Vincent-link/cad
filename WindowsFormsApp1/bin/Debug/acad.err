@@ -1164,6 +1164,7 @@
 -------------
 
 
+<<<<<<< HEAD
 致命错误:  Unhandled e0434f4dh Exception at 73ab2c92h
 
 06/25/2019 at 11:02:30.802  图形: E:\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\分图则\08-01至08-03地块分图图则.dwg
@@ -1239,4 +1240,27 @@
 致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 634e3d80h
 
 07/05/2019 at 14:56:15.724  图形: E:\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\分图则\11-06至11-09地块分图图则.dwg
+=======
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 2eaebdbh
+
+06/26/2019 at 17:25:57.344  图形: E:\503\CAD图集数据\中心城区用地规划图.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 2f1e7e3h
+
+06/26/2019 at 17:32:24.240  图形: E:\503\CAD图集数据\中心城区用地规划图.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 3282308h
+
+06/27/2019 at 14:26:56.804  图形: E:\503\CAD图集数据\中心城区污水规划图.dwg
+-------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at 1af74baeh
+
+06/28/2019 at 09:54:12.394  图形: E:\503\CAD图集数据\道路名称图.dwg
+>>>>>>> 1210a02c7f5dcbb8e2a7a0cf6ca1988865fc9af9
 -------------

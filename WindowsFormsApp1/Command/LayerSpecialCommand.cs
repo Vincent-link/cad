@@ -11,11 +11,14 @@ namespace RegulatoryPlan.Command
 
         public void AddSpecialLayerModel(T model)
         {
+
+            //ModelBaseMethod<ModelBase> baseMethod = new ModelBaseMethod<ModelBase>();
+            //baseMethod.GetAllLengedGemo(model);
             switch (model.DerivedType)
             {
-                case DerivedTypeEnum.BuildingIntegrated:
-                   
-                    break;
+                //case DerivedTypeEnum.BuildingIntegrated:
+                    
+                //    break;
 
                 case DerivedTypeEnum.UnitPlan:
                     UnitPlanMethod<UnitPlanModel> uMethod = new UnitPlanMethod<UnitPlanModel>();
@@ -26,52 +29,72 @@ namespace RegulatoryPlan.Command
                     pMethod.GetAllPointsPlaneInfo(model as PointsPlanModel);
                     break;
                 case DerivedTypeEnum.Power10Kv:
+                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeMethod4.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.Power35kv:
+                    PipeMethod<PipeModel> pipeMethod3 = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeMethod3.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.WaterSupply:
-                    PipeMethod<PipeModel> pipeMethod1 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod1 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod1.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.HeatSupply:
-                    PipeMethod<PipeModel> pipeMethod2 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod2 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod2.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.FuelGas:
-                    PipeMethod<PipeModel> pipeMethod4 = new PipeMethod<PipeModel>();
-                    pipeMethod4.GetAllPipeInfo(model as PipeModel);
+                    PipeMethod<PipeModel> pipeMethod51 = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeMethod51.GetAllPipeInfo(model as PipeModel);
                     break;
-                case DerivedTypeEnum.Communication:
-                    break;
+                //case DerivedTypeEnum.Communication:
+                //    break;
                 case DerivedTypeEnum.TheRoadSection:
                     RoadMethod<RoadSectionModel> mMethod = new RoadMethod<RoadSectionModel>();
                     mMethod.GetAllRoadInfo(model as RoadSectionModel);
                     break;
-                case DerivedTypeEnum.PipeLine:
-                    break;
+                //case DerivedTypeEnum.PipeLine:
+                //    break;
                 case DerivedTypeEnum.Sewage:
-                    PipeMethod<PipeModel> pipeMethod = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod.GetAllPipeInfo(model as PipeModel);
                     break;
-                case DerivedTypeEnum.FiveLine:
+                case DerivedTypeEnum.Communication:
+                    PipeMethod<PipeModel> pipeComMethod = new PipeMethod<PipeModel>(model as PipeModel);
+                    pipeComMethod.GetAllPipeInfo(model as PipeModel);
                     break;
-                case DerivedTypeEnum.LimitFactor:
-                    break;
+                //case DerivedTypeEnum.FiveLine:
+                //    break;
+                //case DerivedTypeEnum.LimitFactor:
+                //    break;
                 case DerivedTypeEnum.RainWater:
-                    PipeMethod<PipeModel> pipeMethod5 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod5 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod5.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.ReuseWater:
-                    PipeMethod<PipeModel> pipeMethod6 = new PipeMethod<PipeModel>();
+                    PipeMethod<PipeModel> pipeMethod6 = new PipeMethod<PipeModel>(model as PipeModel);
                     pipeMethod6.GetAllPipeInfo(model as PipeModel);
                     break;
                 case DerivedTypeEnum.Road:
                     RoadMethod<RoadNoSectionModel> mMethod1 = new RoadMethod<RoadNoSectionModel>();
                     mMethod1.GetAllRoadInfo(model as RoadNoSectionModel);
                     break;
-
+                case DerivedTypeEnum.CenterCityUseLandPlan:
+                    CenterCityUseLandMethod<CenterCityUseLandPlanModel> ccul = new CenterCityUseLandMethod<CenterCityUseLandPlanModel>(model as CenterCityUseLandPlanModel);
+                    break;
+                case DerivedTypeEnum.CityDesign:
+                    break;
+                case DerivedTypeEnum.UseLandNumber:
+                    UsePlanNumberMethod<UseLandNumberModel> upnm = new UsePlanNumberMethod<UseLandNumberModel>(model as UseLandNumberModel);
+                    break;
+                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                    CenterCityLifeUseLandMethod<CenterCityLifeUseLandPlanModel> cclul = new CenterCityLifeUseLandMethod<CenterCityLifeUseLandPlanModel>(model as CenterCityLifeUseLandPlanModel);
+                    break;
             }
         }
+
+   
 
 
     }

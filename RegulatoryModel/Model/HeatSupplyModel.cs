@@ -6,10 +6,10 @@ namespace RegulatoryModel.Model
 {
   public  class HeatSupplyModel:PipeModel
     {
-        public HeatSupplyModel()
+        public HeatSupplyModel() : base()
         {
             this.LayerList = new List<string>() { "规划供热管道", "供热管道", "三水厂给水" };
-            PipeInfo = "管线尺寸";
+            PipeInfo = "供热管径";
             this.DerivedType = DerivedTypeEnum.HeatSupply;
         }
     }

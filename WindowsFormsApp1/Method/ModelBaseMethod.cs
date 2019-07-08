@@ -223,6 +223,7 @@ namespace RegulatoryPlan.Method
                             {
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
                                 BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
+
                                 if (plModel != null)
                                 {
                                     if (plModel.Hatch != null)
@@ -295,7 +296,24 @@ namespace RegulatoryPlan.Method
             
         }
 
-        public LayerModel GetAllLayerGemo(T model,string layerName)
+        public void GetExportLayers(T model)
+        {
+            if (lengedList.Count > 0)
+            {
+                model.LayerList = new List<string>();
+                List<MText> txtList = GetAllLengedText();
+
+                foreach (MText dBText in txtList)
+                {
+                    if (MethodCommand.FindDBTextIsInPolyine(dBText, model.LegendList))
+                    {
+                        model.LayerList.Add(dBText.Text);
+                    }
+                }
+            }
+        }
+
+        public virtual  LayerModel GetAllLayerGemo(T model,string layerName)
         {
             LayerModel lyModel = new LayerModel();
             List<BlockInfoModel> list = new List<BlockInfoModel>();
@@ -341,6 +359,7 @@ namespace RegulatoryPlan.Method
 
                         DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
                         BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
+
                         if (plModel != null)
                         {
                             List<object> obj = new List<object>() { plModel };
@@ -388,22 +407,7 @@ namespace RegulatoryPlan.Method
             return ooids;
         }
 
-        public void GetExportLayers(T model)
-        {
-            if (lengedList.Count > 0)
-            {
-                model.LayerList = new List<string>();
-               List<MText> txtList= GetAllLengedText();
-
-                foreach (MText dBText in txtList)
-                {
-                    if (MethodCommand.FindDBTextIsInPolyine(dBText,model.LegendList))
-                    {
-                        model.LayerList.Add(dBText.Text);
-                    }
-                }
-            }
-        }
+       
 
         }
     

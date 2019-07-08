@@ -11,7 +11,7 @@ using System.Text;
 
 namespace RegulatoryPlan.Method
 {
-    public class RoadMethod<T> where T : RoadModel
+    public class RoadMethod<T>:ModelBaseMethod<T> where T:RoadModel
     {
         public void GetAllRoadInfo(T model)
         {
@@ -188,7 +188,7 @@ namespace RegulatoryPlan.Method
 
                             for (int j = 1; j < item.RoadName.Length + 1; j++)
                             {
-                                item.RoadNameLocaiton.Add(MethodCommand.GetEndPointByTrigonometricHu(mText.Rotation, AutoCad2ModelTools.Point3d2Pointf(mText.Position), partLength * j));
+                                item.RoadNameLocaiton.Add(MethodCommand.GetEndPointByTrigonometricHu(mText.Rotation,MethodCommand.Point3d2Pointf(mText.Position), partLength * j));
                             }
 
                             item.RoadNameLayer = mText.Layer;
@@ -240,7 +240,7 @@ namespace RegulatoryPlan.Method
 
                             for (int j = 1; j < item.RoadName.Length + 1; j++)
                             {
-                                item.RoadNameLocaiton.Add(MethodCommand.GetEndPointByTrigonometricHu(mText.Rotation, AutoCad2ModelTools.Point3d2Pointf(mText.Position), partLength * j));
+                                item.RoadNameLocaiton.Add(MethodCommand.GetEndPointByTrigonometricHu(mText.Rotation, MethodCommand.Point3d2Pointf(mText.Position), partLength * j));
                             }
 
                             item.RoadNameLayer = mText.Layer;

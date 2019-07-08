@@ -170,7 +170,7 @@ namespace RegulatoryModel.Model
 
     }
 
-    public class ColorAndPointItemModel 
+    public class ColorAndPointItemModel :GemoTypeModel
     {
         private string zIndex="1";
         public ColorAndPointItemModel()

@@ -49,4 +49,6 @@ namespace RegulatoryModel.Model
        
         public Size DimensionSize { get; set; }
     }
+
+    
 }

@@ -8,7 +8,7 @@ namespace RegulatoryModel.Model
 {
     public class SewageModel : PipeModel
     {
-        public SewageModel()
+        public SewageModel() : base()
         {
             this.LayerList = new List<string>() { "现状污水管线", "规划污水管线" };
      

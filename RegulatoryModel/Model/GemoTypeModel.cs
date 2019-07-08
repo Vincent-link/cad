@@ -9,11 +9,12 @@ namespace RegulatoryModel.Model
         private string geoType;
         private string zIndex="0";
         private string attrIndex = "";
+       public List<AttributeItemModel> attItemList=new List<AttributeItemModel>();
 
         public string GeoType { get => geoType; set => geoType = value; }
         public string ZIndex { get => zIndex; set => zIndex = value; }
         public string AttrIndex { get => attrIndex; set => attrIndex = value; }
-
+       
         public virtual string ToInfoString()
         {
             return "";

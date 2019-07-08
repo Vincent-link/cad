@@ -40,28 +40,65 @@ namespace RegulatoryModel.Command
                 try
                 {
                     object value = pp.GetValue(t, null);
-                    //if (!value.GetType().IsValueType && value is Autodesk.AutoCAD.Geometry.Entity2d)
-                    //{
-                    //    result += "\"" + pp.Name + "\":\"#" + GetAllPropertyInfo(t, type) + "#\","; ;
-                    //}
-                    //else
-                    //{
+                    if (value.GetType() != typeof(System.Collections.ICollection))
+                    {
+                        //if (!value.GetType().IsValueType && value is Autodesk.AutoCAD.Geometry.Entity2d)
+                        //{
+                        //    result += "\"" + pp.Name + "\":\"#" + GetAllPropertyInfo(t, type) + "#\","; ;
+                        //}
+                        //else
+                        //{
                         result += "\"" + pp.Name + "\":\"" + value.ToString() + "\",";
-                    //}
+                        //}
+                    }
                 }
                 catch (Exception ex)
                 { }
             }
             return result.TrimEnd(',');
             }
-            /// <summary>
-            /// 创建对象字符串
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="fullName">命名空间.类型名</param>
-            /// <param name="assemblyName">程序集</param>
-            /// <returns></returns>
-            public static string GetAllPropertyInfoEx<T>(T t, string type)
+
+        /// <summary>
+        /// 创建对象字符串
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fullName">命名空间.类型名</param>
+        /// <param name="assemblyName">程序集</param>
+        /// <returns></returns>
+        public static string GetAllPropertyInfo<T>(T t)
+        {
+            string result = "";
+            PropertyInfo[] pps = GetPropertyInfos(t.GetType());
+            foreach (var pp in pps)
+            {
+                try
+                {
+                    object value = pp.GetValue(t, null);
+                    if (value.GetType() != typeof(System.Collections.ICollection))
+                    {
+                        //if (!value.GetType().IsValueType && value is Autodesk.AutoCAD.Geometry.Entity2d)
+                        //{
+                        //    result += "\"" + pp.Name + "\":\"#" + GetAllPropertyInfo(t, type) + "#\","; ;
+                        //}
+                        //else
+                        //{
+                        result += "\"" + pp.Name + "\":\"" + value.ToString() + "\",";
+                        //}
+                    }
+                }
+                catch (Exception ex)
+                { }
+            }
+            return result.TrimEnd(',');
+        }
+        /// <summary>
+        /// 创建对象字符串
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fullName">命名空间.类型名</param>
+        /// <param name="assemblyName">程序集</param>
+        /// <returns></returns>
+        public static string GetAllPropertyInfoEx<T>(T t, string type)
             {
                 string result = "";
                 //string result = "#" + type + "#";

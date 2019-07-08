@@ -20,7 +20,7 @@ namespace RegulatoryPlan.Command
             ChooseCityForm cf = new ChooseCityForm();
             if (cf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                MethodCommand.OpenFile(cf.openFile,cf.openCity,cf.derivedType);
+                CadHelper.Instance.OpenFile(cf.openFile,cf.openCity,cf.derivedType);
                
             }
             //MainForm form = new MainForm();
@@ -38,7 +38,8 @@ namespace RegulatoryPlan.Command
                 foreach (string item in dialog.FileNames)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { MethodCommand.AutoOpenFile(item, "成安县", DerivedTypeEnum.PointsPlan); }
+
+                    {CadHelper.Instance.AutoOpenFile(item, "成安县", DerivedTypeEnum.None); }
                 }
             }
 

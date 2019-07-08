@@ -60,7 +60,7 @@ namespace RegulatoryPlan.UI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            MethodCommand.num--;
+            CadHelper.Instance.num--;
             this.Close();
         }
 
@@ -123,8 +123,17 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.None:
                     PostModel.PostModelBase(model);
                     break;
-
+                case DerivedTypeEnum.UseLandNumber:
+                    PostModel.PostModelBase(model as AttributeBaseModel);
+                    break;
+                case DerivedTypeEnum.CenterCityUseLandPlan:
+                    PostModel.PostModelBase(model as AttributeBaseModel);
+                    break;
+                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                    PostModel.PostModelBase(model as AttributeBaseModel);
+                    break;
             }
+          //  PostModel.PostModelBase1(model);
         }
         DerivedTypeEnum crtType;
 
@@ -138,7 +147,6 @@ namespace RegulatoryPlan.UI
                     return new SewageModel();
                 case DerivedTypeEnum.BuildingIntegrated:
                     return new BuildingIntegratedModel();
-
                 case DerivedTypeEnum.UnitPlan:
                     return new UnitPlanModel();
                 case DerivedTypeEnum.PointsPlan:
@@ -167,6 +175,12 @@ namespace RegulatoryPlan.UI
                     return new ReuseWaterModel();
                 case DerivedTypeEnum.Road:
                     return new RoadNoSectionModel();
+                case DerivedTypeEnum.CenterCityUseLandPlan:
+                    return new CenterCityUseLandPlanModel();
+                case DerivedTypeEnum.UseLandNumber:
+                    return new UseLandNumberModel();
+                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                    return new CenterCityLifeUseLandPlanModel();
             }
             return new ModelBase();
 
@@ -331,17 +345,17 @@ namespace RegulatoryPlan.UI
 
             mb = ChangeToModel(mb);
             isOnlyModel = mb.IsOnlyModel;
-            mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
+            mb.DocName = System.IO.Path.GetFileNameWithoutExtension(CadHelper.fileName);
+
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
             // mbm.GetLengedPoints(mb);
             mbm.GetAllLengedGemo(mb);
             mbm.GetExportLayers(mb);
             LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
             layerSpecial.AddSpecialLayerModel(mb);
-            //  mb.AddSpecialLayerModel();
             DataTable tb = new DataTable();
             tb.Columns.Add("所在图层");
-      
+
             //tb.Columns.Add("图例文本");
             //tb.Columns.Add("图例线段");
 
@@ -402,8 +416,12 @@ namespace RegulatoryPlan.UI
             }
             else if (mb is PipeModel)
             {
-                LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
-                GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                try
+                {
+                    LayerModel spModel = (mb as PipeModel).allLines[(mb as PipeModel).allLines.Count - 1];
+                    GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                }
+                catch { }
             }
 
             this.dataGridView1.DataSource = tb;
@@ -417,7 +435,7 @@ namespace RegulatoryPlan.UI
             {
                 mb = ChangeToModel(mb);
                 isOnlyModel = mb.IsOnlyModel;
-                mb.DocName = System.IO.Path.GetFileNameWithoutExtension(MethodCommand.fileName);
+                mb.DocName = System.IO.Path.GetFileNameWithoutExtension(CadHelper.fileName);
                 ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
                 // mbm.GetLengedPoints(mb);
                 mbm.GetAllLengedGemo(mb);
@@ -551,7 +569,7 @@ namespace RegulatoryPlan.UI
 
         private void GetSpecialDataRowInfo(List<object> list, DataTable tb, string layerName)
         {
-            if (list.Count > 0)
+            if (list!=null&&list.Count > 0)
             {
                 if (list[0] is RoadInfoItemModel)
                 {
@@ -695,7 +713,7 @@ namespace RegulatoryPlan.UI
                             dr["管线类型"] = road.PipeType == null ? "" : road.PipeType;
                             dr["管道信息位置"] = "X:" + road.TxtLocation.X + ",Y:" + road.TxtLocation.Y;
                             dr["管线长度"] = road.PipeLength == null ? "" : road.PipeLength;
-                            dr["管线宽度"] = road.PipeWidth == null ? "" : road.PipeWidth;
+                            dr["管线宽度"] = road.Style.LineWidth == null ? "" : road.Style.LineWidth;
                             dr["管线颜色"] = road.ColorIndex;
                             for (int j = 0; j < road.pipeList.Count; j++)
                             {

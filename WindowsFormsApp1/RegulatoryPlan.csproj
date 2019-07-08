@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\BlockCommand.cs" />
+    <Compile Include="Command\CadHelper.cs" />
     <Compile Include="Command\LayerSpecialCommand.cs" />
     <Compile Include="Command\MenuMethodCommand.cs" />
     <Compile Include="Command\MethodCommand.cs" />
@@ -84,7 +85,11 @@
     <Compile Include="Menu\TitelMenuCommand.cs" />
     <Compile Include="Method\AutoDeleteLayers.cs" />
     <Compile Include="Method\AutoSendFiles.cs" />
+    <Compile Include="Method\AttributeBaseMethod.cs" />
     <Compile Include="Method\Cad2ModelTools.cs" />
+    <Compile Include="Method\UseLandNumberMethod.cs" />
+    <Compile Include="Method\CenterCityLifeUseLandMethod.cs" />
+    <Compile Include="Method\CenterCityUseLandMethod.cs" />
     <Compile Include="Method\DrawingMethod.cs" />
     <Compile Include="Method\FenTuZeMethod.cs" />
     <Compile Include="Method\ModelBaseMethod.cs" />
