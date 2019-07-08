@@ -17,9 +17,9 @@ namespace RegulatoryPlan.Command
     {
         public static string LegendLayer = "图例";
 
-  
-        
-
+        public static string fileName = "";
+        public static string cityName = "";
+        static DerivedTypeEnum dp = DerivedTypeEnum.None;
 
         public static BlockInfoModel AnalysisBlcokInfo(DBObject ob)
         {
