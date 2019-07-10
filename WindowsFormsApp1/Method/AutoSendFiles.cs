@@ -12,9 +12,20 @@ using RegulatoryPost.FenTuZe;
 
 namespace RegulatoryPlan.Method
 {
-    class AutoSendFiles
+    public sealed class AutoSendFiles
     {
-        public static void AutoOpenPointPlanFile(string file, DerivedTypeEnum derivedType)
+        private AutoSendFiles()
+        {
+
+        }
+        private static readonly AutoSendFiles instance = new AutoSendFiles();
+
+        public static AutoSendFiles Instance
+        {
+            get { return instance; }
+        }
+
+        internal void AutoOpenPointPlanFile(string file, DerivedTypeEnum derivedType)
         {
             try
             {

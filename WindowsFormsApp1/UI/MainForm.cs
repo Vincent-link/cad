@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace RegulatoryPlan.UI
@@ -17,7 +18,7 @@ namespace RegulatoryPlan.UI
     public partial class MainForm : Form
     {
         ModelBase model;
-        public static bool isOnlyModel=true;
+        public static bool isOnlyModel=true; Thread waitPostThead;
         public MainForm()
         {
             InitializeComponent();
@@ -66,6 +67,9 @@ namespace RegulatoryPlan.UI
 
         private void button2_Click(object sender, EventArgs e)
         {
+            waitPostThead = new Thread(WaitForPost);
+            waitPostThead.IsBackground = true;
+            waitPostThead.Start();
             switch (model.DerivedType)
             {
                 case DerivedTypeEnum.BuildingIntegrated:
@@ -133,7 +137,14 @@ namespace RegulatoryPlan.UI
                     PostModel.PostModelBase(model as AttributeBaseModel);
                     break;
             }
-          //  PostModel.PostModelBase1(model);
+            waitPostThead.Abort();
+            //  PostModel.PostModelBase1(model);
+        }
+        private void WaitForPost()
+        {
+            ProcessForm form = new ProcessForm();
+            form.TopMost = true;
+            form.ShowDialog();
         }
         DerivedTypeEnum crtType;
 

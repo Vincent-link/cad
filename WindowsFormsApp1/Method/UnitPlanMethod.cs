@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Runtime;
 using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using System.Collections;
@@ -73,41 +74,39 @@ namespace RegulatoryPlan.Method
                 using (Transaction acTrans = db.TransactionManager.StartTransaction())
                 {
 
-                    List<string> compositionTableIndex = new List<string>() { "R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41", "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1" };
+                    //List<string> compositionTableIndex = new List<string>() { "R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41", "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1" };
 
-                    //List<string> compositionTableIndex = new List<string>();
+                    List<string> compositionTableIndex = new List<string>();
+                    List<Entity> mtexts = new List<Entity>();
 
-                    //List<Entity> mtexts = new List<Entity>();
-                    //for (int j = 0; j < idArray.Length; j++)
-                    //{
-                    //    Entity ent2 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
-                    //    if (ent2 is MText)
-                    //    {
-                    //        mtexts.Add(ent2);
-                    //    }
-                    //}
-                    /////找出索引
-                    //for (int j = 0; j < mtexts.Count; j++)
-                    //{
-                    //    Entity ent2 = (Entity)mtexts[j];
+                    for (int j = 0; j < idArray.Length; j++)
+                    {
+                        Entity ent2 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
+                        if (ent2 is MText)
+                        {
+                            mtexts.Add(ent2);
+                        }
+                    }
+                    ///找出索引
+                    for (int j = 0; j < mtexts.Count; j++)
+                    {
+                        Entity ent2 = (Entity)mtexts[j];
+                        string indexText = ((MText)mtexts[j]).Text.Replace("\n", "").Replace("\r", "").Replace(" ", "");
+                        // 找一个参照物——主导功能
+                        if (indexText == "用地代码")
+                        {
+                            for (int z = 0; z < mtexts.Count; z++)
+                            {
+                                // 读取数组里的实体
+                                Entity ent3 = (Entity)mtexts[z];
 
-                    //    // 找一个参照物——主导功能
-                    //    if (((MText)mtexts[j]).Text == "R")
-                    //    {
-                    //        for (int z = 0; z < mtexts.Count; z++)
-                    //        {
-                    //            // 读取数组里的实体
-                    //            Entity ent3 = (Entity)mtexts[z];
-
-                    //            if (ent3 is MText && ((MText)ent2).Location.X - 800 < ((MText)ent3).Location.X && ((MText)ent3).Location.X < ((MText)ent2).Location.X + 800 && ((MText)ent2).Location.Y >= ((MText)ent3).Location.Y)
-                    //            {
-                    //                compositionTableIndex.Add(((MText)ent3).Text);
-                    //            }
-                    //        }
-                    //        break;
-                    //    }
-
-                    //}
+                                if (((MText)ent2).Location.X - 300 < ((MText)ent3).Location.X && ((MText)ent3).Location.X < ((MText)ent2).Location.X + 500 && ((MText)ent2).Location.Y > ((MText)ent3).Location.Y)
+                                {
+                                    compositionTableIndex.Add(((MText)ent3).Text);
+                                }
+                            }
+                        }
+                    }
 
                     // 增加表格表头名称   
                     table.Columns.Add(new System.Data.DataColumn(("用地代码"), typeof(string)));
@@ -118,20 +117,12 @@ namespace RegulatoryPlan.Method
                     //table.Columns.Add(new System.Data.DataColumn(("col"),typeof(string)));
                     //table.NewRow().ItemArray = new string[] { "",""};
 
-                    int[] keysArr = new int[10];
-                    string[] valuesArr = new string[10];
-
                     // 用地代码循环
                     for (int w = 0; w < compositionTableIndex.Count; w++)
                     {
-
-                        // 循环所有实体
-                        for (int j = 0; j < idArray.Length; j++)
+                        for (int j = 0; j < mtexts.Count; j++)
                         {
-                            Entity ent1 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
-
-                            ArrayList rowList = new ArrayList();
-                            Hashtable columnList = new Hashtable();
+                            Entity ent1 = mtexts[j];
 
                             // 找出所有用地代码的关联属性
                             if (ent1 is MText && ((MText)ent1).Text == compositionTableIndex[w])
@@ -139,106 +130,63 @@ namespace RegulatoryPlan.Method
 
                                 //ed.WriteMessage("\nFound X：{0} \n Y：{1} of {2}", ((MText)ent1).Location.X, ((MText)ent1).Location.Y, ((MText)ent1).Text);
 
-                                // 增加一个排序列表，把实体对应的距离和文本内容放进去
-                                SortedList eSListRes = new SortedList();
+                                // 增加一个排序列表，把实体对应的距离和文本内容放进去                                
+                                List<int> distances = new List<int>();
+                                List<string> texts = new List<string>();
 
-                                // 循环所有实体
-                                for (int c = 0; c < idArray.Length; c++)
+                                for (int c = 0; c < mtexts.Count; c++)
                                 {
-                                    // 读取数组里的实体
-                                    Entity ent2 = (Entity)idArray[c].GetObject(OpenMode.ForRead);
+                                    Entity ent2 = mtexts[c];
 
                                     // 如果为多行文本，以ent2为参考点，在y轴方向，在+400~-400范围内的，x轴方向，大于x轴的实体
                                     if (ent2 is MText)
                                     {
                                         if (((MText)ent1).Location.Y - 400 < ((MText)ent2).Location.Y && ((MText)ent2).Location.Y < ((MText)ent1).Location.Y + 400 && ((MText)ent1).Location.X <= ((MText)ent2).Location.X)
                                         {
-                                            int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent1).Location, ((MText)ent2).Location);
+                                            int distance = (int)MethodCommand.DistancePointToPoint(((MText)ent1).Location, ((MText)ent2).Location);
 
-                                            eSListRes.Add(eDistance, ((MText)ent2).Text);
+                                            distances.Add(distance);
+                                            texts.Add(((MText)ent2).Text);
                                         }
                                     }
-
-                                    // 如果为单行文本，以ent2为参考点，在y轴方向，在+400~-400范围内的，x轴方向，大于x轴的实体
-                                    if (ent2 is DBText)
-                                    {
-                                        if (((MText)ent1).Location.Y - 400 < ((DBText)ent2).Position.Y && ((DBText)ent2).Position.Y < ((MText)ent1).Location.Y + 400 && ((MText)ent1).Location.X <= ((DBText)ent2).Position.X)
-                                        {
-                                            int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent1).Location, ((DBText)ent2).Position);
-
-                                            eSListRes.Add(eDistance, ((DBText)ent2).TextString);
-                                        }
-                                    }
-                                    //dResString = dResString + "\n" + GetDistance(((MText)ent1).Location.X, ((MText)ent1).Location.Y, ((MText)ent2).Location.X, ((MText)ent2).Location.Y);
-                                }
-
-                                // 获取与用地代码相关的距离和属性
-                                int b = 0;
-                                int a = 0;
-
-                                // 距离
-                                ICollection key = eSListRes.Keys;
-                                foreach (int k in key)
-                                {
-                                    keysArr[b] = k;
-                                    b++;
-                                }
-                                // 属性值
-                                ICollection value = eSListRes.Values;
-                                foreach (string v in value)
-                                {
-                                    valuesArr[a] = v;
-                                    a++;
                                 }
 
                                 // 把获取的属性值按照距离大小排序，距离最近的放在第一位，以此类推
-                                string temp = "";
-                                for (int m = 0; m < keysArr.Length; m++)
+                                string temp;
+                                int tempDis;
+                                for (int m = 0; m < distances.Count; m++)
                                 {
-                                    for (int q = 0; q < keysArr.Length - m - 1; q++)
+                                    for (int q = 0; q < distances.Count - m - 1; q++)
                                     {
-                                        if (keysArr[q] > keysArr[q + 1])
+                                        try
                                         {
-                                            temp = valuesArr[q];
-                                            valuesArr[q] = valuesArr[q + 1];
-                                            valuesArr[q + 1] = temp;
+                                            if (distances[q] > distances[q + 1])
+                                            {
+                                                temp = texts[q];
+                                                texts[q] = texts[q + 1];
+                                                texts[q + 1] = temp;
+
+                                                tempDis = distances[q];
+                                                distances[q] = distances[q + 1];
+                                                distances[q + 1] = tempDis;
+                                            }
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            System.Windows.Forms.MessageBox.Show(e.Message);
                                         }
                                     }
                                 }
 
                                 row = table.NewRow();
-                                row["用地代码"] = valuesArr[0];
-                                row["用地名称"] = valuesArr[1];
-                                row["面积"] = valuesArr[2];
-                                row["占建设用地比例"] = valuesArr[3];
+                                row["用地代码"] = texts[0];
+                                row["用地名称"] = texts[1];
+                                row["面积"] = texts[2];
+                                if (texts.Count < 4)
+                                    row["占建设用地比例"] = "无";
+                                else
+                                    row["占建设用地比例"] = texts[3];
                                 table.Rows.Add(row);
-
-                                //if (valuesArr[4] != null && System.Text.RegularExpressions.Regex.IsMatch(valuesArr[4], @"^[+-]?\d*[.]?\d*$"))
-                                //{
-                                //    columnList.Add("index", valuesArr[5]);
-                                //    columnList.Add("value1", valuesArr[6]);
-                                //    columnList.Add("value2", valuesArr[7]);
-                                //    columnList.Add("value3", valuesArr[8]);
-                                //}
-                                //else if (valuesArr[4] != null)
-                                //{
-                                //    columnList.Add("index", valuesArr[4]);
-                                //    columnList.Add("value1", valuesArr[5]);
-                                //    columnList.Add("value2", valuesArr[6]);
-                                //    columnList.Add("value3", valuesArr[7]);
-                                //}
-
-                                //rowList.Add(columnList);
-
-                                //foreach (Hashtable rowL in rowList)
-                                //{
-                                //    row = table.NewRow();
-                                //    row["用地代码"] = rowL["index"];
-                                //    row["用地名称"] = rowL["value1"];
-                                //    row["面积"] = rowL["value2"];
-                                //    row["占建设用地比例"] = rowL["value3"];
-                                //    table.Rows.Add(row);
-                                //}
 
                             } // 找出所有用地代码的关联属性
 

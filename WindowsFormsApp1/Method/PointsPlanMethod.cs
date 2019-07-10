@@ -238,7 +238,7 @@ namespace RegulatoryPlan.Method
 
         public System.Data.DataTable AttributeList()
         {
-            Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             Editor ed = doc.Editor;
             Database db = doc.Database;
 
@@ -268,9 +268,6 @@ namespace RegulatoryPlan.Method
                     System.Data.DataColumn column;
                     System.Data.DataRow row;
 
-                    // 以地块编号为参照物，向右、向下读取
-                    table.Columns.Add(new System.Data.DataColumn(("地块编号"), typeof(string)));
-
                     // 个体指标地块编号索引
                     ArrayList index = new ArrayList();
                     // 个体指标图标表头
@@ -293,7 +290,7 @@ namespace RegulatoryPlan.Method
                                 if (ent2 is MText && ((MText)ent2).Text == "地块编号")
                                 {
                                     // 添加表头
-                                    if (((MText)ent2).Location.X < ((MText)ent1).Location.X && ((MText)ent2).Location.Y - 14 < ((MText)ent1).Location.Y && ((MText)ent1).Location.Y < ((MText)ent2).Location.Y + 14)
+                                    if (((MText)ent2).Location.X <= ((MText)ent1).Location.X && ((MText)ent2).Location.Y - 14 < ((MText)ent1).Location.Y && ((MText)ent1).Location.Y < ((MText)ent2).Location.Y + 14)
                                     {
                                         //MessageBox.Show((((MText)ent1).Text).ToString());
                                         biaotou.Add(ent1);
@@ -311,10 +308,11 @@ namespace RegulatoryPlan.Method
 
                     } // 循环整个实体群组结束
 
-                    int[] keysArr = new int[biaotou.Count];
-                    string[] valuesArr = new string[biaotou.Count];
-
                     // 给表头排序 从小到大
+                    List<int> distances = new List<int>();
+                    List<string> texts = new List<string>();
+                    string temp;
+                    int tempDis;
                     for (int i = 0; i < idArray.Length; i++)
                     {
                         Entity ent3 = (Entity)idArray[i].GetObject(OpenMode.ForRead);
@@ -323,45 +321,27 @@ namespace RegulatoryPlan.Method
                             for (int s = 0; s < biaotou.Count; s++)
                             {
                                 Entity ent4 = (Entity)biaotou[s];
-
                                 int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent4).Location, ((MText)ent3).Location);
                                 //MessageBox.Show(eDistance.ToString());
 
-                                eSListRes.Add(eDistance, ((MText)ent4).Text);
-
-                            }
-
-                            // 获取与用地代码相关的距离和属性
-                            int b = 0;
-                            int a = 0;
-
-                            // 距离
-                            ICollection key = eSListRes.Keys;
-                            foreach (int k in key)
-                            {
-                                keysArr[b] = k;
-                                b++;
-                            }
-                            // 属性值
-                            ICollection value = eSListRes.Values;
-                            foreach (string v in value)
-                            {
-
-                                valuesArr[a] = v;
-                                a++;
+                                distances.Add(eDistance);
+                                texts.Add(((MText)ent4).Text);
                             }
 
                             // 把获取的属性值按照距离大小排序，距离最近的放在第一位，以此类推
-                            string temp = "";
-                            for (int m = 0; m < keysArr.Length; m++)
+                            for (int m = 0; m < distances.Count; m++)
                             {
-                                for (int q = 0; q < keysArr.Length - m - 1; q++)
+                                for (int q = 0; q < distances.Count - m - 1; q++)
                                 {
-                                    if (keysArr[q] > keysArr[q + 1])
+                                    if (distances[q] > distances[q + 1])
                                     {
-                                        temp = valuesArr[q];
-                                        valuesArr[q] = valuesArr[q + 1];
-                                        valuesArr[q + 1] = temp;
+                                        temp = texts[q];
+                                        texts[q] = texts[q + 1];
+                                        texts[q + 1] = temp;
+
+                                        tempDis = distances[q];
+                                        distances[q] = distances[q + 1];
+                                        distances[q + 1] = tempDis;
                                     }
                                 }
                             }
@@ -370,69 +350,54 @@ namespace RegulatoryPlan.Method
                     }
 
                     // 添加表头
-                    for (int s = 0; s < valuesArr.Length; s++)
+                    foreach (string text in texts)
                     {
-                        table.Columns.Add(new System.Data.DataColumn((valuesArr[s]), typeof(string)));
+                        table.Columns.Add(new System.Data.DataColumn(text, typeof(string)));
                     }
 
-                    // 循环所有实体 给每一行的实体排序 
+                    // 循环所有实体 给每一行排序 
                     for (int s = 0; s < index.Count; s++)
                     {
-                        eSListRes.Clear();
+                        distances.Clear();
+                        texts.Clear();
                         Entity ent3 = (Entity)index[s];
                         // 循环所有实体，如果实体的x值大于table索引的x值，加进table的每一行
                         for (int i = 0; i < idArray.Length; i++)
                         {
                             Entity ent4 = (Entity)idArray[i].GetObject(OpenMode.ForRead);
-                            if (ent4 is MText && ((MText)ent3).Location.X < ((MText)ent4).Location.X && ((MText)ent3).Location.Y - 3.5 < ((MText)ent4).Location.Y && ((MText)ent4).Location.Y < ((MText)ent3).Location.Y + 3.5)
+                            if (ent4 is MText && ((MText)ent3).Location.X <= ((MText)ent4).Location.X && ((MText)ent3).Location.Y - 3.5 < ((MText)ent4).Location.Y && ((MText)ent4).Location.Y < ((MText)ent3).Location.Y + 3.5)
                             {
                                 int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent4).Location, ((MText)ent3).Location);
 
                                 //MessageBox.Show(eDistance.ToString());
-                                eSListRes.Add(eDistance, ((MText)ent4).Text);
+                                distances.Add(eDistance);
+                                texts.Add(((MText)ent4).Text);
                             }
                         }
 
-                        // 获取与用地代码相关的距离和属性
-                        int b = 0;
-                        int a = 0;
-
-                        // 距离
-                        ICollection key = eSListRes.Keys;
-                        foreach (int k in key)
-                        {
-                            keysArr[b] = k;
-                            b++;
-                        }
-                        // 属性值
-                        ICollection value = eSListRes.Values;
-                        foreach (string v in value)
-                        {
-                            valuesArr[a] = v;
-                            a++;
-                        }
-
                         // 把获取的属性值按照距离大小排序，距离最近的放在第一位，以此类推
-                        string temp = "";
-                        for (int m = 0; m < keysArr.Length; m++)
+                        for (int m = 0; m < distances.Count; m++)
                         {
-                            for (int q = 0; q < keysArr.Length - m - 1; q++)
+                            for (int q = 0; q < distances.Count - m - 1; q++)
                             {
-                                if (keysArr[q] > keysArr[q + 1])
+                                if (distances[q] > distances[q + 1])
                                 {
-                                    temp = valuesArr[q];
-                                    valuesArr[q] = valuesArr[q + 1];
-                                    valuesArr[q + 1] = temp;
+                                    temp = texts[q];
+                                    texts[q] = texts[q + 1];
+                                    texts[q + 1] = temp;
+
+                                    tempDis = distances[q];
+                                    distances[q] = distances[q + 1];
+                                    distances[q + 1] = tempDis;
                                 }
                             }
                         }
 
                         row = table.NewRow();
-                        row["地块编号"] = ((MText)index[s]).Text;
-                        for (int f = 0; f < valuesArr.Length; f++)
+                        for (int f = 0; f < texts.Count; f++)
                         {
                             //MessageBox.Show(table.Columns[f].ToString());
-                            row[table.Columns[f + 1]] = valuesArr[f];
+                            row[table.Columns[f]] = texts[f];
                         }
 
                         table.Rows.Add(row);

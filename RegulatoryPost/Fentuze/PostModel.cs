@@ -2798,19 +2798,21 @@ namespace RegulatoryPost.FenTuZe
                                             {
                                                 ArrayList arrayList = new ArrayList();
 
-                                                if (arPt is LineModel && ((LineModel)arPt).StartPoint == ((LineModel)arPt).EndPoint)
+                                                if (arPt is LineModel)
                                                 {
-                                                    geoType = "point";
-                                                    arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                    if (((LineModel)arPt).StartPoint == ((LineModel)arPt).EndPoint)
+                                                    {
+                                                        geoType = "point";
+                                                        arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                    }
+                                                    else
+                                                    {
+                                                        arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                        arrayList.Add(Transform(((LineModel)arPt).EndPoint));
+                                                    }
                                                 }
 
-
-                                                if (arPt is LineModel && ((LineModel)arPt).StartPoint != ((LineModel)arPt).EndPoint)
-                                                {
-                                                    arrayList.Add(Transform(((LineModel)arPt).StartPoint));
-                                                    arrayList.Add(Transform(((LineModel)arPt).EndPoint));
-                                                }
-                                                else if (arPt is ArcModel)
+                                                if (arPt is ArcModel)
                                                 {
                                                     if (((ArcModel)arPt).pointList[0] == ((ArcModel)arPt).pointList[1])
                                                     {
@@ -2824,7 +2826,6 @@ namespace RegulatoryPost.FenTuZe
                                                             arrayList.Add(Transform(arPtt));
                                                         }
                                                     }
-
                                                 }
                                                 geom.Add(arrayList);
 
@@ -3258,8 +3259,17 @@ namespace RegulatoryPost.FenTuZe
                                         {
                                             geoType = "polyline";
                                             ArrayList arrayList = new ArrayList();
-                                            arrayList.Add(Transform(lineModel.StartPoint));
-                                            arrayList.Add(Transform(lineModel.EndPoint));
+
+                                            if (((LineModel)lineModel).StartPoint == ((LineModel)lineModel).EndPoint)
+                                            {
+                                                geoType = "point";
+                                                arrayList.Add(Transform(((LineModel)lineModel).StartPoint));
+                                            }
+                                            else
+                                            {
+                                                arrayList.Add(Transform(lineModel.StartPoint));
+                                                arrayList.Add(Transform(lineModel.EndPoint));
+                                            }
 
                                             geom.Add(arrayList);
                                             zIndex.Add(lineModel.ZIndex);
@@ -3292,26 +3302,39 @@ namespace RegulatoryPost.FenTuZe
                                             geoType = "polyline";
                                             foreach (object arPt in arcModel.Vertices)
                                             {
+                                                ArrayList arrayList = new ArrayList();
+
                                                 if (arPt is LineModel)
                                                 {
-
-                                                    ArrayList arrayList = new ArrayList();
-                                                        
+                                                    if (((LineModel)arPt).StartPoint == ((LineModel)arPt).EndPoint)
+                                                    {
+                                                        geoType = "point";
+                                                        arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                    }
+                                                    else
+                                                    {
                                                         arrayList.Add(Transform(((LineModel)arPt).StartPoint));
                                                         arrayList.Add(Transform(((LineModel)arPt).EndPoint));
-
-                                                    geom.Add(arrayList);
-                                                }
-                                                else if (arPt is ArcModel)
-                                                {
-                                                    ArrayList arrayList = new ArrayList();
-                                                    foreach (PointF arPtt in ((ArcModel)arPt).pointList)
-                                                    {
-                                                        arrayList.Add(Transform(arPtt));
-
                                                     }
-                                                    geom.Add(arrayList);
                                                 }
+
+                                                if (arPt is ArcModel)
+                                                {
+                                                    if (((ArcModel)arPt).pointList[0] == ((ArcModel)arPt).pointList[1])
+                                                    {
+                                                        geoType = "point";
+                                                        arrayList.Add(Transform(((ArcModel)arPt).pointList[0]));
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (PointF arPtt in ((ArcModel)arPt).pointList)
+                                                        {
+                                                            arrayList.Add(Transform(arPtt));
+                                                        }
+                                                    }
+                                                }
+                                                geom.Add(arrayList);
+
                                                 zIndex.Add(arcModel.ZIndex);
 
                                                 // 属性索引

@@ -115,7 +115,12 @@ namespace RegulatoryPlan.Command
 
                 }
             }
-            catch { }
+            catch(Exception ex)
+
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+
+            }
         }
 
         /// <summary>

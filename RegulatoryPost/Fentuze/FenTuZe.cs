@@ -82,9 +82,9 @@ namespace RegulatoryPost.FenTuZe
 
             // 发送 开始
             string[] baseAddresses = new string[] {
-                "http://172.18.84.102:8080/CIM/", // 測試
+                //"http://172.18.84.102:8080/CIM/", // 測試
                 //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
-               //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
+               "http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
             };
 
             foreach (var baseAddress in baseAddresses)
@@ -110,7 +110,7 @@ namespace RegulatoryPost.FenTuZe
                     h++;
                 }
 
-                using (StreamWriter file = new StreamWriter(@"C:\Users\Public\Documents\WriteLines2.json", false))
+                using (StreamWriter file = new StreamWriter(@"C:\Users\Public\Documents\" + result["chartName"] + ".json", false))
                 {
                     file.WriteLine(builder);
                 }
@@ -150,7 +150,7 @@ namespace RegulatoryPost.FenTuZe
                     var sr = new StreamReader(stream, Encoding.UTF8);
                     content = sr.ReadToEnd();
 
-                    //MessageBox.Show(content);
+                    MessageBox.Show(content);
                 }
                 catch (Exception e)
                 {

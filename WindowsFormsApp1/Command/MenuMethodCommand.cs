@@ -78,7 +78,7 @@ namespace RegulatoryPlan.Command
                 foreach (string item in dialog.FileNames)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.AutoOpenPointPlanFile(item, DerivedTypeEnum.PointsPlan); }
+                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.PointsPlan); }
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace RegulatoryPlan.Command
                 foreach (string item in dialog.FileNames)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan); }
+                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan); }
                 }
             }
         }
