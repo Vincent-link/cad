@@ -41,6 +41,9 @@ namespace RegulatoryModel.Model
         string name;
         DerivedTypeEnum derivedType= DerivedTypeEnum.None;
         bool isOnlyModel=true;
+        public System.Data.DataTable attributeList;
+        public System.Collections.ArrayList kgGuide;
+
         public List<string> specailLayers;
         public List<string> LayerList;
         public List<LayerModel> allLines;
@@ -53,7 +56,9 @@ namespace RegulatoryModel.Model
         public string DocName { get => docName; set => docName = value; }
         public bool IsOnlyModel { get => isOnlyModel; set => isOnlyModel = value; }
 
-      
+        public System.Data.DataTable AttributeList { get => attributeList; set => attributeList = value; }
+        public System.Collections.ArrayList KgGuide { get => kgGuide; set => kgGuide = value; }
+
 
         public virtual string ToJson()
         {

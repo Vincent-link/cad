@@ -17,13 +17,6 @@ namespace RegulatoryPlan.Method
         public void GetAllPointsPlaneInfo(T model)
         {
             LayerModel lm = new LayerModel();
-
-            // 获取图表数据（特殊数据）
-            // 指标集合
-            System.Data.DataTable attributeList = AttributeList();
-            // 控规引导
-            ArrayList kgGuide = KgGuide();
-
             //string attributeLists = JsonConvert.SerializeObject(attributeList);
             //MessageBox.Show(attributeLists);
 
@@ -31,15 +24,14 @@ namespace RegulatoryPlan.Method
             {
                 lm.modelItemList = new List<object>();
             }
+            lm.modelItemList.Add(AttributeList());
+            lm.modelItemList.Add(KgGuide());
 
             if (model.allLines == null)
             {
                 model.allLines = new List<LayerModel>();
             }
             model.allLines.Add(lm);
-
-            lm.modelItemList.Add(attributeList);
-            lm.modelItemList.Add(kgGuide);
 
             //地块图层
             GetAllYDBMGemo(model, "地块界限");
@@ -51,31 +43,23 @@ namespace RegulatoryPlan.Method
             if (model != null)
             {
                 LayerModel lm = new LayerModel();
-                Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                Database db = doc.Database;
+
                 ObjectIdCollection ids = new ObjectIdCollection();
                 lm.Name = layerName;
 
                 PromptSelectionResult ProSset = null;
                 TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
                 SelectionFilter sfilter = new SelectionFilter(filList);
-                LayoutManager layoutMgr = LayoutManager.Current;
 
-                string ss = layoutMgr.CurrentLayout;
                 ProSset = doc.Editor.SelectAll(sfilter);
-                //  List<ObjectId> idss=  GetEntitiesInModelSpace();
-                Database db = doc.Database;
-                List<BlockReference> blockTableRecords = new List<BlockReference>();
                 if (ProSset.Status == PromptStatus.OK)
                 {
-                   // lyModel.pointFs = new Dictionary<int, List<object>>();
                     using (Transaction tran = db.TransactionManager.StartTransaction())
                     {
                         SelectionSet sst = ProSset.Value;
-
                         ObjectId[] oids = sst.GetObjectIds();
-
-                        int ad = 0;
-                        List<string> aa = new List<string>();
 
                         LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
                         foreach (ObjectId layerId in lt)
@@ -83,11 +67,10 @@ namespace RegulatoryPlan.Method
                             LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
                             if (ltr.Name == layerName)
                             {
-                            //    lyModel.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                                lm.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
                             }
                         }
 
-                        int i = 0;
                         foreach (ObjectId lengGemo in oids)
                         {
                             
@@ -121,18 +104,15 @@ namespace RegulatoryPlan.Method
                             }
                             
                             lm.modelItemList.Add(pointsPlanItem);
-                         
 
                         }
                     }
-
 
                     if (model.allLines == null)
                     {
                         model.allLines = new List<LayerModel>();
                     }
                     model.allLines.Add(lm);
-
 
                 }
 
@@ -144,31 +124,24 @@ namespace RegulatoryPlan.Method
             if (model != null)
             {
                 LayerModel lm = new LayerModel();
-                Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                Database db = doc.Database;
+
                 ObjectIdCollection ids = new ObjectIdCollection();
                 lm.Name = layerName;
 
                 PromptSelectionResult ProSset = null;
                 TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
                 SelectionFilter sfilter = new SelectionFilter(filList);
-                LayoutManager layoutMgr = LayoutManager.Current;
 
-                string ss = layoutMgr.CurrentLayout;
                 ProSset = doc.Editor.SelectAll(sfilter);
-                //  List<ObjectId> idss=  GetEntitiesInModelSpace();
-                Database db = doc.Database;
-                List<BlockReference> blockTableRecords = new List<BlockReference>();
                 if (ProSset.Status == PromptStatus.OK)
                 {
                     // lyModel.pointFs = new Dictionary<int, List<object>>();
                     using (Transaction tran = db.TransactionManager.StartTransaction())
                     {
                         SelectionSet sst = ProSset.Value;
-
                         ObjectId[] oids = sst.GetObjectIds();
-
-                        int ad = 0;
-                        List<string> aa = new List<string>();
 
                         LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
                         foreach (ObjectId layerId in lt)
@@ -176,11 +149,10 @@ namespace RegulatoryPlan.Method
                             LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
                             if (ltr.Name == layerName)
                             {
-                                //    lyModel.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                                lm.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
                             }
                         }
 
-                        int i = 0;
                         foreach (ObjectId lengGemo in oids)
                         {
 
@@ -228,13 +200,6 @@ namespace RegulatoryPlan.Method
 
             }
         }
-        /// <summary>
-        /// 对实体进行写属性
-        /// </summary>
-        /// <param name="objId">实体id</param>
-        /// <param name="appName">外部数据名</param>
-        /// <param name="proStr">属性</param>
-        /// <returns>true: 成功 false: 失败</returns>
 
         public System.Data.DataTable AttributeList()
         {
@@ -420,7 +385,7 @@ namespace RegulatoryPlan.Method
 
         public ArrayList KgGuide()
         {
-            Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             Editor ed = doc.Editor;
             Database db = doc.Database;
 

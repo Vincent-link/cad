@@ -1592,52 +1592,6 @@ namespace RegulatoryPlan.Command
                 }
             }
 
-            //string word = "";
-
-            //List<ObjectId> idArray = GetCrossObjectIds(col_point3d, doc.Editor);
-
-            //for (int i = 0; i < idArray.Count; i++)
-            //{
-            //    Entity ent1 = (Entity)idArray[i].GetObject(OpenMode.ForRead);
-            //    if (ent1 is DBText)
-            //    {
-            //        word = ((DBText)ent1).TextString;
-
-            //    }
-            //    if (ent1 is MText)
-            //    {
-            //        word = ((MText)ent1).Text;
-            //    }
-            //    if (ent1 is BlockReference)
-            //    {
-            //        List<string> tagList = new List<string>();
-            //        using (Transaction trans = doc.Database.TransactionManager.StartTransaction())
-            //        {
-            //            BlockReference ent2 = (BlockReference)ent1;
-            //            if (IsInPolygon(ent2.Position, col_point3d))
-            //            {
-            //                foreach (ObjectId rt in ((BlockReference)ent1).AttributeCollection)
-            //                {
-            //                    DBObject dbObj = trans.GetObject(rt, OpenMode.ForRead) as DBObject;
-            //                    AttributeReference acAttRef = dbObj as AttributeReference;
-
-            //                    tagList.Add(acAttRef.TextString);
-
-            //                    //MessageBox.Show("Tag: " + acAttRef.Tag + "\n" +
-            //                    //                "Value: " + acAttRef.TextString + "\n");
-            //                }
-            //            }
-            //        }
-
-            //        // 如果地块编码属性只有两个属性值，attributeIndexList，如果少于2个或者多于2个都视为异常，添加空。
-            //        if (tagList.Count == 2)
-            //        {
-            //            word = tagList[0] + "_" + tagList[1];
-            //        }
-
-            //    }
-            //}
-
             return word;
 
         }

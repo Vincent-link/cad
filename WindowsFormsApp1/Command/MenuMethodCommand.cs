@@ -48,9 +48,11 @@ namespace RegulatoryPlan.Command
             //MainForm form = new MainForm();
             //form.ShowDialog();
         }
+
         [CommandMethod("AutoDeleteLayer", CommandFlags.Session)]
         public void AutoDeleteLayer()
         {
+
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = true;//等于true表示可以选择多个文件
 
@@ -59,12 +61,14 @@ namespace RegulatoryPlan.Command
                 foreach (string item in dialog.FileNames)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoDeleteLayers.AutoDeleteLayer(item); }
+                    { AutoDeleteLayers.Instance.AutoDeleteLayer(item); }
 
                     //{ MethodCommand.AutoOpenFile(item, "成安县", DerivedTypeEnum.None); }
 
                 }
             }
+
+
         }
 
         [CommandMethod("SendPointPlans", CommandFlags.Session)]

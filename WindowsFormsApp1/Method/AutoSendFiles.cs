@@ -90,7 +90,7 @@ namespace RegulatoryPlan.Method
                 //    logFile.Close();
                 //}
 
-                //System.Windows.Forms.MessageBox.Show(e.Message);
+                System.Windows.Forms.MessageBox.Show(e.Message);
             }
             // 发送类型
 

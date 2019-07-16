@@ -1,11 +1,13 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace RegulatoryPlan.Method
 {
@@ -13,24 +15,14 @@ namespace RegulatoryPlan.Method
     {
         public void GetAllUnitPlaneInfo(T model)
         {
-            LayerModel lm = new LayerModel();
-
             // 坐标点图层 特殊处理
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
+
+            LayerModel lm = new LayerModel();
             lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
 
             LayerModel lm2 = new LayerModel();
-
             lm2 = mbm.GetAllLayerGemo(model, "控制单元范围");
-
-            // 获取图表数据（特殊数据）
-            System.Data.DataTable attributeList = new System.Data.DataTable();  // 属性集合
-            ArrayList kgGuide = new ArrayList();//控规引导
-
-            // 属性
-            attributeList = AttributeList();
-            // 控规要求
-            kgGuide = ControlList();
 
             if (lm.modelItemList == null)
             {
@@ -44,8 +36,130 @@ namespace RegulatoryPlan.Method
             model.allLines.Add(lm);
             model.allLines.Add(lm2);
 
-            lm.modelItemList.Add(attributeList);
-            lm.modelItemList.Add(kgGuide);
+            model.attributeList = AttributeList();
+            model.kgGuide = ControlList();
+
+            //mbm.GetExportLayers(model);
+            //foreach (string layer in model.LayerList)
+            //{
+            //    GetAttributeIndex(model, layer);
+            //}
+
+            GetAttributeIndex(model, "用地代码");
+
+        }
+
+        public void GetAttributeIndex(T model, string layerName)
+        {
+            if (model != null)
+            {
+                LayerModel lm = new LayerModel();
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                Database db = doc.Database;
+
+                ObjectIdCollection ids = new ObjectIdCollection();
+                lm.Name = layerName;
+
+                PromptSelectionResult ProSset = null;
+                TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layerName) };
+                SelectionFilter sfilter = new SelectionFilter(filList);
+
+                ProSset = doc.Editor.SelectAll(sfilter);
+                if (ProSset.Status == PromptStatus.OK)
+                {
+                    using (Transaction tran = db.TransactionManager.StartTransaction())
+                    {
+                        SelectionSet sst = ProSset.Value;
+                        ObjectId[] oids = sst.GetObjectIds();
+
+                        LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
+                        foreach (ObjectId layerId in lt)
+                        {
+                            LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
+                            if (ltr.Name == layerName)
+                            {
+                                lm.Color = ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                            }
+                        }
+
+                        foreach (ObjectId lengGemo in oids)
+                        {
+
+                            DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
+                            PointsPlanItemModel pointsPlanItem = new PointsPlanItemModel();
+                            List<PointF> pfs = new List<PointF>();
+
+                            //if (ob is Hatch)
+                            //{
+                            //    Hatch h = ob as Hatch;
+                            //    int count = h.NumberOfLoops;
+
+                            //    for (int i = 0; i < count; i++)
+                            //    {
+                            //        HatchLoop loop = h.GetLoopAt(i);
+
+                            //        if (loop.IsPolyline)
+                            //        {
+                            //            foreach (BulgeVertex pt in loop.Polyline)
+                            //            {
+                            //                pfs.Add(new PointF((float)pt.Vertex.X, (float)pt.Vertex.Y));
+                            //            }
+                            //        }
+                            //        else
+                            //        {
+                            //            foreach (Curve2d item in loop.Curves)
+                            //            {
+                            //                Point2d[] M_point2d = item.GetSamplePoints(20);
+                            //                foreach (Point2d pt in M_point2d)
+                            //                {
+                            //                    pfs.Add(new PointF((float)pt.X, (float)pt.Y));
+                            //                }
+                            //            }
+                            //        }
+                            //    }
+
+                            //    pointsPlanItem.Num = MethodCommand.GetAttrIndex(pfs);
+
+                            //    if (pointsPlanItem.Num == null)
+                            //    {
+
+                            //    }
+                            //}
+
+                            if (ob is MText)
+                            {
+                                MText h = ob as MText;
+                                pointsPlanItem.Num = h.Text;
+                            }
+
+                            if (ob is DBText)
+                            {
+                                DBText h = ob as DBText;
+                                pointsPlanItem.Num = h.TextString;
+                            }
+
+                            BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
+                            pointsPlanItem.Geom = plModel;
+
+                            if (lm.modelItemList == null)
+                            {
+                                lm.modelItemList = new List<object>();
+                            }
+
+                            lm.modelItemList.Add(pointsPlanItem);
+
+                        }
+                    }
+
+                    if (model.allLines == null)
+                    {
+                        model.allLines = new List<LayerModel>();
+                    }
+                    model.allLines.Add(lm);
+
+                }
+
+            }
         }
 
         public System.Data.DataTable AttributeList()
@@ -204,7 +318,7 @@ namespace RegulatoryPlan.Method
 
         public ArrayList ControlList()
         {
-            Document doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             Editor ed = doc.Editor;
             Database db = doc.Database;
 

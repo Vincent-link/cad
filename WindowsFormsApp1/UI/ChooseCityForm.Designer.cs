@@ -143,8 +143,9 @@
             "中心城区居住用地规划"});
             this.comboBox1.Location = new System.Drawing.Point(67, 66);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(221, 20);
+            this.comboBox1.Size = new System.Drawing.Size(251, 20);
             this.comboBox1.TabIndex = 12;
+            this.comboBox1.Font = new System.Drawing.Font("SimSun", 12F);
             // 
             // label4
             // 

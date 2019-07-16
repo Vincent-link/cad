@@ -10,7 +10,32 @@ namespace RegulatoryPlan.Method
 {
     class AutoDeleteLayers
     {
-        internal static void AutoDeleteLayer(string file)
+        public void foo()
+        {
+            int x = 2;
+            char b = (char)x;
+        }
+        private AutoDeleteLayers()
+        {
+
+        }
+
+        public static AutoDeleteLayers Instance
+        {
+            get { return Nest.instance; }
+            
+        }
+        class Nest
+        {
+            internal readonly static AutoDeleteLayers instance = new AutoDeleteLayers();
+        }
+
+        internal static void ShowHello()
+        {
+            
+        }
+
+        internal void AutoDeleteLayer(string file)
         {
             try
             {
