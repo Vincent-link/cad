@@ -70,11 +70,11 @@ namespace RegulatoryPlan.Method
                 }
                 if (derivedType is DerivedTypeEnum.PointsPlan)
                 {
-                    PostModel.PostModelBase(mb as PointsPlanModel);
+                    PostModel.PostModelBase(mb as ModelBase);
                 }
                 if (derivedType is DerivedTypeEnum.UnitPlan)
                 {
-                    PostModel.PostModelBase(mb as UnitPlanModel);
+                    PostModel.PostModelBase(mb as ModelBase);
                 }
 
             }

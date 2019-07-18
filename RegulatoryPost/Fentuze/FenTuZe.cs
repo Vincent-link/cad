@@ -80,75 +80,69 @@ namespace RegulatoryPost.FenTuZe
         public static void PostData(Dictionary<string, string> result)
         {
 
-            // 发送 开始
-            string[] baseAddresses = new string[] {
-                "http://172.18.84.102:8080/CIM/", // 測試
-                //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
-               //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
-            };
-
-            foreach (var baseAddress in baseAddresses)
+            try
             {
-                Dictionary<string, string> resultAll = new Dictionary<string, string>();
-                string resultString = JsonConvert.SerializeObject(result);
-                resultAll.Add("result", resultString);
+                // 发送 开始
+                string[] baseAddresses = new string[] {
+                    //"http://172.18.84.102:8080/CIM/", // 測試
+                    //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
+                    "http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
+                };
 
-                var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
-                http.ContentType = "application/x-www-form-urlencoded";
-                http.Method = "POST";
-
-                StringBuilder builder = new StringBuilder();
-                int h = 0;
-                foreach (var item in resultAll)
+                foreach (var baseAddress in baseAddresses)
                 {
-                    if (h > 0)
-                        builder.Append("&");
-                    string value = "";
-                    value = item.Value.ToString().Replace("%", "百分号");
+                    Dictionary<string, string> resultAll = new Dictionary<string, string>();
+                    string resultString = JsonConvert.SerializeObject(result);
+                    resultAll.Add("result", resultString);
 
-                    builder.AppendFormat("{0}={1}", item.Key, value);
-                    h++;
-                }
+                    var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
+                    http.ContentType = "application/x-www-form-urlencoded";
+                    http.Method = "POST";
+                    //http.Timeout = 600000;
+                    //http.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
+                    //http.KeepAlive = false;
+                    //http.ProtocolVersion = HttpVersion.Version10;
+                    //http.ServicePoint.Expect100Continue = false;
+                    //ServicePointManager.DefaultConnectionLimit = 200;
 
-                using (StreamWriter file = new StreamWriter(@"C:\Users\Public\Documents\" + result["chartName"] + ".json", false))
-                {
-                    file.WriteLine(builder);
-                }
+                    //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                    //http.ServicePoint.ConnectionLimit = 200;
+                    //ServicePointManager.ServerCertificateValidationCallback = CheckValidationResult;
 
-                //MessageBox.Show(builder.ToString());
+                    StringBuilder builder = new StringBuilder();
+                    int h = 0;
+                    foreach (var item in resultAll)
+                    {
+                        if (h > 0)
+                            builder.Append("&");
+                        string value = "";
+                        value = item.Value.ToString().Replace("%", "百分号");
 
-                //string parsedContent = "srid=4326&attrlist=[\"chColor:51\"]&factorid=[\"b73e3fce-8314-4d5b-8e2b-0a3e8844b28b\"]&type=polygon&geom={\"rings\":[[[60145.4546169,33387.5339155],[59895.3137297,33437.8260557],[59885.7661656,33285.0286724],[59885.4849623,33280.5283488],[59902.1499232,33259.5545569],[59906.5973667,33258.8114325],[60127.4437563,33221.9101578],[60145.4546169,33387.5339155]]]}&name=123";
-                Byte[] bytes = Encoding.UTF8.GetBytes(builder.ToString());
+                        builder.AppendFormat("{0}={1}", item.Key, value);
+                        h++;
+                    }
 
-                try
-                {
+                    using (StreamWriter file = new StreamWriter(@"C:\Users\Public\Documents\" + result["chartName"] + ".json", false))
+                    {
+                        file.WriteLine(builder);
+                    }
+                    //MessageBox.Show(builder.ToString());
+
+                    //string parsedContent = "srid=4326&attrlist=[\"chColor:51\"]&factorid=[\"b73e3fce-8314-4d5b-8e2b-0a3e8844b28b\"]&type=polygon&geom={\"rings\":[[[60145.4546169,33387.5339155],[59895.3137297,33437.8260557],[59885.7661656,33285.0286724],[59885.4849623,33280.5283488],[59902.1499232,33259.5545569],[59906.5973667,33258.8114325],[60127.4437563,33221.9101578],[60145.4546169,33387.5339155]]]}&name=123";
+                    Byte[] bytes = Encoding.UTF8.GetBytes(builder.ToString());
+
                     Stream newStream = http.GetRequestStream();
                     newStream.Write(bytes, 0, bytes.Length);
                     newStream.Close();
-                }
-                catch(Exception e)
-                {
-                    string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-                    using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
-                    {
-                        logFile.WriteLine(DateTime.Now);
-                        logFile.WriteLine(result["chartName"] + "，" + e.Message);
-                        logFile.WriteLine("\n");
-                        logFile.Flush();
-                        logFile.Close();
-                    }
-                    //MessageBox.Show(e.Message);
-                }
 
-                string content = "";
+                    string content = "";
 
-                try
-                {
                     var response = http.GetResponse();
-
                     var stream = response.GetResponseStream();
                     var sr = new StreamReader(stream, Encoding.UTF8);
                     content = sr.ReadToEnd();
+                    sr.Close();
+                    response.Close();
 
                     string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
                     using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
@@ -161,26 +155,31 @@ namespace RegulatoryPost.FenTuZe
                     }
 
                     //MessageBox.Show(content);
-                }
-                catch (Exception e)
-                {
-                    string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-                    using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
-                    {
-                        logFile.WriteLine(DateTime.Now);
-                        logFile.WriteLine(result["chartName"] + "，" + e.Message);
-                        logFile.WriteLine("\n");
-                        logFile.Flush();
-                        logFile.Close();
-                    }
 
-                    //MessageBox.Show(e.Message);
-                }
-
+                } // 发送 结束
             }
-            // 发送 结束
+            catch (Exception e)
+            {
+                string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+                using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
+                {
+                    logFile.WriteLine(DateTime.Now);
+                    logFile.WriteLine(result["chartName"] + "，" + e.Message);
+                    logFile.WriteLine("\n");
+                    logFile.Flush();
+                    logFile.Close();
+                }
+
+                //MessageBox.Show(e.Message);
+            }
         }
-       
+
+
+        private static bool CheckValidationResult(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors errors)
+        {
+            return true; //总是接受
+        }
+
     }
 
 }

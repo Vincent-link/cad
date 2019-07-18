@@ -20,18 +20,19 @@ namespace RegulatoryPlan.Method
             //string attributeLists = JsonConvert.SerializeObject(attributeList);
             //MessageBox.Show(attributeLists);
 
-            if (lm.modelItemList == null)
-            {
-                lm.modelItemList = new List<object>();
-            }
-            lm.modelItemList.Add(AttributeList());
-            lm.modelItemList.Add(KgGuide());
-
             if (model.allLines == null)
             {
                 model.allLines = new List<LayerModel>();
             }
             model.allLines.Add(lm);
+
+            if (lm.modelItemList == null)
+            {
+                lm.modelItemList = new List<object>();
+            }
+
+            model.attributeList = AttributeList();
+            model.kgGuide = KgGuide();
 
             //地块图层
             GetAllYDBMGemo(model, "地块界限");

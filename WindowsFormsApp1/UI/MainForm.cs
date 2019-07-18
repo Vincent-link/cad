@@ -67,78 +67,85 @@ namespace RegulatoryPlan.UI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            waitPostThead = new Thread(WaitForPost);
-            waitPostThead.IsBackground = true;
-            waitPostThead.Start();
-            switch (model.DerivedType)
+            try
             {
-                case DerivedTypeEnum.BuildingIntegrated:
-                    PostModel.PostModelBase(model as BuildingIntegratedModel);
-                    break;
+                waitPostThead = new Thread(WaitForPost);
+                waitPostThead.IsBackground = true;
+                waitPostThead.Start();
+                switch (model.DerivedType)
+                {
+                    case DerivedTypeEnum.BuildingIntegrated:
+                        PostModel.PostModelBase(model as BuildingIntegratedModel);
+                        break;
 
-                case DerivedTypeEnum.UnitPlan:
-                    PostModel.PostModelBase(model as UnitPlanModel);
-                    break;
-                case DerivedTypeEnum.PointsPlan:
-                    PostModel.PostModelBase(model as PointsPlanModel);
-                    break;
-                case DerivedTypeEnum.Power10Kv:
-                    PostModel.PostModelBase(model as Power10kvModel);
-                    break;
-                case DerivedTypeEnum.Power35kv:
-                    PostModel.PostModelBase(model as Power35kvModel);
-                    break;
-                case DerivedTypeEnum.WaterSupply:
-                    PostModel.PostModelBase(model as WaterSupplyModel);
-                    break;
-                case DerivedTypeEnum.HeatSupply:
-                    PostModel.PostModelBase(model as HeatSupplyModel);
-                    break;
-                case DerivedTypeEnum.FuelGas:
-                    PostModel.PostModelBase(model as FuelGasModel);
-                    break;
-                case DerivedTypeEnum.Communication:
-                    PostModel.PostModelBase(model as CommunicationModel);
-                    break;
-                case DerivedTypeEnum.TheRoadSection:
-                    PostModel.PostModelBase(model as RoadSectionModel);
-                    break;
-                case DerivedTypeEnum.PipeLine:
-                    PostModel.PostModelBase(model as PipeLineModel);
-                    break;
-                case DerivedTypeEnum.Sewage:
-                    PostModel.PostModelBase(model as SewageModel);
-                    break;
-                case DerivedTypeEnum.FiveLine:
-                    PostModel.PostModelBase(model as UnitPlanModel);
-                    break;
-                case DerivedTypeEnum.LimitFactor:
-                    PostModel.PostModelBase(model as LimitFactorModel);
-                    break;
-                case DerivedTypeEnum.RainWater:
-                    PostModel.PostModelBase(model as RainWaterModel);
-                    break;
-                case DerivedTypeEnum.ReuseWater:
-                    PostModel.PostModelBase(model as ReuseWaterModel);
-                    break;
-                case DerivedTypeEnum.Road:
-                    PostModel.PostModelBase(model as RoadNoSectionModel);
-                    break;
-                case DerivedTypeEnum.None:
-                    PostModel.PostModelBase(model);
-                    break;
-                case DerivedTypeEnum.UseLandNumber:
-                    PostModel.PostModelBase(model as AttributeBaseModel);
-                    break;
-                case DerivedTypeEnum.CenterCityUseLandPlan:
-                    PostModel.PostModelBase(model as AttributeBaseModel);
-                    break;
-                case DerivedTypeEnum.CenterCityLifeUseLandPlan:
-                    PostModel.PostModelBase(model as AttributeBaseModel);
-                    break;
+                    case DerivedTypeEnum.UnitPlan:
+                        PostModel.PostModelBase(model as ModelBase);
+                        break;
+                    case DerivedTypeEnum.PointsPlan:
+                        PostModel.PostModelBase(model as ModelBase);
+                        break;
+                    case DerivedTypeEnum.Power10Kv:
+                        PostModel.PostModelBase(model as Power10kvModel);
+                        break;
+                    case DerivedTypeEnum.Power35kv:
+                        PostModel.PostModelBase(model as Power35kvModel);
+                        break;
+                    case DerivedTypeEnum.WaterSupply:
+                        PostModel.PostModelBase(model as WaterSupplyModel);
+                        break;
+                    case DerivedTypeEnum.HeatSupply:
+                        PostModel.PostModelBase(model as HeatSupplyModel);
+                        break;
+                    case DerivedTypeEnum.FuelGas:
+                        PostModel.PostModelBase(model as FuelGasModel);
+                        break;
+                    case DerivedTypeEnum.Communication:
+                        PostModel.PostModelBase(model as CommunicationModel);
+                        break;
+                    case DerivedTypeEnum.TheRoadSection:
+                        PostModel.PostModelBase(model as RoadSectionModel);
+                        break;
+                    case DerivedTypeEnum.PipeLine:
+                        PostModel.PostModelBase(model as PipeLineModel);
+                        break;
+                    case DerivedTypeEnum.Sewage:
+                        PostModel.PostModelBase(model as SewageModel);
+                        break;
+                    case DerivedTypeEnum.FiveLine:
+                        PostModel.PostModelBase(model as ModelBase);
+                        break;
+                    case DerivedTypeEnum.LimitFactor:
+                        PostModel.PostModelBase(model as LimitFactorModel);
+                        break;
+                    case DerivedTypeEnum.RainWater:
+                        PostModel.PostModelBase(model as RainWaterModel);
+                        break;
+                    case DerivedTypeEnum.ReuseWater:
+                        PostModel.PostModelBase(model as ReuseWaterModel);
+                        break;
+                    case DerivedTypeEnum.Road:
+                        PostModel.PostModelBase(model as RoadNoSectionModel);
+                        break;
+                    case DerivedTypeEnum.None:
+                        PostModel.PostModelBase(model);
+                        break;
+                    case DerivedTypeEnum.UseLandNumber:
+                        PostModel.PostModelBase(model as AttributeBaseModel);
+                        break;
+                    case DerivedTypeEnum.CenterCityUseLandPlan:
+                        PostModel.PostModelBase(model as AttributeBaseModel);
+                        break;
+                    case DerivedTypeEnum.CenterCityLifeUseLandPlan:
+                        PostModel.PostModelBase(model as AttributeBaseModel);
+                        break;
+                }
+                waitPostThead.Abort();
+                //  PostModel.PostModelBase1(model);
             }
-            waitPostThead.Abort();
-            //  PostModel.PostModelBase1(model);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void WaitForPost()
         {
