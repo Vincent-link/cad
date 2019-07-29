@@ -100,7 +100,7 @@ namespace RegulatoryPlan.Method
         /// 获取图例文本
         /// </summary>
         /// <returns></returns>
-        private List<MText> GetAllLengedText()
+        public List<MText> GetAllLengedText()
         {
             List<MText> textList = new List<MText>();
             Document doc = Application.DocumentManager.MdiActiveDocument;

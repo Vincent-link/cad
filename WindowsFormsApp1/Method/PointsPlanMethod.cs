@@ -326,19 +326,31 @@ namespace RegulatoryPlan.Method
                     {
                         distances.Clear();
                         texts.Clear();
-                        Entity ent3 = (Entity)index[s];
+                        MText ent3Mtext = (MText)index[s];
+
                         // 循环所有实体，如果实体的x值大于table索引的x值，加进table的每一行
                         for (int i = 0; i < idArray.Length; i++)
                         {
                             Entity ent4 = (Entity)idArray[i].GetObject(OpenMode.ForRead);
-                            if (ent4 is MText && ((MText)ent3).Location.X <= ((MText)ent4).Location.X && ((MText)ent3).Location.Y - 3.5 < ((MText)ent4).Location.Y && ((MText)ent4).Location.Y < ((MText)ent3).Location.Y + 3.5)
-                            {
-                                int eDistance = (int)MethodCommand.DistancePointToPoint(((MText)ent4).Location, ((MText)ent3).Location);
 
-                                //MessageBox.Show(eDistance.ToString());
-                                distances.Add(eDistance);
-                                texts.Add(((MText)ent4).Text);
+                            if (ent4 is MText)
+                            {
+                                MText ent4Mtext = (MText)ent4;
+                                int num = System.Text.RegularExpressions.Regex.Matches(((MText)ent4).Text, "P").Count;
+                                double textHeightPlusLineSpacing = ent4Mtext.TextHeight/2;
+                                double ent4LocationY = ent4Mtext.Location.Y - ent4Mtext.ActualHeight / 2;
+                                double ent3LocationY = ent3Mtext.Location.Y - ent3Mtext.ActualHeight / 2;
+
+                                if (ent3Mtext.Location.X <= ent4Mtext.Location.X && ent3Mtext.Location.Y - 3.5 < ent4LocationY && ent4LocationY < ent3Mtext.Location.Y + 3.5)
+                                {
+                                    int eDistance = (int)MethodCommand.DistancePointToPoint(ent4Mtext.Location, ent3Mtext.Location);
+
+                                    //MessageBox.Show(eDistance.ToString());
+                                    distances.Add(eDistance);
+                                    texts.Add(ent4Mtext.Text);
+                                }
                             }
+
                         }
 
                         // 把获取的属性值按照距离大小排序，距离最近的放在第一位，以此类推

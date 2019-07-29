@@ -76,20 +76,26 @@ namespace RegulatoryPost.FenTuZe
             PostData(result);
         }
 
-        // 发送方法
-        public static void PostData(Dictionary<string, string> result)
+        private static string[] BaseAddresses()
         {
-
-            try
-            {
-                // 发送 开始
-                string[] baseAddresses = new string[] {
+            string[] baseAddresses = new string[] {
                     //"http://172.18.84.102:8080/CIM/", // 測試
                     //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
                     "http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
                 };
+            return baseAddresses;
+        }
+        // 发送方法
+        public static void PostData(Dictionary<string, string> result)
+        {
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
-                foreach (var baseAddress in baseAddresses)
+            try
+            {
+                sw.Start();
+                // 发送 开始
+
+                foreach (var baseAddress in BaseAddresses())
                 {
                     Dictionary<string, string> resultAll = new Dictionary<string, string>();
                     string resultString = JsonConvert.SerializeObject(result);
@@ -98,16 +104,15 @@ namespace RegulatoryPost.FenTuZe
                     var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
                     http.ContentType = "application/x-www-form-urlencoded";
                     http.Method = "POST";
-                    //http.Timeout = 600000;
-                    //http.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
-                    //http.KeepAlive = false;
-                    //http.ProtocolVersion = HttpVersion.Version10;
-                    //http.ServicePoint.Expect100Continue = false;
-                    //ServicePointManager.DefaultConnectionLimit = 200;
+                    http.Timeout = 600000;
+                    http.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
+                    http.KeepAlive = false;
+                    http.ProtocolVersion = HttpVersion.Version10;
+                    http.ServicePoint.Expect100Continue = false;
+                    ServicePointManager.DefaultConnectionLimit = 200;
 
-                    //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
-                    //http.ServicePoint.ConnectionLimit = 200;
-                    //ServicePointManager.ServerCertificateValidationCallback = CheckValidationResult;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                    http.ServicePoint.ConnectionLimit = 200;
 
                     StringBuilder builder = new StringBuilder();
                     int h = 0;
@@ -128,7 +133,6 @@ namespace RegulatoryPost.FenTuZe
                     }
                     //MessageBox.Show(builder.ToString());
 
-                    //string parsedContent = "srid=4326&attrlist=[\"chColor:51\"]&factorid=[\"b73e3fce-8314-4d5b-8e2b-0a3e8844b28b\"]&type=polygon&geom={\"rings\":[[[60145.4546169,33387.5339155],[59895.3137297,33437.8260557],[59885.7661656,33285.0286724],[59885.4849623,33280.5283488],[59902.1499232,33259.5545569],[59906.5973667,33258.8114325],[60127.4437563,33221.9101578],[60145.4546169,33387.5339155]]]}&name=123";
                     Byte[] bytes = Encoding.UTF8.GetBytes(builder.ToString());
 
                     Stream newStream = http.GetRequestStream();
@@ -144,40 +148,111 @@ namespace RegulatoryPost.FenTuZe
                     sr.Close();
                     response.Close();
 
-                    string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-                    using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
-                    {
-                        logFile.WriteLine(DateTime.Now);
-                        logFile.WriteLine(result["chartName"] + "，成功");
-                        logFile.WriteLine("\n");
-                        logFile.Flush();
-                        logFile.Close();
-                    }
+                    sw.Stop();
 
-                    //MessageBox.Show(content);
+                    WriteLog(result["chartName"], content, sw.ElapsedMilliseconds/1000);
+
+                    MessageBox.Show("发送成功！");
 
                 } // 发送 结束
             }
             catch (Exception e)
             {
-                string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-                using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
-                {
-                    logFile.WriteLine(DateTime.Now);
-                    logFile.WriteLine(result["chartName"] + "，" + e.Message);
-                    logFile.WriteLine("\n");
-                    logFile.Flush();
-                    logFile.Close();
-                }
+                WriteLog(result["chartName"], e.Message, sw.ElapsedMilliseconds/1000);
 
-                //MessageBox.Show(e.Message);
+                MessageBox.Show("发送失败！");
+
             }
         }
 
-
-        private static bool CheckValidationResult(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors errors)
+        public static void AutoPostData(Dictionary<string, string> result)
         {
-            return true; //总是接受
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+
+            try
+            {
+                sw.Start();
+                // 发送 开始
+
+                foreach (var baseAddress in BaseAddresses())
+                {
+                    Dictionary<string, string> resultAll = new Dictionary<string, string>();
+                    string resultString = JsonConvert.SerializeObject(result);
+                    resultAll.Add("result", resultString);
+
+                    var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
+                    http.ContentType = "application/x-www-form-urlencoded";
+                    http.Method = "POST";
+                    http.Timeout = 600000;
+                    http.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
+                    http.KeepAlive = false;
+                    http.ProtocolVersion = HttpVersion.Version10;
+                    http.ServicePoint.Expect100Continue = false;
+                    ServicePointManager.DefaultConnectionLimit = 200;
+
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                    http.ServicePoint.ConnectionLimit = 200;
+
+                    StringBuilder builder = new StringBuilder();
+                    int h = 0;
+                    foreach (var item in resultAll)
+                    {
+                        if (h > 0)
+                            builder.Append("&");
+                        string value = "";
+                        value = item.Value.ToString().Replace("%", "百分号");
+
+                        builder.AppendFormat("{0}={1}", item.Key, value);
+                        h++;
+                    }
+
+                    using (StreamWriter file = new StreamWriter(@"C:\Users\Public\Documents\" + result["chartName"] + ".json", false))
+                    {
+                        file.WriteLine(builder);
+                    }
+                    //MessageBox.Show(builder.ToString());
+
+                    Byte[] bytes = Encoding.UTF8.GetBytes(builder.ToString());
+
+                    Stream newStream = http.GetRequestStream();
+                    newStream.Write(bytes, 0, bytes.Length);
+                    newStream.Close();
+
+                    string content = "";
+
+                    var response = http.GetResponse();
+                    var stream = response.GetResponseStream();
+                    var sr = new StreamReader(stream, Encoding.UTF8);
+                    content = sr.ReadToEnd();
+                    sr.Close();
+                    response.Close();
+
+                    sw.Stop();
+
+                    WriteLog(result["chartName"], content, sw.ElapsedMilliseconds / 1000);
+
+
+                } // 发送 结束
+            }
+            catch (Exception e)
+            {
+                WriteLog(result["chartName"], e.Message, sw.ElapsedMilliseconds / 1000);
+
+            }
+        }
+        public static void WriteLog(string fileName, string content, long time)
+        {
+            content = content.Replace("\n", "").Replace("\r", "").Replace(" ", "");
+            string logFileName = @"C: \Users\Public\Documents\" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+            using (TextWriter logFile = TextWriter.Synchronized(File.AppendText(logFileName)))
+            {
+                logFile.WriteLine(DateTime.Now);
+                logFile.WriteLine(fileName + "，" + content);
+                logFile.WriteLine("耗时：" + time + "秒");
+                logFile.WriteLine("\n");
+                logFile.Flush();
+                logFile.Close();
+            }
         }
 
     }

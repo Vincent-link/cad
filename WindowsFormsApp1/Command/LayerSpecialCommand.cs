@@ -80,8 +80,13 @@ namespace RegulatoryPlan.Command
                     RoadMethod<RoadNoSectionModel> mMethod1 = new RoadMethod<RoadNoSectionModel>();
                     mMethod1.GetAllRoadInfo(model as RoadNoSectionModel);
                     break;
+                case DerivedTypeEnum.RoadSituation:
+                    RoadSituationMethod<RoadSituationModel> rMethod = new RoadSituationMethod<RoadSituationModel>();
+                    rMethod.GetAllRoadInfo(model as RoadSituationModel);
+                    break;
                 case DerivedTypeEnum.CenterCityUseLandPlan:
                     CenterCityUseLandMethod<CenterCityUseLandPlanModel> ccul = new CenterCityUseLandMethod<CenterCityUseLandPlanModel>(model as CenterCityUseLandPlanModel);
+                    ccul.GetAllAttributeInfo(model as CenterCityUseLandPlanModel);
                     break;
                 case DerivedTypeEnum.CityDesign:
                     break;

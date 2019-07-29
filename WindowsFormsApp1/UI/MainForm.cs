@@ -69,9 +69,9 @@ namespace RegulatoryPlan.UI
         {
             try
             {
-                waitPostThead = new Thread(WaitForPost);
-                waitPostThead.IsBackground = true;
-                waitPostThead.Start();
+                //waitPostThead = new Thread(WaitForPost);
+                //waitPostThead.IsBackground = true;
+                //waitPostThead.Start();
                 switch (model.DerivedType)
                 {
                     case DerivedTypeEnum.BuildingIntegrated:
@@ -103,7 +103,7 @@ namespace RegulatoryPlan.UI
                         PostModel.PostModelBase(model as CommunicationModel);
                         break;
                     case DerivedTypeEnum.TheRoadSection:
-                        PostModel.PostModelBase(model as RoadSectionModel);
+                        PostModel.PostModelBase(model as RoadModel);
                         break;
                     case DerivedTypeEnum.PipeLine:
                         PostModel.PostModelBase(model as PipeLineModel);
@@ -126,6 +126,9 @@ namespace RegulatoryPlan.UI
                     case DerivedTypeEnum.Road:
                         PostModel.PostModelBase(model as RoadNoSectionModel);
                         break;
+                    case DerivedTypeEnum.RoadSituation:
+                        PostModel.PostModelBase(model as RoadSituationModel);
+                        break;
                     case DerivedTypeEnum.None:
                         PostModel.PostModelBase(model);
                         break;
@@ -139,7 +142,7 @@ namespace RegulatoryPlan.UI
                         PostModel.PostModelBase(model as AttributeBaseModel);
                         break;
                 }
-                waitPostThead.Abort();
+                //waitPostThead.Abort();
                 //  PostModel.PostModelBase1(model);
             }
             catch (Exception ex)
@@ -193,6 +196,8 @@ namespace RegulatoryPlan.UI
                     return new ReuseWaterModel();
                 case DerivedTypeEnum.Road:
                     return new RoadNoSectionModel();
+                case DerivedTypeEnum.RoadSituation:
+                    return new RoadSituationModel();
                 case DerivedTypeEnum.CenterCityUseLandPlan:
                     return new CenterCityUseLandPlanModel();
                 case DerivedTypeEnum.UseLandNumber:
@@ -426,9 +431,14 @@ namespace RegulatoryPlan.UI
                     LayerModel spModel = (mb as RoadSectionModel).allLines[(mb as RoadSectionModel).allLines.Count - 1];
                     GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
                 }
-                else
+                if (mb is RoadNoSectionModel)
                 {
                     LayerModel spModel = (mb as RoadNoSectionModel).allLines[(mb as RoadNoSectionModel).allLines.Count - 1];
+                    GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
+                }
+                if (mb is RoadSituationModel)
+                {
+                    LayerModel spModel = (mb as RoadSituationModel).allLines[(mb as RoadSituationModel).allLines.Count - 1];
                     GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
                 }
             }
@@ -516,7 +526,7 @@ namespace RegulatoryPlan.UI
                         LayerModel spModel = (mb as RoadSectionModel).allLines[(mb as RoadSectionModel).allLines.Count - 1];
                         GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
                     }
-                    else
+                    if (mb is RoadNoSectionModel)
                     {
                         LayerModel spModel = (mb as RoadNoSectionModel).allLines[(mb as RoadNoSectionModel).allLines.Count - 1];
                         GetSpecialDataRowInfo(spModel.modelItemList, tb, spModel.Name);
@@ -861,6 +871,21 @@ namespace RegulatoryPlan.UI
                     outStr += "}";
                 }
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -7,18 +7,18 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
-    public class RoadNoSectionModel: RoadModel
+    public class RoadSituationModel : RoadModel
     {
         string roadSectionName;
       
 
-        public RoadNoSectionModel()
+        public RoadSituationModel()
         {
             RoadNameLayer = "路名";
             RoadLineLayer = "道路";
             RoadSectionLayer = "横断面符号";
             this.specailLayers = new List<string>() {RoadLineLayer,RoadNameLayer};
-            this.DerivedType = DerivedTypeEnum.Road;
+            this.DerivedType = DerivedTypeEnum.RoadSituation;
         }
 
         public string RoadSectionLayer  {get => roadSectionName; set => roadSectionName = value; }

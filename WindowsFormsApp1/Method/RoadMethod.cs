@@ -15,12 +15,18 @@ namespace RegulatoryPlan.Method
     {
         public void GetAllRoadInfo(T model)
         {
+            GetRoadGeom(model);
+            GetRoadAttribute(model);
+        }
+        private void GetRoadGeom(T model)
+        {
             Document doc = Application.DocumentManager.MdiActiveDocument;
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;
             PromptSelectionResult ProSset1 = null;
             PromptSelectionResult ProSsetSection = null;
+
             TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.RoadNameLayer) };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
@@ -44,16 +50,17 @@ namespace RegulatoryPlan.Method
             List<Polyline> sectionLine = new List<Polyline>();
             List<DBText> sectionText = new List<DBText>();
             Database db = doc.Database;
+
             if (ProSset.Status == PromptStatus.OK && ProSset1.Status == PromptStatus.OK)
             {
                 using (Transaction tran = db.TransactionManager.StartTransaction())
                 {
                     SelectionSet sst = ProSset.Value;
                     SelectionSet sst1 = ProSset1.Value;
-                   
+
                     ObjectId[] oids = sst.GetObjectIds();
                     ObjectId[] oids1 = sst1.GetObjectIds();
-                  
+
 
                     int rt = 0;
                     int rl = 0;
@@ -65,7 +72,7 @@ namespace RegulatoryPlan.Method
                         LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
                         if (ltr.Name == MethodCommand.LegendLayer)
                         {
-                            lm.Color =  System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                            lm.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
                         }
                     }
                     for (int i = 0; i < oids.Length; i++)
@@ -73,13 +80,12 @@ namespace RegulatoryPlan.Method
 
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
 
-                            if ((ob as DBText).BlockName.ToLower() == "*model_space")
-                            {
-
-                                roadText.Add((ob as DBText));
-                            }
+                        if ((ob as DBText).BlockName.ToLower() == "*model_space")
+                        {
+                            roadText.Add((ob as DBText));
                         }
-                    
+                    }
+
                     for (int i = 0; i < oids1.Length; i++)
                     {
 
@@ -99,7 +105,7 @@ namespace RegulatoryPlan.Method
                         }
                     }
 
-                    if(ProSsetSection.Status== PromptStatus.OK)
+                    if (ProSsetSection.Status == PromptStatus.OK)
                     {
                         SelectionSet sstSec = ProSsetSection.Value;
                         ObjectId[] oidsSec = sstSec.GetObjectIds();
@@ -137,7 +143,7 @@ namespace RegulatoryPlan.Method
                     {
                         if (sectionLine.Count > 0)
                         {
-                            lm.modelItemList.Add(GetRoadItemInfo(polyline, roadText,sectionLine,sectionText));
+                            lm.modelItemList.Add(GetRoadItemInfo(polyline, roadText, sectionLine, sectionText));
                         }
                         else
                         {
@@ -151,8 +157,6 @@ namespace RegulatoryPlan.Method
                     model.allLines.Add(lm);
                 }
             }
-
-
         }
 
         public RoadInfoItemModel GetRoadItemInfo(Polyline line, List<DBText> txtList)
@@ -279,6 +283,52 @@ namespace RegulatoryPlan.Method
 
             
 
+
+        }
+        // 获取属性
+        private void GetRoadAttribute(T model)
+        {
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+
+            ObjectIdCollection ids = new ObjectIdCollection();
+            PromptSelectionResult ProSset = null;
+
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.RoadNameLayer) };
+            SelectionFilter sfilter = new SelectionFilter(filList);
+            ProSset = doc.Editor.SelectAll(sfilter);
+
+            if (model.allLines == null)
+            {
+                model.allLines = new List<LayerModel>();
+            }
+
+            model.attributeList = new System.Data.DataTable("道路");
+            model.attributeList.Columns.Add(new System.Data.DataColumn(("道路名称"), typeof(string)));
+
+            if (ProSset.Status == PromptStatus.OK)
+            {
+                using (Transaction tran = doc.Database.TransactionManager.StartTransaction())
+                {
+                    SelectionSet sst = ProSset.Value;
+                    ObjectId[] oids = sst.GetObjectIds();
+
+                    for (int i = 0; i < oids.Length; i++)
+                    {
+
+                        DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+
+                        if (ob is DBText)
+                        {
+                            // 获取道路的属性数据
+                            System.Data.DataRow row;
+                            row = model.attributeList.NewRow();
+                            row["道路名称"] = ((DBText)ob).TextString.Replace(" ", "").Replace("　", "").Replace("\r", "").Replace("\n", ""); ;
+                            model.attributeList.Rows.Add(row);
+                        }
+                    }
+
+                }
+            }
 
         }
     }

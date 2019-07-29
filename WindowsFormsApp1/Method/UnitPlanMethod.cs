@@ -72,6 +72,12 @@ namespace RegulatoryPlan.Method
                         SelectionSet sst = ProSset.Value;
                         ObjectId[] oids = sst.GetObjectIds();
 
+                        // 去重
+                        List<string> numsAll = new List<string>();
+
+                        // 增加用地大类
+                        List<string> nums = new List<string>();
+
                         LayerTable lt = (LayerTable)db.LayerTableId.GetObject(OpenMode.ForRead);
                         foreach (ObjectId layerId in lt)
                         {
@@ -138,18 +144,36 @@ namespace RegulatoryPlan.Method
                                 pointsPlanItem.Num = h.TextString;
                             }
 
-                            BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
-                            pointsPlanItem.Geom = plModel;
-
-                            if (lm.modelItemList == null)
+                            if (!numsAll.Contains(pointsPlanItem.Num))
                             {
-                                lm.modelItemList = new List<object>();
-                            }
+                                numsAll.Add(pointsPlanItem.Num);
 
-                            lm.modelItemList.Add(pointsPlanItem);
+                                BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob);
+                                pointsPlanItem.Geom = plModel;
+
+                                if (lm.modelItemList == null)
+                                {
+                                    lm.modelItemList = new List<object>();
+                                }
+
+                                PointsPlanItemModel pointsPlanItem2 = new PointsPlanItemModel();
+                                string firstLetter = pointsPlanItem.Num.Substring(0, 1);
+
+                                if (!nums.Contains(firstLetter))
+                                {
+                                    nums.Add(firstLetter);
+
+                                    pointsPlanItem2.Num = firstLetter;
+                                    pointsPlanItem2.Geom = pointsPlanItem.Geom;
+                                    lm.modelItemList.Add(pointsPlanItem2);
+                                }
+
+                                lm.modelItemList.Add(pointsPlanItem);
+                            }
 
                         }
                     }
+
 
                     if (model.allLines == null)
                     {
@@ -225,8 +249,8 @@ namespace RegulatoryPlan.Method
                     // 增加表格表头名称   
                     table.Columns.Add(new System.Data.DataColumn(("用地代码"), typeof(string)));
                     table.Columns.Add(new System.Data.DataColumn(("用地名称"), typeof(string)));
-                    table.Columns.Add(new System.Data.DataColumn(("面积"), typeof(string)));
-                    table.Columns.Add(new System.Data.DataColumn(("占建设用地比例"), typeof(string)));
+                    table.Columns.Add(new System.Data.DataColumn(("面积（ha）"), typeof(string)));
+                    table.Columns.Add(new System.Data.DataColumn(("占建设用地比例（%）"), typeof(string)));
 
                     //table.Columns.Add(new System.Data.DataColumn(("col"),typeof(string)));
                     //table.NewRow().ItemArray = new string[] { "",""};
@@ -295,11 +319,11 @@ namespace RegulatoryPlan.Method
                                 row = table.NewRow();
                                 row["用地代码"] = texts[0];
                                 row["用地名称"] = texts[1];
-                                row["面积"] = texts[2];
+                                row["面积（ha）"] = texts[2];
                                 if (texts.Count < 4)
-                                    row["占建设用地比例"] = "无";
+                                    row["占建设用地比例（%）"] = "无";
                                 else
-                                    row["占建设用地比例"] = texts[3];
+                                    row["占建设用地比例（%）"] = texts[3];
                                 table.Rows.Add(row);
 
                             } // 找出所有用地代码的关联属性

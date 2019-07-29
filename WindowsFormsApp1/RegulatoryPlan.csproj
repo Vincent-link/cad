@@ -87,6 +87,7 @@
     <Compile Include="Method\AutoSendFiles.cs" />
     <Compile Include="Method\AttributeBaseMethod.cs" />
     <Compile Include="Method\Cad2ModelTools.cs" />
+    <Compile Include="Method\RoadSituationMethod.cs" />
     <Compile Include="Method\UseLandNumberMethod.cs" />
     <Compile Include="Method\CenterCityLifeUseLandMethod.cs" />
     <Compile Include="Method\CenterCityUseLandMethod.cs" />

@@ -32,8 +32,8 @@ namespace RegulatoryModel.Model
         CenterCityUseLandPlan,//中心城区用地规划
         CenterCityLifeUseLandPlan,//中心城区居住用地规划
         UseLandNumber,//用地规划编码图
-        None
-
+        None,
+        RoadSituation, //道路现状
     }
     public class ModelBase
     {

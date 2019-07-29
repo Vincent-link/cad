@@ -48,6 +48,7 @@
     <Compile Include="Model\BlockInfoModel.cs" />
     <Compile Include="Model\BuildingIntegratedModel.cs" />
     <Compile Include="Model\CenterCityLifeUseLandPlan.cs" />
+    <Compile Include="Model\RoadSituationModel.cs" />
     <Compile Include="Model\UseLandNumber.cs" />
     <Compile Include="Model\CenterCityUseLandPlan.cs" />
     <Compile Include="Model\CommandItemModel.cs" />

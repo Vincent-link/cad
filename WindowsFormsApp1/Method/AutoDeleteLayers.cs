@@ -80,7 +80,10 @@ namespace RegulatoryPlan.Method
 
                                 }
                                 // 删除图层
-                                layer.Erase();
+                                if (layer.Name != "0")
+                                {
+                                    layer.Erase();
+                                }
                             }
                             catch (Exception e)
                             {
