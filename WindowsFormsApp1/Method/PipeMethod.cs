@@ -11,14 +11,14 @@ using System.Text;
 
 namespace RegulatoryPlan.Method
 {
-   public class PipeMethod<T>:AttributeBaseMethod<T> where T:PipeModel
+    public class PipeMethod<T> : AttributeBaseMethod<T> where T : PipeModel
     {
         private PipeMethod()
         {
 
         }
 
-        public PipeMethod(T model):base(model)
+        public PipeMethod(T model) : base(model)
         {
 
         }
@@ -30,6 +30,7 @@ namespace RegulatoryPlan.Method
                 foreach (string layerName in GetRealLayer(am.LayerName))
                 {
                     LayerModel lyModel = new LayerModel();
+                    lyModel.IsHaveAttribute = true;
                     List<BlockInfoModel> list = new List<BlockInfoModel>();
                     lyModel.Name = layerName;
                     Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -78,7 +79,7 @@ namespace RegulatoryPlan.Method
                                     List<object> obj = new List<object>() { plModel };
                                     lyModel.pointFs.Add(i, obj);
                                     i++;
-                                }
+                                } 
 
                             }
                         }
@@ -100,7 +101,7 @@ namespace RegulatoryPlan.Method
 
             PromptSelectionResult ProSset = null;
 
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName,model.PipeInfo) };
+            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.PipeInfo) };
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
 
@@ -119,7 +120,7 @@ namespace RegulatoryPlan.Method
             }
             List<MText> roadText = new List<MText>();
             Database db = doc.Database;
-            if (ProSset.Status == PromptStatus.OK )
+            if (ProSset.Status == PromptStatus.OK)
             {
                 using (Transaction tran = db.TransactionManager.StartTransaction())
                 {
@@ -137,7 +138,7 @@ namespace RegulatoryPlan.Method
                         LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
                         if (ltr.Name == MethodCommand.LegendLayer)
                         {
-                            lm.Color =  System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
+                            lm.Color = System.Drawing.ColorTranslator.ToHtml(ltr.Color.ColorValue);
                         }
                     }
                     for (int i = 0; i < oids.Length; i++)
@@ -153,7 +154,7 @@ namespace RegulatoryPlan.Method
                             }
                         }
                     }
-                
+
                     lm.Name = model.LayerList[0];
                     lm.modelItemList = new List<object>();
                     foreach (Polyline polyline in roadLine)
@@ -170,15 +171,15 @@ namespace RegulatoryPlan.Method
 
 
         }
-        
+
         public PipeItemModel GetPipeItemInfo(Polyline line, List<MText> txtList)
         {
-        
+
             PipeItemModel item = new PipeItemModel();
             try
             {
                 item.PipeLength = line.Length.ToString();
-                item.Style.LineWidth= line.ConstantWidth.ToString();
+                item.Style.LineWidth = line.ConstantWidth.ToString();
                 item.ColorIndex = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 Database db = doc.Database;
@@ -190,7 +191,7 @@ namespace RegulatoryPlan.Method
                     {
                         item.TxtLocation = new System.Drawing.PointF((float)mText.Location.X, (float)mText.Location.Y);
                         item.PipeType = mText.Text; //Replace(" ", "").Replace("　", "");
-                        item.PipeLayer =mText.Layer;
+                        item.PipeLayer = mText.Layer;
                     }
 
 

@@ -13,9 +13,9 @@ namespace RegulatoryPlan.Method
     public class CenterCityLifeUseLandMethod<T> : AttributeBaseMethod<T> where T : CenterCityLifeUseLandPlanModel
     {
         private CenterCityLifeUseLandMethod() { }
-        public CenterCityLifeUseLandMethod(T model):base(model)
+        public CenterCityLifeUseLandMethod(T model) : base(model)
         {
-            
+
         }
         public override void GetAllAttributeInfo(T model)
         {
@@ -24,9 +24,10 @@ namespace RegulatoryPlan.Method
                 foreach (string layerName in GetRealLayer(am.LayerName))
                 {
                     LayerModel lyModel = new LayerModel();
+                    lyModel.IsHaveAttribute = true;
                     List<BlockInfoModel> list = new List<BlockInfoModel>();
                     lyModel.Name = layerName;
-                   // Document doc = Application.DocumentManager.MdiActiveDocument;
+                    // Document doc = Application.DocumentManager.MdiActiveDocument;
                     ObjectIdCollection ids = new ObjectIdCollection();
 
                     PromptSelectionResult ProSset = null;
@@ -37,7 +38,7 @@ namespace RegulatoryPlan.Method
                     string ss = layoutMgr.CurrentLayout;
                     ProSset = CadHelper.Instance.Editor.SelectAll(sfilter);
                     //  List<ObjectId> idss=  GetEntitiesInModelSpace();
-                //    Database db = doc.Database;
+                    //    Database db = doc.Database;
                     List<BlockReference> blockTableRecords = new List<BlockReference>();
                     if (ProSset.Status == PromptStatus.OK)
                     {
@@ -63,7 +64,7 @@ namespace RegulatoryPlan.Method
                             double totalFamily = 0;
                             double totalPeople = 0;
                             int i = 0;
-                   
+
                             foreach (ObjectId lengGemo in oids)
                             {
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
@@ -105,14 +106,14 @@ namespace RegulatoryPlan.Method
                                 if (plModel != null)
                                 {
                                     List<object> obj = new List<object>() { plModel };
-                                   lyModel.pointFs.Add(i, obj);
+                                    lyModel.pointFs.Add(i, obj);
                                     i++;
                                 }
 
                             }
                             foreach (List<object> ptssItem in lyModel.pointFs.Values)
                             {
-                               
+
                                 foreach (object ptsItem in ptssItem)
                                 {
                                     BlockInfoModel tempBlock = new BlockInfoModel();
@@ -122,9 +123,9 @@ namespace RegulatoryPlan.Method
                                         {
 
                                             DbTextModel dbTextModel = (ptsItem as BlockInfoModel).DbText[j];
-                                           List<AttributeItemModel> kk = new List<AttributeItemModel>();
+                                            List<AttributeItemModel> kk = new List<AttributeItemModel>();
                                             if (dbTextModel.attItemList != null && dbTextModel.attItemList.Count > 0)
-                                            { 
+                                            {
                                                 foreach (AttributeItemModel attribute in dbTextModel.attItemList)
                                                 {
                                                     AttributeItemModel tempModel = attribute;
@@ -132,7 +133,7 @@ namespace RegulatoryPlan.Method
                                                     {
                                                         tempModel = attribute;
                                                         tempModel.AtValue = totalFamily.ToString();
-                                                        kk.Add( tempModel);// dbTextModel.attItemList[attribute] = totalFamily.ToString();
+                                                        kk.Add(tempModel);// dbTextModel.attItemList[attribute] = totalFamily.ToString();
                                                     }
                                                     else if (attribute.TargetName == "总人数")
                                                     {
@@ -162,6 +163,6 @@ namespace RegulatoryPlan.Method
                 }
             }
 
-            }
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace RegulatoryPlan.Method
     {
        public AttributeBaseMethod() { }
 
-        public AttributeBaseMethod(T model)
+         public AttributeBaseMethod(T model)
         {
             GetAllAttributeInfo(model);
         }

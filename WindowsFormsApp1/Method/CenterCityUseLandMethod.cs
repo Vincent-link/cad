@@ -12,9 +12,9 @@ namespace RegulatoryPlan.Method
     public class CenterCityUseLandMethod<T> : AttributeBaseMethod<T> where T : CenterCityUseLandPlanModel
     {
         private CenterCityUseLandMethod() { }
-        public CenterCityUseLandMethod(T model):base(model)
+        public CenterCityUseLandMethod(T model) : base(model)
         {
-            
+
         }
         public override void GetAllAttributeInfo(T model)
         {
@@ -23,6 +23,7 @@ namespace RegulatoryPlan.Method
                 foreach (string layerName in GetRealLayer(am.LayerName))
                 {
                     LayerModel lyModel = new LayerModel();
+                    lyModel.IsHaveAttribute = true;
                     List<BlockInfoModel> list = new List<BlockInfoModel>();
                     lyModel.Name = layerName;
                     Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -65,7 +66,7 @@ namespace RegulatoryPlan.Method
                             {
 
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
-                                BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob,am);
+                                BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob, am);
                                 if (plModel != null)
                                 {
                                     List<object> obj = new List<object>() { plModel };

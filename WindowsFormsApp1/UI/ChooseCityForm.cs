@@ -22,16 +22,6 @@ namespace RegulatoryPlan.UI
             InitializeComponent();
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -140,5 +130,6 @@ namespace RegulatoryPlan.UI
             this.Close();
            
         }
+
     }
 }

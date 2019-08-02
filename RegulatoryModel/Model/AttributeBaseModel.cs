@@ -66,15 +66,15 @@ namespace RegulatoryModel.Model
         /// <summary>
         /// 图层名
         /// </summary>
-            LayerName,
-            /// <summary>
-            /// 地块编码
-            /// </summary>
-            LotNumber,
-            /// <summary>
-            /// 用地代码
-            /// </summary>
-            UseLandNumber
+        LayerName,
+        /// <summary>
+        /// 地块编码
+        /// </summary>
+        LotNumber,
+        /// <summary>
+        /// 用地代码
+        /// </summary>
+        UseLandNumber,
     }
 
     public class AttributeBaseModel:ModelBase

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace RegulatoryModel.Model
 {
-   public class ReuseWaterModel : ModelBase
+   public class ReuseWaterModel : PipeModel
     {
-        public ReuseWaterModel()
+        public ReuseWaterModel() : base()
         {
             this.DerivedType = DerivedTypeEnum.ReuseWater;
         }

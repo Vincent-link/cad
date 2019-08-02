@@ -285,50 +285,53 @@ namespace RegulatoryPlan.Method
 
 
         }
+
         // 获取属性
         private void GetRoadAttribute(T model)
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
 
-            ObjectIdCollection ids = new ObjectIdCollection();
-            PromptSelectionResult ProSset = null;
 
-            TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.RoadNameLayer) };
-            SelectionFilter sfilter = new SelectionFilter(filList);
-            ProSset = doc.Editor.SelectAll(sfilter);
+            //Document doc = Application.DocumentManager.MdiActiveDocument;
 
-            if (model.allLines == null)
-            {
-                model.allLines = new List<LayerModel>();
-            }
+            //ObjectIdCollection ids = new ObjectIdCollection();
+            //PromptSelectionResult ProSset = null;
 
-            model.attributeList = new System.Data.DataTable("道路");
-            model.attributeList.Columns.Add(new System.Data.DataColumn(("道路名称"), typeof(string)));
+            //TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, model.RoadNameLayer) };
+            //SelectionFilter sfilter = new SelectionFilter(filList);
+            //ProSset = doc.Editor.SelectAll(sfilter);
 
-            if (ProSset.Status == PromptStatus.OK)
-            {
-                using (Transaction tran = doc.Database.TransactionManager.StartTransaction())
-                {
-                    SelectionSet sst = ProSset.Value;
-                    ObjectId[] oids = sst.GetObjectIds();
+            //if (model.allLines == null)
+            //{
+            //    model.allLines = new List<LayerModel>();
+            //}
 
-                    for (int i = 0; i < oids.Length; i++)
-                    {
+            //model.attributeList = new System.Data.DataTable("道路");
+            //model.attributeList.Columns.Add(new System.Data.DataColumn(("道路名称"), typeof(string)));
 
-                        DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+            //if (ProSset.Status == PromptStatus.OK)
+            //{
+            //    using (Transaction tran = doc.Database.TransactionManager.StartTransaction())
+            //    {
+            //        SelectionSet sst = ProSset.Value;
+            //        ObjectId[] oids = sst.GetObjectIds();
 
-                        if (ob is DBText)
-                        {
-                            // 获取道路的属性数据
-                            System.Data.DataRow row;
-                            row = model.attributeList.NewRow();
-                            row["道路名称"] = ((DBText)ob).TextString.Replace(" ", "").Replace("　", "").Replace("\r", "").Replace("\n", ""); ;
-                            model.attributeList.Rows.Add(row);
-                        }
-                    }
+            //        for (int i = 0; i < oids.Length; i++)
+            //        {
 
-                }
-            }
+            //            DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+
+            //            if (ob is DBText)
+            //            {
+            //                // 获取道路的属性数据
+            //                System.Data.DataRow row;
+            //                row = model.attributeList.NewRow();
+            //                row["道路名称"] = ((DBText)ob).TextString.Replace(" ", "").Replace("　", "").Replace("\r", "").Replace("\n", ""); ;
+            //                model.attributeList.Rows.Add(row);
+            //            }
+            //        }
+
+            //    }
+            //}
 
         }
     }

@@ -15,7 +15,7 @@ namespace RegulatoryPlan.Method
     {
         public void GetAllRoadInfo(T model)
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Document doc = CadHelper.Instance.Doc;
             ObjectIdCollection ids = new ObjectIdCollection();
 
             PromptSelectionResult ProSset = null;

@@ -22,7 +22,7 @@ namespace RegulatoryPlan.Model
             dbModel.Rotation = dbText.Rotation;
             dbModel.ThickNess = dbText.Thickness;
             dbModel.Text = dbText.TextString;
-            dbModel.Color =dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
+            dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
             return dbModel;
         }
 
@@ -33,7 +33,7 @@ namespace RegulatoryPlan.Model
             //dbModel.Position = new System.Drawing.PointF((float)dbText.Position.X, (float)dbText.Position.Y);
             dbModel.Position = Point3d2Pointf(dbText.Location);
             dbModel.Rotation = dbText.Rotation;
-      //      dbModel.ThickNess = dbText.TextHeight;
+            //      dbModel.ThickNess = dbText.TextHeight;
             dbModel.Text = dbText.Text;
             dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
             return dbModel;
@@ -42,84 +42,84 @@ namespace RegulatoryPlan.Model
         public static HatchModel Hatch2Model(Hatch dbText)
         {
             HatchModel dbModel = new HatchModel();
-          
-                int cont = dbText.NumberOfLoops;
 
-                for (int i = 0; i < cont; i++)
+            int cont = dbText.NumberOfLoops;
+
+            for (int i = 0; i < cont; i++)
+            {
+                dbModel.loopPoints.Add(i, new ColorAndPointItemModel());
+                HatchLoop loop = dbText.GetLoopAt(i);
+
+                ColorAndPointItemModel cpModel = new ColorAndPointItemModel();
+                if (i == 0)
                 {
-                    dbModel.loopPoints.Add(i, new ColorAndPointItemModel());
-                    HatchLoop loop = dbText.GetLoopAt(i);
-
-                    ColorAndPointItemModel cpModel = new ColorAndPointItemModel();
-                    if (i == 0)
-                    {
-                        cpModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
-                    }
-                    else
-                    {
-                        cpModel.Color = "#FFFFFF";
-                        //  cpModel.ZIndex = "1";
-                    }
-                    if (loop.IsPolyline)
-                    {
-                        for (int j = 0; j < loop.Polyline.Count - 1; j++)
-                        {
-                            BulgeVertex vertex = loop.Polyline[j];
-                            BulgeVertex vertex1 = loop.Polyline[j + 1];
-                            if (vertex.Bulge != 0)
-                            {
-
-                                cpModel.loopPoints.AddRange(MethodCommand.GetArcPointsByBulge(vertex.Vertex, vertex1.Vertex, vertex.Bulge));
-                            }
-                            else
-                            {
-                                cpModel.loopPoints.Add(Point2d2Pointf(vertex.Vertex));
-                            }
-                        }
-                      
-
-                        if (dbText.NumberOfHatchLines > 0)
-                        {
-                            Line2dCollection cl = dbText.GetHatchLinesData();
-                        } //foreach (Line2d itemi in )
-                          //{
-
-                        //}
-
-                    }
-                    else
-                    {
-                        Curve2dCollection col_cur2d = loop.Curves;
-                        foreach (Curve2d item in col_cur2d)
-                        {
-                            Point2d[] M_point2d = item.GetSamplePoints(20);
-                            foreach (Point2d point in M_point2d)
-                            {
-                                cpModel.loopPoints.Add(Point2d2Pointf(point));
-                            }
-                        }
-                    }
-                    if (cpModel.loopPoints[0] != cpModel.loopPoints[cpModel.loopPoints.Count - 1])
-                    {
-                        cpModel.loopPoints.Add(cpModel.loopPoints[0]);
-                    }
-                    dbModel.loopPoints[i] = cpModel;
+                    cpModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
                 }
-
-                for (int i = 0; i < dbModel.loopPoints.Count; i++)
+                else
                 {
-
-                    for (int j = 0; j < dbModel.loopPoints.Count; j++)
+                    cpModel.Color = "#FFFFFF";
+                    //  cpModel.ZIndex = "1";
+                }
+                if (loop.IsPolyline)
+                {
+                    for (int j = 0; j < loop.Polyline.Count - 1; j++)
                     {
-                        if (i != j)
+                        BulgeVertex vertex = loop.Polyline[j];
+                        BulgeVertex vertex1 = loop.Polyline[j + 1];
+                        if (vertex.Bulge != 0)
                         {
-                            if (MethodCommand.PointsAllInPoints(dbModel.loopPoints[j].loopPoints, dbModel.loopPoints[i].loopPoints))
-                            {
-                                dbModel.loopPoints[j].ZIndex = "2";
-                            }
+
+                            cpModel.loopPoints.AddRange(MethodCommand.GetArcPointsByBulge(vertex.Vertex, vertex1.Vertex, vertex.Bulge));
+                        }
+                        else
+                        {
+                            cpModel.loopPoints.Add(Point2d2Pointf(vertex.Vertex));
+                        }
+                    }
+
+
+                    if (dbText.NumberOfHatchLines > 0)
+                    {
+                        Line2dCollection cl = dbText.GetHatchLinesData();
+                    } //foreach (Line2d itemi in )
+                      //{
+
+                    //}
+
+                }
+                else
+                {
+                    Curve2dCollection col_cur2d = loop.Curves;
+                    foreach (Curve2d item in col_cur2d)
+                    {
+                        Point2d[] M_point2d = item.GetSamplePoints(20);
+                        foreach (Point2d point in M_point2d)
+                        {
+                            cpModel.loopPoints.Add(Point2d2Pointf(point));
                         }
                     }
                 }
+                if (cpModel.loopPoints[0] != cpModel.loopPoints[cpModel.loopPoints.Count - 1])
+                {
+                    cpModel.loopPoints.Add(cpModel.loopPoints[0]);
+                }
+                dbModel.loopPoints[i] = cpModel;
+            }
+
+            for (int i = 0; i < dbModel.loopPoints.Count; i++)
+            {
+
+                for (int j = 0; j < dbModel.loopPoints.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        if (MethodCommand.PointsAllInPoints(dbModel.loopPoints[j].loopPoints, dbModel.loopPoints[i].loopPoints))
+                        {
+                            dbModel.loopPoints[j].ZIndex = "2";
+                        }
+                    }
+                }
+            }
             try
             {
                 dbModel.Area = dbText.Area;
@@ -149,14 +149,14 @@ namespace RegulatoryPlan.Model
         public static CircleModel Circle2Model(Circle line)
         {
             CircleModel dbModel = new CircleModel();
-            dbModel.Center= Point3d2Pointf(line.Center);
-            dbModel.Radius =line.Radius;
+            dbModel.Center = Point3d2Pointf(line.Center);
+            dbModel.Radius = line.Radius;
             dbModel.GeoType = "Circle";
-            MyPoint spt = new MyPoint(line.StartPoint.X,line.StartPoint.Y);
+            MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);
             MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
-            dbModel.pointList = MethodCommand.GetArcPoints(line,line.Circumference);
-            dbModel.Color= line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+            dbModel.pointList = MethodCommand.GetArcPoints(line, line.Circumference);
+            dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
         }
 
@@ -165,16 +165,16 @@ namespace RegulatoryPlan.Model
         {
             EllipseModel dbModel = new EllipseModel();
             dbModel.Center = Point3d2Pointf(line.Center);
-            dbModel.MajorAxis= line.MajorRadius;
+            dbModel.MajorAxis = line.MajorRadius;
             dbModel.MinorAxis = line.MinorRadius;
             dbModel.GeoType = "Ellipse";
             MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);
             MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
-           
-            double length = line.RadiusRatio * (line.MinorRadius+line.MajorRadius);
-            dbModel.pointList= MethodCommand.GetArcPoints(line,length);
-            
+
+            double length = line.RadiusRatio * (line.MinorRadius + line.MajorRadius);
+            dbModel.pointList = MethodCommand.GetArcPoints(line, length);
+
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
         }
@@ -184,7 +184,7 @@ namespace RegulatoryPlan.Model
             PolyLineModel polylineModel = new PolyLineModel();
             polylineModel.Area = polyLine.Area;
             polylineModel.Closed = polyLine.Closed;
-           polylineModel.Color=polyLine.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(polyLine.LayerId) : System.Drawing.ColorTranslator.ToHtml(polyLine.Color.ColorValue);
+            polylineModel.Color = polyLine.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(polyLine.LayerId) : System.Drawing.ColorTranslator.ToHtml(polyLine.Color.ColorValue);
             polylineModel.Vertices = new System.Collections.ArrayList();
             int vn = polyLine.NumberOfVertices;  //lwp已知的多段线
             for (int i = 0; i < vn; i++)
@@ -210,17 +210,17 @@ namespace RegulatoryPlan.Model
                     {
                         arc.EndPoint = Point2d2Pointf(cir.EndPoint);
                     }
-           
+
 
                     MyPoint spt = new MyPoint(arc.StartPoint.X, arc.StartPoint.Y);
-                    MyPoint ept = new MyPoint(arc.EndPoint.X,arc.EndPoint.Y);
+                    MyPoint ept = new MyPoint(arc.EndPoint.X, arc.EndPoint.Y);
                     MyPoint center = new MyPoint(arc.Center.X, arc.Center.Y);
                     arc.Color = polylineModel.Color;
                     // arc.pointList = MethodCommand.GetRoationPoint(spt, ept, center, arc.Startangel,arc.EndAngel,cir.IsClockWise);
                     arc.pointList = MethodCommand.GetArcPointsByPoint2d(cir.GetSamplePoints(20));
                     //arc.pointList = MethodCommand.GetArcPoints(arc.Center,arc.Startangel,arc.EndAngel,arc.Radius);
-                  //  arc.pointList.Insert(0, arc.StartPoint);
-                 //   arc.pointList.Add(arc.EndPoint);
+                    //  arc.pointList.Insert(0, arc.StartPoint);
+                    //   arc.pointList.Add(arc.EndPoint);
                     polylineModel.Vertices.Add(arc);
                 }
                 else if (st == SegmentType.Line)
@@ -249,7 +249,7 @@ namespace RegulatoryPlan.Model
                     polylineModel.Vertices.Add(line);
                 }
             }
-           
+
             return polylineModel;
         }
 
@@ -269,7 +269,7 @@ namespace RegulatoryPlan.Model
 
         internal static ArcModel Arc2Model(Arc line)
         {
-           ArcModel dbModel = new ArcModel();
+            ArcModel dbModel = new ArcModel();
             dbModel.Center = Point3d2Pointf(line.Center);
             dbModel.EndAngel = line.EndAngle;
             dbModel.EndPoint = MethodCommand.Point3d2Pointf(line.EndPoint);
@@ -281,7 +281,7 @@ namespace RegulatoryPlan.Model
             MyPoint spt = new MyPoint(line.StartPoint.X, line.StartPoint.Y);
             MyPoint ept = new MyPoint(line.EndPoint.X, line.EndPoint.Y);
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
-          
+
             double length = line.Length;
             dbModel.pointList = MethodCommand.GetArcPoints(line, length);
 
@@ -289,10 +289,10 @@ namespace RegulatoryPlan.Model
             return dbModel;
         }
 
- 
 
 
-        public static DbTextModel DbText2Model(DBText dbText,AttributeModel atModel)
+
+        public static DbTextModel DbText2Model(DBText dbText, AttributeModel atModel)
         {
             DbTextModel dbModel = new DbTextModel();
             dbModel.attItemList = new List<AttributeItemModel>();
@@ -301,7 +301,11 @@ namespace RegulatoryPlan.Model
             dbModel.Position = Point3d2Pointf(dbText.Position);
             dbModel.Rotation = dbText.Rotation;
             dbModel.ThickNess = dbText.Thickness;
-            dbModel.Text = dbText.TextString;
+            dbModel.Text = dbText.TextString.Replace(" ", "").Replace("\n", "").Replace("\r", "");
+            if (dbText.TextString.Replace("　　　　　　", "").Replace("\n", "").Replace("\r", "") == "纬三路")
+            {
+
+            }
             dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
             foreach (AttributeItemModel item in atModel.attributeItems)
             {
@@ -316,7 +320,7 @@ namespace RegulatoryPlan.Model
                         attValue = dbModel.Color;
                         break;
                     case AttributeItemType.Content:
-                        attValue = dbText.TextString;
+                        attValue = dbText.TextString.Replace(" ", "").Replace("　　　　　　", "").Replace("\n", "").Replace("\r", "");
                         break;
                     case AttributeItemType.LayerName:
                         attValue = dbText.Layer;
@@ -345,9 +349,9 @@ namespace RegulatoryPlan.Model
             dbModel.Position = Point3d2Pointf(dbText.Location);
             dbModel.Rotation = dbText.Rotation;
             //      dbModel.ThickNess = dbText.TextHeight;
-            dbModel.Text = dbText.Text;
+            dbModel.Text = dbText.Text.Replace(" ", "").Replace("\n", "").Replace("\r", "");
             dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
-         
+
             foreach (AttributeItemModel item in atModel.attributeItems)
             {
                 string attValue = "";
@@ -361,7 +365,7 @@ namespace RegulatoryPlan.Model
                         attValue = dbModel.Color;
                         break;
                     case AttributeItemType.Content:
-                        attValue = dbText.Text;
+                        attValue = dbText.Text.Replace(" ", "").Replace("\n", "").Replace("\r", "");
                         break;
                     case AttributeItemType.LayerName:
                         attValue = dbText.Layer;
@@ -385,6 +389,12 @@ namespace RegulatoryPlan.Model
         public static HatchModel Hatch2Model(Hatch dbText, AttributeModel atModel)
         {
             HatchModel dbModel = new HatchModel();
+            try
+            {
+                dbModel.Area = dbText.Area;
+            }
+            catch
+            { }
 
             int cont = dbText.NumberOfLoops;
             string color = "";
@@ -396,7 +406,7 @@ namespace RegulatoryPlan.Model
                 ColorAndPointItemModel cpModel = new ColorAndPointItemModel();
                 if (i == 0)
                 {
-                   color= cpModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
+                    color = cpModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
                 }
                 else
                 {
@@ -484,7 +494,11 @@ namespace RegulatoryPlan.Model
                     if (!string.IsNullOrEmpty(attValue))
                     {
                         item.AtValue = attValue;
-                       cpModel.attItemList.Add(item);
+                        cpModel.attItemList.Add(item);
+                    }
+                    else
+                    {
+
                     }
                 }
                 dbModel.loopPoints[i] = cpModel;
@@ -504,13 +518,7 @@ namespace RegulatoryPlan.Model
                     }
                 }
             }
-            try
-            {
-                dbModel.Area = dbText.Area;
-            }
-            catch
-            {  }
-          
+
             //   dbModel.Color =
             return dbModel;
         }
@@ -534,7 +542,7 @@ namespace RegulatoryPlan.Model
                 switch (item.AtItemType)
                 {
                     case AttributeItemType.Area:
-                        
+
                         break;
                     case AttributeItemType.TxtHeight:
 
@@ -546,7 +554,7 @@ namespace RegulatoryPlan.Model
 
                         break;
                     case AttributeItemType.LayerName:
-                        attValue =line.Layer;
+                        attValue = line.Layer;
                         break;
                     case AttributeItemType.LineScale:
                         attValue = line.LinetypeScale.ToString();
@@ -555,10 +563,10 @@ namespace RegulatoryPlan.Model
                         attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
-                    
+
                         break;
                     case AttributeItemType.TotalArea:
-                      
+
                         break;
 
                 }
@@ -827,7 +835,7 @@ namespace RegulatoryPlan.Model
                         }
 
                         item.AtValue = attValue;
-                       line.attItemList.Add(item);
+                        line.attItemList.Add(item);
                     }
                     polylineModel.Vertices.Add(line);
                 }
@@ -854,7 +862,7 @@ namespace RegulatoryPlan.Model
                 switch (item.AtItemType)
                 {
                     case AttributeItemType.Area:
-                        attValue =line.Area.ToString();
+                        attValue = line.Area.ToString();
                         break;
                     case AttributeItemType.TxtHeight:
 
@@ -933,7 +941,7 @@ namespace RegulatoryPlan.Model
                         attValue = GetLayerLineTypeByID(line);
                         break;
                     case AttributeItemType.Overallwidth:
-                   
+
                         break;
                     case AttributeItemType.TotalArea:
 
