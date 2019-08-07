@@ -144,7 +144,7 @@ namespace RegulatoryPlan.Method
                                 pointsPlanItem.Num = h.TextString;
                             }
 
-                            if (!numsAll.Contains(pointsPlanItem.Num))
+                            if (pointsPlanItem.Num != null && !numsAll.Contains(pointsPlanItem.Num))
                             {
                                 numsAll.Add(pointsPlanItem.Num);
 

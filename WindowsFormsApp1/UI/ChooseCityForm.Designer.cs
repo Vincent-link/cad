@@ -133,7 +133,7 @@
             "地块控制总图则",
             "分图图则",
             "供电工程规划图",
-            " ",
+            "供电工程规划图",
             "给水工程规划图",
             "供热工程规划图",
             "燃气工程规划图",
@@ -150,7 +150,10 @@
             "用地规划图",
             "用地编码图",
             "居住用地规划图",
-            "道路现状图"});
+            "道路现状图",
+            "设施控制总图则",
+            "“五线”控制总图则",
+            "其他",});
             this.comboBox1.Location = new System.Drawing.Point(98, 116);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(5);
             this.comboBox1.Name = "comboBox1";
@@ -177,6 +180,7 @@
             this.lb_FileLocation.Size = new System.Drawing.Size(15, 21);
             this.lb_FileLocation.TabIndex = 10;
             this.lb_FileLocation.Text = " ";
+            this.lb_FileLocation.MaximumSize = new System.Drawing.Size(430, 0);
             // 
             // lb_FileTime
             // 

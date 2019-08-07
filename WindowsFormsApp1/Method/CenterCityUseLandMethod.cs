@@ -62,11 +62,25 @@ namespace RegulatoryPlan.Method
                             }
 
                             int i = 0;
+
+
                             foreach (ObjectId lengGemo in oids)
                             {
+                                AttributeModel am2 = new AttributeModel();
+
+                                foreach (AttributeItemModel att in am.attributeItems)
+                                {
+
+                                    AttributeItemModel aim2 = new AttributeItemModel();
+                                    aim2.TargetName = att.TargetName;
+                                    aim2.AtItemType = att.AtItemType;
+                                    aim2.AtGroupType = att.AtGroupType;
+                                    am2.attributeItems.Add(aim2);
+                                }
 
                                 DBObject ob = tran.GetObject(lengGemo, OpenMode.ForRead);
-                                BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob, am);
+                                BlockInfoModel plModel = MethodCommand.AnalysisBlcokInfo(ob, am2);
+                                
                                 if (plModel != null)
                                 {
                                     List<object> obj = new List<object>() { plModel };

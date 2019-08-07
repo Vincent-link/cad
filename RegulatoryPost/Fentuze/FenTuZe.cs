@@ -152,7 +152,7 @@ namespace RegulatoryPost.FenTuZe
 
                     WriteLog(result["chartName"], content, sw.ElapsedMilliseconds/1000);
 
-                    MessageBox.Show("发送成功！");
+                    MessageBox.Show("发送成功！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                 } // 发送 结束
             }
@@ -160,7 +160,7 @@ namespace RegulatoryPost.FenTuZe
             {
                 WriteLog(result["chartName"], e.Message, sw.ElapsedMilliseconds/1000);
 
-                MessageBox.Show("发送失败！");
+                MessageBox.Show("发送失败！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
             }
         }

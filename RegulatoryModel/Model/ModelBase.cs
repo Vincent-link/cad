@@ -34,6 +34,8 @@ namespace RegulatoryModel.Model
         UseLandNumber,//用地规划编码图
         None,
         RoadSituation, //道路现状
+        FacilityControl, //设施控制
+        FiveLineControl, //五线控制
     }
     public class ModelBase
     {

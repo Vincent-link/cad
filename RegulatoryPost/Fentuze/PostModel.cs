@@ -710,6 +710,9 @@ namespace RegulatoryPost.FenTuZe
                                             foreach (PolyLineModel arcModel in blm.PolyLine)
                                             {
                                                 geoType = "polyline";
+                                                string colid = "索引" + ysIndex + "_U9-02";
+                                                GetAttributeTable(attributeList, arcModel.attItemList, colid);
+                                                attributeIndexList.Add(colid); ysIndex++;
                                                 foreach (object arPt in arcModel.Vertices)
                                                 {
                                                     if (arPt is LineModel)
@@ -738,9 +741,7 @@ namespace RegulatoryPost.FenTuZe
                                                         geom.Add(arrayList);
                                                     }
                                                     zIndex.Add(arcModel.ZIndex);
-                                                    string colid = "索引" + ysIndex + "_U9-02";
-                                                    GetAttributeTable(attributeList, ((GemoTypeModel)arPt).attItemList, colid);
-                                                    attributeIndexList.Add(colid); ysIndex++;
+
 
                                                     uuid.Add(GetUUID());
                                                     colorList.Add(arcModel.Color);
@@ -1498,6 +1499,8 @@ namespace RegulatoryPost.FenTuZe
                                     foreach (PolyLineModel arcModel in ppim.Geom.PolyLine)
                                     {
                                         geoType = "polyline";
+                                        attributeIndexList.Add(ppim.Num != null ? ppim.Num : "");
+
                                         foreach (object arPt in arcModel.Vertices)
                                         {
                                             ArrayList arrayList = new ArrayList();
@@ -1542,7 +1545,6 @@ namespace RegulatoryPost.FenTuZe
 
                                             geom.Add(arrayList);
                                             zIndex.Add(arcModel.ZIndex);
-                                            attributeIndexList.Add(ppim.Num != null ? ppim.Num : "");
                                             uuid.Add(GetUUID());
 
                                             colorList.Add(arcModel.Color);

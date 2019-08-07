@@ -69,9 +69,9 @@ namespace RegulatoryPlan.UI
         {
             try
             {
-                //waitPostThead = new Thread(WaitForPost);
-                //waitPostThead.IsBackground = true;
-                //waitPostThead.Start();
+                waitPostThead = new Thread(WaitForPost);
+                waitPostThead.IsBackground = true;
+                waitPostThead.Start();
                 switch (model.DerivedType)
                 {
                     case DerivedTypeEnum.BuildingIntegrated:
@@ -141,8 +141,14 @@ namespace RegulatoryPlan.UI
                     case DerivedTypeEnum.CenterCityLifeUseLandPlan:
                         PostModel.PostModelBase(model as AttributeBaseModel);
                         break;
+                    case DerivedTypeEnum.FacilityControl:
+                        PostModel.PostModelBase(model as ModelBase);
+                        break;
+                    case DerivedTypeEnum.FiveLineControl:
+                        PostModel.PostModelBase(model as ModelBase);
+                        break;
                 }
-                //waitPostThead.Abort();
+                waitPostThead.Abort();
                 //  PostModel.PostModelBase1(model);
             }
             catch (Exception ex)
@@ -187,7 +193,7 @@ namespace RegulatoryPlan.UI
                 case DerivedTypeEnum.PipeLine:
                     return new PipeLineModel();
                 case DerivedTypeEnum.FiveLine:
-                    return new UnitPlanModel();
+                    return new FiveLineModel();
                 case DerivedTypeEnum.LimitFactor:
                     return new LimitFactorModel();
                 case DerivedTypeEnum.RainWater:
@@ -204,6 +210,10 @@ namespace RegulatoryPlan.UI
                     return new UseLandNumberModel();
                 case DerivedTypeEnum.CenterCityLifeUseLandPlan:
                     return new CenterCityLifeUseLandPlanModel();
+                case DerivedTypeEnum.FacilityControl:
+                    return new UnitPlanModel();
+                case DerivedTypeEnum.FiveLineControl:
+                    return new UnitPlanModel();
             }
             return new ModelBase();
 
@@ -375,7 +385,7 @@ namespace RegulatoryPlan.UI
             mbm.GetAllLengedGemo(mb);
             mbm.GetExportLayers(mb);
             LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
-            layerSpecial.AddSpecialLayerModel(mb);
+            layerSpecial.AddSpecialLayerModel (mb);
             DataTable tb = new DataTable();
             tb.Columns.Add("所在图层");
 

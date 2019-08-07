@@ -349,6 +349,7 @@ namespace RegulatoryPlan.Method
                                     distances.Add(eDistance);
                                     texts.Add(ent4Mtext.Text);
                                 }
+
                             }
 
                         }
@@ -368,6 +369,15 @@ namespace RegulatoryPlan.Method
                                     distances[q] = distances[q + 1];
                                     distances[q + 1] = tempDis;
                                 }
+                            }
+                        }
+                        // 删除多余的文本
+                        if (texts.Count > biaotou.Count)
+                        {
+                            int length = texts.Count;
+                            for (int h = length; h > biaotou.Count; h--)
+                            {  
+                                texts.RemoveAt(h-1);
                             }
                         }
 

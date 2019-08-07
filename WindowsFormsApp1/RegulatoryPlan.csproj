@@ -186,5 +186,32 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1565082567.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\15650825671.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1565151397%281%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btn03.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btn01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shape002.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btn_bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\biaoqian.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shanchu.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

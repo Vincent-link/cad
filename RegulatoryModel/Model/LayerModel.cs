@@ -14,6 +14,7 @@ namespace RegulatoryModel.Model
         private bool isHaveAttribute;
         public Dictionary<int,List<object>> pointFs;//图例框识别的模型
         public List<object> modelItemList;//特殊图层的模型
+        public List<BlockInfoModel> atts;//特殊图层的模型
         private string jsonStr;
 
         public string JsonStr { get

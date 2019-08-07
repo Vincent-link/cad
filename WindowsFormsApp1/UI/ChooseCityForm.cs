@@ -113,14 +113,34 @@ namespace RegulatoryPlan.UI
                 case 20:
                     crtType = DerivedTypeEnum.RoadSituation;
                     break;
+                case 21:
+                    crtType = DerivedTypeEnum.FacilityControl;
+                    break;
+                case 22:
+                    crtType = DerivedTypeEnum.FiveLineControl;
+                    break;
+                case 23:
+                    crtType = DerivedTypeEnum.None;
+                    break;
             }    
             return crtType;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (this.listBox1.SelectedItem == null||string.IsNullOrEmpty(this.textBox1.Text))
+            if (this.listBox1.SelectedItem == null)
             {
+                MessageBox.Show("城市不能为空！");
+                return;
+            }
+            if (string.IsNullOrEmpty(this.textBox1.Text))
+            {
+                MessageBox.Show("图纸不能为空！");
+                return;
+            }
+            if (this.comboBox1.SelectedItem == null)
+            {
+                MessageBox.Show("导出类型不能为空！");
                 return;
             }
             this.DialogResult = DialogResult.OK;
@@ -131,5 +151,9 @@ namespace RegulatoryPlan.UI
            
         }
 
+        private void ChooseCityForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
