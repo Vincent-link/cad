@@ -261,5 +261,7 @@ __pycache__/
 *.pyc
 
 # VS
-*.dll
+.WindowsFormsApp1/bin/Debug/
 *.err
+*.dll
+.WindowsFormsApp1/*.dll
