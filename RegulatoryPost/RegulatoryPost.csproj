@@ -44,14 +44,58 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Fentuze\FenTuZe.cs" />
+    <Compile Include="Fentuze\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fentuze\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Fentuze\PostModel.cs" />
+    <Compile Include="Fentuze\SuccessAlert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fentuze\SuccessAlert.Designer.cs">
+      <DependentUpon>SuccessAlert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RegulatoryModel\RegulatoryModel.csproj">
       <Project>{2386ee5c-509e-4ece-83d5-7c3c7d244fa6}</Project>
       <Name>RegulatoryModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fentuze\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fentuze\SuccessAlert.resx">
+      <DependentUpon>SuccessAlert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btn01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shape002.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\duigou.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\矩形 13 拷贝.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\矩形 13 拷贝1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

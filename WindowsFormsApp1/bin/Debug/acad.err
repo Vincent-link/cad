@@ -1288,3 +1288,9 @@
 
 08/02/2019 at 09:25:34.349  图形: E:\liuhui work\cad文件\成安县中心城区控制性详细规划（2016-2030）\CAD图集数据\CAD图集数据\中心城区用地规划图0722(1).dwg
 -------------
+
+
+致命错误:  Unhandled Access Violation Reading 0x0000 Exception at c59d7ffh
+
+08/09/2019 at 17:31:13.921  图形: Drawing1.dwg
+-------------

@@ -152,7 +152,10 @@ namespace RegulatoryPost.FenTuZe
 
                     WriteLog(result["chartName"], content, sw.ElapsedMilliseconds/1000);
 
-                    MessageBox.Show("发送成功！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    //MessageBox.Show("发送成功！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                    Fentuze.SuccessAlert f = new Fentuze.SuccessAlert(result["chartName"]);
+                    f.Show();
 
                 } // 发送 结束
             }
@@ -160,9 +163,18 @@ namespace RegulatoryPost.FenTuZe
             {
                 WriteLog(result["chartName"], e.Message, sw.ElapsedMilliseconds/1000);
 
-                MessageBox.Show("发送失败！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                //MessageBox.Show("发送失败！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                //ShowMessage(result["chartName"]);
+                Fentuze.Form1 f = new Fentuze.Form1(result["chartName"]);
+                f.Show();
 
             }
+        }
+
+        private static void ShowMessage(string v)
+        {
+            
         }
 
         public static void AutoPostData(Dictionary<string, string> result)

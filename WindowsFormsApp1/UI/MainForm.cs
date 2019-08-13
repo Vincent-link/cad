@@ -31,7 +31,7 @@ namespace RegulatoryPlan.UI
             InitializeComponent();
             InitPage();
             InitData();
-            this.lb_City.Text = cityName;
+            //this.lb_City.Text = cityName;
         }
 
         public MainForm(string cityName, DerivedTypeEnum derivedType,bool auTo)
@@ -40,22 +40,22 @@ namespace RegulatoryPlan.UI
             InitializeComponent();
             InitPage();
             AutoInitData();
-            this.lb_City.Text = cityName;
+            //this.lb_City.Text = cityName;
             //this.Close();
         }
 
         private void InitPage()
         {
-            this.lb_DrawingName.Text = DrawingMethod.GetDrawingName();
-            foreach (string item in comboBox1.Items)
-            {
-                if (item.Contains(lb_DrawingName.Text))
-                {
-                    comboBox1.SelectedItem = item;
-                    break;
-                }
+            //this.lb_DrawingName.Text = DrawingMethod.GetDrawingName();
+            //foreach (string item in comboBox1.Items)
+            //{
+            //    if (item.Contains(lb_DrawingName.Text))
+            //    {
+            //        comboBox1.SelectedItem = item;
+            //        break;
+            //    }
 
-            }
+            //}
 
         }
 
@@ -895,6 +895,46 @@ namespace RegulatoryPlan.UI
 
         private void groupBox2_Enter(object sender, EventArgs e)
         {
+
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        public static extern IntPtr SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        public static extern bool ReleaseCapture();
+        private const long WM_GETMINMAXINFO = 0x24;
+
+
+        public struct POINTAPI
+        {
+            public int x;
+            public int y;
+        }
+
+
+        public struct MINMAXINFO
+        {
+            public POINTAPI ptReserved;
+            public POINTAPI ptMaxSize;
+            public POINTAPI ptMaxPosition;
+            public POINTAPI ptMinTrackSize;
+            public POINTAPI ptMaxTrackSize;
+        }
+
+
+        private void MainForm_Load(object sender, MouseEventArgs e)
+        {
+
+
+                const int WM_NCLBUTTONDOWN = 0x00A1;
+                const int HTCAPTION = 2;
+                if (e.Button == MouseButtons.Left) // 按下的是鼠标左键 
+                {
+                    ReleaseCapture();
+                    SendMessage(this.Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero); // 拖动窗体 
+                }
 
         }
     }
