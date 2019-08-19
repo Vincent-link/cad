@@ -14,32 +14,6 @@ using System.Windows.Forms;
 namespace RegulatoryPlan.UI
 {
 
-    //public class TestRichTextBox : System.Windows.Forms.RichTextBox
-    //{
-    //    private const int WM_SETFOCUS = 0x7;
-    //    private const int WM_LBUTTONDOWN = 0x201;
-    //    private const int WM_LBUTTONUP = 0x202;
-    //    private const int WM_LBUTTONDBLCLK = 0x203;
-    //    private const int WM_RBUTTONDOWN = 0x204;
-    //    private const int WM_RBUTTONUP = 0x205;
-    //    private const int WM_RBUTTONDBLCLK = 0x206;
-    //    private const int WM_KEYDOWN = 0x0100;
-    //    private const int WM_KEYUP = 0x0101;
-
-    //    public TestRichTextBox()
-    //    {
-    //        this.Cursor = Cursors.Arrow;//设置鼠标样式
-    //    }
-
-    //    protected override void WndProc(ref Message m)
-    //    {
-    //        if (m.Msg == WM_SETFOCUS || m.Msg == WM_KEYDOWN || m.Msg == WM_KEYUP || m.Msg == WM_LBUTTONDOWN || m.Msg == WM_LBUTTONUP || m.Msg == WM_LBUTTONDBLCLK || m.Msg == WM_RBUTTONDOWN || m.Msg == WM_RBUTTONUP || m.Msg == WM_RBUTTONDBLCLK)
-    //        {
-    //            return;
-    //        }
-    //        base.WndProc(ref m);
-    //    }
-    //}
     public partial class ChooseCityForm : Form
     {
         void richTextBox1_GotFocus(object sender, EventArgs e)
@@ -225,9 +199,25 @@ namespace RegulatoryPlan.UI
 
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
 
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        public static extern IntPtr SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        public static extern bool ReleaseCapture();
+        private const long WM_GETMINMAXINFO = 0x24;
+
+        private void MainForm_Load(object sender, MouseEventArgs e)
+        {
+            const int WM_NCLBUTTONDOWN = 0x00A1;
+            const int HTCAPTION = 2;
+            if (e.Button == MouseButtons.Left) // 按下的是鼠标左键 
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero); // 拖动窗体 
+            }
         }
+
     }
 }

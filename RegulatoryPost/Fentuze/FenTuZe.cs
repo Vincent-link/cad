@@ -166,18 +166,14 @@ namespace RegulatoryPost.FenTuZe
                 //MessageBox.Show("发送失败！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                 //ShowMessage(result["chartName"]);
-                Fentuze.Form1 f = new Fentuze.Form1(result["chartName"]);
+                Fentuze.FailAlert f = new Fentuze.FailAlert(result["chartName"]);
                 f.Show();
 
             }
         }
 
-        private static void ShowMessage(string v)
-        {
-            
-        }
 
-        public static void AutoPostData(Dictionary<string, string> result)
+        public static void AutoPostData(Dictionary<string, string> result, List<string> failedFiles)
         {
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
@@ -243,13 +239,16 @@ namespace RegulatoryPost.FenTuZe
 
                     WriteLog(result["chartName"], content, sw.ElapsedMilliseconds / 1000);
 
+                    Fentuze.SuccessAlert f = new Fentuze.SuccessAlert(result["chartName"]);
+                    f.Show();
+
 
                 } // 发送 结束
             }
             catch (Exception e)
             {
                 WriteLog(result["chartName"], e.Message, sw.ElapsedMilliseconds / 1000);
-
+                failedFiles.Add(result["chartName"]);
             }
         }
         public static void WriteLog(string fileName, string content, long time)

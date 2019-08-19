@@ -19,12 +19,7 @@ namespace RegulatoryPlan.UI
     {
         ModelBase model;
         public static bool isOnlyModel=true; Thread waitPostThead;
-        public MainForm()
-        {
-            InitializeComponent();
-            InitPage();
-            InitData();
-        }
+
         public MainForm(string cityName, DerivedTypeEnum derivedType)
         {
             crtType = derivedType;
@@ -924,10 +919,8 @@ namespace RegulatoryPlan.UI
         }
 
 
-        private void MainForm_Load(object sender, MouseEventArgs e)
+        public void MainForm_Load(object sender, MouseEventArgs e)
         {
-
-
                 const int WM_NCLBUTTONDOWN = 0x00A1;
                 const int HTCAPTION = 2;
                 if (e.Button == MouseButtons.Left) // 按下的是鼠标左键 
@@ -935,7 +928,6 @@ namespace RegulatoryPlan.UI
                     ReleaseCapture();
                     SendMessage(this.Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero); // 拖动窗体 
                 }
-
         }
     }
 }

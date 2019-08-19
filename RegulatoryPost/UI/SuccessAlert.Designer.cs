@@ -77,6 +77,7 @@
             this.Text = "数据发布";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Timer);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

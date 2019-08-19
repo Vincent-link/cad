@@ -14,6 +14,7 @@ namespace RegulatoryPlan.Command
 {
    public class MenuMethodCommand
     {
+
         [CommandMethod("ShowMainForm")]
         public void ShowMain()
         {
@@ -72,18 +73,36 @@ namespace RegulatoryPlan.Command
         }
 
         [CommandMethod("SendPointPlans", CommandFlags.Session)]
+        //[CommandMethod("SendPointPlans", CommandFlags.Session)]
+
+        //public void SendPointPlans()
+        //{
+        //    OpenFileDialog dialog = new OpenFileDialog();
+        //    dialog.Multiselect = true;//等于true表示可以选择多个文件
+
+        //    if (dialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        foreach (string item in dialog.FileNames)
+        //        {
+        //            if (Path.GetExtension(item).ToLower() == ".dwg")
+        //            { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.PointsPlan); }
+        //        }
+        //    }
+        //}
         public void SendPointPlans()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = true;//等于true表示可以选择多个文件
-
-            if (dialog.ShowDialog() == DialogResult.OK)
+            BatchChooseCityForm cf = new BatchChooseCityForm();
+            if (cf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                foreach (string item in dialog.FileNames)
+                 List<string> failedFiles = new List<string>();
+
+                foreach (string item in cf.openFile)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.PointsPlan); }
+                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, cf.derivedType, failedFiles); }
                 }
+                BatchFailAlert f = new BatchFailAlert(failedFiles);
+                f.Show();
             }
         }
 
@@ -95,10 +114,12 @@ namespace RegulatoryPlan.Command
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
+                List<string> failedFiles = new List<string>();
+
                 foreach (string item in dialog.FileNames)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan); }
+                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan, failedFiles); }
                 }
             }
         }

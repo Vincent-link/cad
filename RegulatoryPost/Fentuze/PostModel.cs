@@ -1922,7 +1922,7 @@ namespace RegulatoryPost.FenTuZe
         /// 单元图则
         /// </summary>
         /// <param name="model"></param>
-        public static void AutoPostModelBase(ModelBase model)
+        public static void AutoPostModelBase(ModelBase model, List<string> failedFiles)
         {
             ArrayList uuid = new ArrayList();
             ArrayList geom = new ArrayList();   // 坐标点集合
@@ -2431,7 +2431,7 @@ namespace RegulatoryPost.FenTuZe
             result.Add("textContent", textContentString);
             result.Add("blockContent", blockContentString);
 
-            FenTuZe.AutoPostData(result);
+            FenTuZe.AutoPostData(result, failedFiles);
         }
         /// <summary>
         /// 道路截面、道路名称、道路现状图纸

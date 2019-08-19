@@ -25,7 +25,7 @@ namespace RegulatoryPlan.Method
             get { return instance; }
         }
 
-        internal void AutoOpenPointPlanFile(string file, DerivedTypeEnum derivedType)
+        internal void AutoOpenPointPlanFile(string file, DerivedTypeEnum derivedType, List<string> failedFiles)
         {
             try
             {
@@ -57,24 +57,27 @@ namespace RegulatoryPlan.Method
                 layerSpecial.AddSpecialLayerModel(mb);
 
                 //mb.LayerList = new List<string>{"道路中线"};
-                foreach (string layer in mb.LayerList)
+                if (mb.LayerList != null)
                 {
-                    ModelBaseMethod<ModelBase> modelMe = new ModelBaseMethod<ModelBase>();
-                    LayerModel lyModel = modelMe.GetAllLayerGemo(mb, layer);
-
-                    if (mb.allLines == null)
+                    foreach (string layer in mb.LayerList)
                     {
-                        mb.allLines = new List<LayerModel>();
+                        ModelBaseMethod<ModelBase> modelMe = new ModelBaseMethod<ModelBase>();
+                        LayerModel lyModel = modelMe.GetAllLayerGemo(mb, layer);
+
+                        if (mb.allLines == null)
+                        {
+                            mb.allLines = new List<LayerModel>();
+                        }
+                        mb.allLines.Add(lyModel);
                     }
-                    mb.allLines.Add(lyModel);
-                }
-                if (derivedType is DerivedTypeEnum.PointsPlan)
-                {
-                    PostModel.AutoPostModelBase(mb as ModelBase);
-                }
-                if (derivedType is DerivedTypeEnum.UnitPlan)
-                {
-                    PostModel.AutoPostModelBase(mb as ModelBase);
+                    if (derivedType is DerivedTypeEnum.PointsPlan)
+                    {
+                        PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
+                    }
+                    if (derivedType is DerivedTypeEnum.UnitPlan)
+                    {
+                        PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
+                    }
                 }
 
             }

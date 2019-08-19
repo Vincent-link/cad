@@ -42,19 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Fentuze\UIMethod.cs" />
     <Compile Include="Fentuze\FenTuZe.cs" />
-    <Compile Include="Fentuze\Form1.cs">
+    <Compile Include="UI\FailAlert.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Fentuze\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="UI\FailAlert.Designer.cs">
+      <DependentUpon>FailAlert.cs</DependentUpon>
     </Compile>
     <Compile Include="Fentuze\PostModel.cs" />
-    <Compile Include="Fentuze\SuccessAlert.cs">
+    <Compile Include="UI\SuccessAlert.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Fentuze\SuccessAlert.Designer.cs">
+    <Compile Include="UI\SuccessAlert.Designer.cs">
       <DependentUpon>SuccessAlert.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,10 +71,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Fentuze\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="UI\FailAlert.resx">
+      <DependentUpon>FailAlert.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Fentuze\SuccessAlert.resx">
+    <EmbeddedResource Include="UI\SuccessAlert.resx">
       <DependentUpon>SuccessAlert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

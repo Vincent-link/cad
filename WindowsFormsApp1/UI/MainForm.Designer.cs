@@ -204,6 +204,8 @@
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+            Command.UIMethod.SetFormRoundRectRgn(this, 5);	//设置圆角
+
 
         }
 
