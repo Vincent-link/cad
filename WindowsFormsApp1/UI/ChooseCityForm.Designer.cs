@@ -72,10 +72,10 @@
             this.comboBoxCity.FormattingEnabled = true;
             this.comboBoxCity.Items.AddRange(new object[] {
             "成安县"});
-            this.comboBoxCity.Location = new System.Drawing.Point(150, 69);
+            this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
             this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
             this.comboBoxCity.Name = "comboBoxCity";
-            this.comboBoxCity.Size = new System.Drawing.Size(143, 29);
+            this.comboBoxCity.Size = new System.Drawing.Size(102, 29);
             this.comboBoxCity.TabIndex = 13;
             // 
             // label6
@@ -116,7 +116,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(150, 183);
+            this.textBox1.Location = new System.Drawing.Point(297, 186);
             this.textBox1.Margin = new System.Windows.Forms.Padding(5);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -132,7 +132,6 @@
             this.comboBox1.Items.AddRange(new object[] {
             "地块控制总图则",
             "分图图则",
-            "供电工程规划图",
             "供电工程规划图",
             "给水工程规划图",
             "供热工程规划图",
@@ -152,12 +151,12 @@
             "居住用地规划图",
             "道路现状图",
             "设施控制总图则",
-            "“五线”控制总图则",
+            "\'五线\'控制总图则",
             "其他"});
-            this.comboBox1.Location = new System.Drawing.Point(150, 120);
+            this.comboBox1.Location = new System.Drawing.Point(150, 126);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(143, 29);
+            this.comboBox1.Size = new System.Drawing.Size(102, 29);
             this.comboBox1.TabIndex = 12;
             // 
             // lb_PageName
@@ -183,7 +182,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(420, 338);
+            this.label2.Location = new System.Drawing.Point(248, 298);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 21);
             this.label2.TabIndex = 20;
@@ -197,7 +196,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox1.Size = new System.Drawing.Size(672, 33);
+            this.richTextBox1.Size = new System.Drawing.Size(500, 33);
             this.richTextBox1.TabIndex = 22;
             this.richTextBox1.Text = "";
             this.richTextBox1.Click += new System.EventHandler(this.richTextBox1_GotFocus);
@@ -277,20 +276,20 @@
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button3.BackColor = System.Drawing.Color.White;
             this.button3.BackgroundImage = global::RegulatoryPlan.Properties.Resources.btn01;
             this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button3.Location = new System.Drawing.Point(303, 179);
+            this.button3.Location = new System.Drawing.Point(150, 180);
             this.button3.Margin = new System.Windows.Forms.Padding(5);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(115, 35);
+            this.button3.Size = new System.Drawing.Size(108, 35);
             this.button3.TabIndex = 4;
             this.button3.Text = "浏览";
             this.button3.UseVisualStyleBackColor = false;
@@ -298,20 +297,20 @@
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.Control;
+            this.button2.BackColor = System.Drawing.Color.White;
             this.button2.BackgroundImage = global::RegulatoryPlan.Properties.Resources.btn_bg;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.button2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.button2.Location = new System.Drawing.Point(322, 381);
+            this.button2.Location = new System.Drawing.Point(150, 341);
             this.button2.Margin = new System.Windows.Forms.Padding(5);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(133, 37);
+            this.button2.Size = new System.Drawing.Size(128, 37);
             this.button2.TabIndex = 2;
             this.button2.Text = "取消";
             this.button2.UseVisualStyleBackColor = false;
@@ -323,12 +322,12 @@
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button1.Location = new System.Drawing.Point(474, 381);
+            this.button1.Location = new System.Drawing.Point(302, 341);
             this.button1.Margin = new System.Windows.Forms.Padding(5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(228, 37);
@@ -343,8 +342,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(713, 443);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(554, 405);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.button5);

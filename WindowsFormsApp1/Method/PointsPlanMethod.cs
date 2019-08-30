@@ -347,7 +347,7 @@ namespace RegulatoryPlan.Method
 
                                     //MessageBox.Show(eDistance.ToString());
                                     distances.Add(eDistance);
-                                    texts.Add(ent4Mtext.Text);
+                                    texts.Add(ent4Mtext.Text.Replace("\r", "").Replace("\n", ""));
                                 }
 
                             }

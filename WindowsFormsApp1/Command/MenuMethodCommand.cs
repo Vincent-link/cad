@@ -44,11 +44,53 @@ namespace RegulatoryPlan.Command
                 }
             }
 
-
-
             //MainForm form = new MainForm();
             //form.ShowDialog();
         }
+
+        [CommandMethod("SendPointPlans", CommandFlags.Session)]
+        public void SendPointPlans()
+        {
+            BatchChooseCityForm cf = new BatchChooseCityForm();
+            if (cf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                 List<string> failedFiles = new List<string>();
+
+                foreach (string item in cf.openFile)
+                {
+                    if (Path.GetExtension(item).ToLower() == ".dwg")
+                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, cf.derivedType, failedFiles); }
+                }
+                if (failedFiles.Count > 0)
+                {
+                    BatchFailAlert f = new BatchFailAlert(failedFiles);
+                    f.Show();
+                }
+                else
+                {
+                    RegulatoryPost.Fentuze.SuccessAlert f = new RegulatoryPost.Fentuze.SuccessAlert("图纸");
+                    f.Show();
+                }
+            }
+        }
+
+        //[CommandMethod("SendUnitPlans", CommandFlags.Session)]
+        //public void SendUnitPlans()
+        //{
+        //    OpenFileDialog dialog = new OpenFileDialog();
+        //    dialog.Multiselect = true;//等于true表示可以选择多个文件
+
+        //    if (dialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        List<string> failedFiles = new List<string>();
+
+        //        foreach (string item in dialog.FileNames)
+        //        {
+        //            if (Path.GetExtension(item).ToLower() == ".dwg")
+        //            { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan, failedFiles); }
+        //        }
+        //    }
+        //}
 
         [CommandMethod("AutoDeleteLayer", CommandFlags.Session)]
         public void AutoDeleteLayer()
@@ -69,64 +111,6 @@ namespace RegulatoryPlan.Command
                 }
             }
 
-
-        }
-
-        [CommandMethod("SendPointPlans", CommandFlags.Session)]
-        //[CommandMethod("SendPointPlans", CommandFlags.Session)]
-
-        //public void SendPointPlans()
-        //{
-        //    OpenFileDialog dialog = new OpenFileDialog();
-        //    dialog.Multiselect = true;//等于true表示可以选择多个文件
-
-        //    if (dialog.ShowDialog() == DialogResult.OK)
-        //    {
-        //        foreach (string item in dialog.FileNames)
-        //        {
-        //            if (Path.GetExtension(item).ToLower() == ".dwg")
-        //            { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.PointsPlan); }
-        //        }
-        //    }
-        //}
-        public void SendPointPlans()
-        {
-            BatchChooseCityForm cf = new BatchChooseCityForm();
-            if (cf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                 List<string> failedFiles = new List<string>();
-
-                foreach (string item in cf.openFile)
-                {
-                    if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, cf.derivedType, failedFiles); }
-                }
-                BatchFailAlert f = new BatchFailAlert(failedFiles);
-                f.Show();
-            }
-        }
-
-        [CommandMethod("SendUnitPlans", CommandFlags.Session)]
-        public void SendUnitPlans()
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = true;//等于true表示可以选择多个文件
-
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                List<string> failedFiles = new List<string>();
-
-                foreach (string item in dialog.FileNames)
-                {
-                    if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, DerivedTypeEnum.UnitPlan, failedFiles); }
-                }
-            }
-        }
-
-        [CommandMethod("测试发送")]
-        public void SendTestInfo()
-        {
 
         }
 

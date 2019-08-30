@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegulatoryPost", "Regulator
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegulatoryModel", "RegulatoryModel\RegulatoryModel.csproj", "{2386EE5C-509E-4ECE-83D5-7C3C7D244FA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomScrollbar", "CustomScrollBar\CustomScrollbar.csproj", "{EC86CB4A-5BB1-4402-951A-0EB831753EB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{2386EE5C-509E-4ECE-83D5-7C3C7D244FA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2386EE5C-509E-4ECE-83D5-7C3C7D244FA6}.Release|x64.ActiveCfg = Release|Any CPU
 		{2386EE5C-509E-4ECE-83D5-7C3C7D244FA6}.Release|x64.Build.0 = Release|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC86CB4A-5BB1-4402-951A-0EB831753EB5}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

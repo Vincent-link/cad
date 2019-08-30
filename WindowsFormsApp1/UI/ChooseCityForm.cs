@@ -36,6 +36,8 @@ namespace RegulatoryPlan.UI
         public ChooseCityForm()
         {
             InitializeComponent();
+            UIMethod.SetFormRoundRectRgn(this, 5);  //设置圆角
+            this.textBox1.Hide();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -107,66 +109,63 @@ namespace RegulatoryPlan.UI
                     crtType = DerivedTypeEnum.Power10Kv;
                     break;
                 case 3:
-                    crtType = DerivedTypeEnum.Power35kv;
-                    break;
-                case 4:
                     crtType = DerivedTypeEnum.WaterSupply;
                     break;
-                case 5:
+                case 4:
                     crtType = DerivedTypeEnum.HeatSupply;
                     break;
-                case 6:
+                case 5:
                     crtType = DerivedTypeEnum.FuelGas;
                     break;
-                case 7:
+                case 6:
                     crtType = DerivedTypeEnum.Communication;
                     break;
-                case 8:
+                case 7:
                     crtType = DerivedTypeEnum.BuildingIntegrated;
                     break;
-                case 9:
+                case 8:
                     crtType = DerivedTypeEnum.TheRoadSection;
                     break;
-                case 10:
+                case 9:
                     crtType = DerivedTypeEnum.PipeLine;
                     break;
-                case 11:
+                case 10:
                     crtType = DerivedTypeEnum.Sewage;
                     break;
-                case 12:
+                case 11:
                     crtType = DerivedTypeEnum.FiveLine;
                     break;
-                case 13:
+                case 12:
                     crtType = DerivedTypeEnum.LimitFactor;
                     break;
-                case 14:
+                case 13:
                     crtType = DerivedTypeEnum.RainWater;
                     break;
-                case 15:
+                case 14:
                     crtType = DerivedTypeEnum.ReuseWater;
                     break;
-                case 16:
+                case 15:
                     crtType = DerivedTypeEnum.Road;
                     break;
-                case 17:
+                case 16:
                     crtType = DerivedTypeEnum.CenterCityUseLandPlan;
                     break;
-                case 18:
+                case 17:
                     crtType = DerivedTypeEnum.UseLandNumber;
                     break;
-                case 19:
+                case 18:
                     crtType = DerivedTypeEnum.CenterCityLifeUseLandPlan;
                     break;
-                case 20:
+                case 19:
                     crtType = DerivedTypeEnum.RoadSituation;
                     break;
-                case 21:
+                case 20:
                     crtType = DerivedTypeEnum.FacilityControl;
                     break;
-                case 22:
+                case 21:
                     crtType = DerivedTypeEnum.FiveLineControl;
                     break;
-                case 23:
+                case 22:
                     crtType = DerivedTypeEnum.None;
                     break;
             }

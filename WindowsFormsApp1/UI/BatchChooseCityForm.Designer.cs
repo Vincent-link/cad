@@ -76,7 +76,7 @@ namespace RegulatoryPlan.UI
             this.comboBoxCity.FormattingEnabled = true;
             this.comboBoxCity.Items.AddRange(new object[] {
             "成安县"});
-            this.comboBoxCity.Location = new System.Drawing.Point(150, 69);
+            this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
             this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
             this.comboBoxCity.Name = "comboBoxCity";
             this.comboBoxCity.Size = new System.Drawing.Size(104, 29);
@@ -127,7 +127,7 @@ namespace RegulatoryPlan.UI
             this.comboBox1.Items.AddRange(new object[] {
             "地块控制总图则",
             "分图图则"});
-            this.comboBox1.Location = new System.Drawing.Point(150, 120);
+            this.comboBox1.Location = new System.Drawing.Point(150, 125);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(5);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(104, 29);
@@ -190,7 +190,7 @@ namespace RegulatoryPlan.UI
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button3.Location = new System.Drawing.Point(150, 178);
+            this.button3.Location = new System.Drawing.Point(148, 178);
             this.button3.Margin = new System.Windows.Forms.Padding(5);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(115, 35);
@@ -211,7 +211,7 @@ namespace RegulatoryPlan.UI
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.button2.Location = new System.Drawing.Point(436, 498);
+            this.button2.Location = new System.Drawing.Point(318, 426);
             this.button2.Margin = new System.Windows.Forms.Padding(5);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(133, 37);
@@ -231,7 +231,7 @@ namespace RegulatoryPlan.UI
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button1.Location = new System.Drawing.Point(588, 498);
+            this.button1.Location = new System.Drawing.Point(470, 426);
             this.button1.Margin = new System.Windows.Forms.Padding(5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(228, 37);
@@ -249,7 +249,7 @@ namespace RegulatoryPlan.UI
             this.fileGroup.Location = new System.Drawing.Point(30, 233);
             this.fileGroup.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.fileGroup.Name = "fileGroup";
-            this.fileGroup.Size = new System.Drawing.Size(786, 243);
+            this.fileGroup.Size = new System.Drawing.Size(672, 157);
             this.fileGroup.TabIndex = 0;
             // 
             // notifyIcon1
@@ -265,7 +265,7 @@ namespace RegulatoryPlan.UI
             this.AutoScroll = true;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(844, 555);
+            this.ClientSize = new System.Drawing.Size(736, 483);
             this.Controls.Add(this.fileGroup);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
@@ -292,7 +292,7 @@ namespace RegulatoryPlan.UI
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            UIMethod.SetFormRoundRectRgn(this, 5);	//设置圆角
+
         }
 
         #endregion

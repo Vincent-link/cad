@@ -14,8 +14,6 @@ using System.Windows.Forms;
 namespace RegulatoryPlan.UI
 {
 
-
-
     public partial class BatchChooseCityForm : Form
     {
         public List<string> openFile = new List<string>();
@@ -29,9 +27,6 @@ namespace RegulatoryPlan.UI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            // 清空旧数据
-            this.fileGroup.Controls.Clear();
-
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = true;//等于true表示可以选择多个文件
             dialog.Title = "请选择文件";
@@ -39,21 +34,30 @@ namespace RegulatoryPlan.UI
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                for (int i = 0; i < dialog.FileNames.Length; i++)
+                for (int j = 0; j < dialog.FileNames.Length; j++)
                 {
-                    Panel gbox = new Panel();
-                    gbox.Name = dialog.FileNames[i] + i;
-                    gbox.Text = dialog.FileNames[i];
-                    gbox.Width = 300;
-                    gbox.Height = 33;
-                    gbox.Location = new Point(15, 15 + i * 33);
-                    //调用添加文本控件的方法
-                    AddTxt(gbox, Path.GetFileNameWithoutExtension(dialog.FileNames[i]));
-
-                    this.fileGroup.Controls.Add(gbox);
-
+                    if (!openFile.Contains(dialog.FileNames[j]))
+                    {
+                        openFile.Add(dialog.FileNames[j]);
+                    }
                 }
+                
+
             }
+            for (int i = 0; i < openFile.Count; i++)
+            {
+                Panel gbox = new Panel();
+                gbox.Name = openFile[i] + i;
+                gbox.Text = openFile[i];
+                gbox.Width = 400;
+                gbox.Height = 33;
+                gbox.Location = new Point(15, 15 + i * 33);
+                //调用添加文本控件的方法
+                AddTxt(gbox, Path.GetFileNameWithoutExtension(openFile[i]));
+
+                this.fileGroup.Controls.Add(gbox);
+            }
+
 
         }
         //添加文本控件
@@ -81,22 +85,25 @@ namespace RegulatoryPlan.UI
             Label txt = new Label();
             txt.Name = gb.Name;
             txt.Text = fileName;
-            txt.Location = new Point(15, 0);
+            txt.Location = new Point(file_icon_button.Right, 0);
             txt.AutoSize = true;
             gb.Controls.Add(txt);
 
             Button file_icon_button_close = new Button();
-            file_icon_button_close.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            file_icon_button_close.BackgroundImage = global::RegulatoryPlan.Properties.Resources.shanchu;
-            file_icon_button_close.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            file_icon_button_close.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            file_icon_button_close.BackColor = SystemColors.GradientInactiveCaption;
+            file_icon_button_close.BackgroundImage = Properties.Resources.shanchu;
+            file_icon_button_close.BackgroundImageLayout = ImageLayout.None;
+            file_icon_button_close.FlatAppearance.BorderColor = Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             file_icon_button_close.FlatAppearance.BorderSize = 0;
+
             file_icon_button_close.FlatAppearance.MouseDownBackColor = SystemColors.GradientInactiveCaption;
             file_icon_button_close.FlatAppearance.MouseOverBackColor = SystemColors.GradientInactiveCaption;
-            file_icon_button_close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            file_icon_button_close.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            file_icon_button_close.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            file_icon_button_close.Location = new System.Drawing.Point(250, 5);
+            file_icon_button_close.FlatStyle = FlatStyle.Flat;
+            file_icon_button_close.Font = new Font("微软雅黑", 15F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(134)));
+            file_icon_button_close.ForeColor = SystemColors.ButtonHighlight;
+            int l = file_icon_button.Location.X + file_icon_button.Width + txt.Width;
+            //MessageBox.Show(file_icon_button.Right.ToString());
+            file_icon_button_close.Location = new Point(240, 7);
             file_icon_button_close.Name = "file_icon_button_close" + gb.Name;
             file_icon_button_close.UseVisualStyleBackColor = false;
             file_icon_button_close.Visible = true;

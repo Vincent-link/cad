@@ -79,9 +79,9 @@ namespace RegulatoryPost.FenTuZe
         private static string[] BaseAddresses()
         {
             string[] baseAddresses = new string[] {
-                    "http://172.18.84.102:8080/CIM/", // 測試
+                    //"http://172.18.84.102:8080/CIM/", // 測試
                     //"http://172.18.84.102:8081/CIM/cim/geom!addCadGeomByType.action", // GIS
-                    //"http://172.18.84.70:8081/PDD/pdd/webgl!addIndividual.action" // JAVA
+                    "http://172.18.84.114:8080/PDD/pdd/webgl!addIndividual.action" // JAVA
                 };
             return baseAddresses;
         }
@@ -104,15 +104,15 @@ namespace RegulatoryPost.FenTuZe
                     var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
                     http.ContentType = "application/x-www-form-urlencoded";
                     http.Method = "POST";
-                    http.Timeout = 600000;
+                    http.Timeout = 6000000;
                     http.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
                     http.KeepAlive = false;
-                    http.ProtocolVersion = HttpVersion.Version10;
-                    http.ServicePoint.Expect100Continue = false;
-                    ServicePointManager.DefaultConnectionLimit = 200;
+                    //http.ProtocolVersion = HttpVersion.Version10;
+                    //http.ServicePoint.Expect100Continue = false;
+                    //ServicePointManager.DefaultConnectionLimit = 200;
 
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
-                    http.ServicePoint.ConnectionLimit = 200;
+                    //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                    //http.ServicePoint.ConnectionLimit = 200;
 
                     StringBuilder builder = new StringBuilder();
                     int h = 0;
@@ -153,9 +153,17 @@ namespace RegulatoryPost.FenTuZe
                     WriteLog(result["chartName"], content, sw.ElapsedMilliseconds/1000);
 
                     //MessageBox.Show("发送成功！", "服务器反馈", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    if (content.Contains("false"))
+                    {
+                        Fentuze.FailAlert f = new Fentuze.FailAlert(result["chartName"]);
+                        f.Show();
+                    }
+                    else
+                    {
+                        Fentuze.SuccessAlert f = new Fentuze.SuccessAlert(result["chartName"]);
+                        f.Show();
+                    }
 
-                    Fentuze.SuccessAlert f = new Fentuze.SuccessAlert(result["chartName"]);
-                    f.Show();
 
                 } // 发送 结束
             }
@@ -191,7 +199,7 @@ namespace RegulatoryPost.FenTuZe
                     var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
                     http.ContentType = "application/x-www-form-urlencoded";
                     http.Method = "POST";
-                    http.Timeout = 600000;
+                    http.Timeout = 6000000;
                     http.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
                     http.KeepAlive = false;
                     http.ProtocolVersion = HttpVersion.Version10;
@@ -239,9 +247,10 @@ namespace RegulatoryPost.FenTuZe
 
                     WriteLog(result["chartName"], content, sw.ElapsedMilliseconds / 1000);
 
-                    Fentuze.SuccessAlert f = new Fentuze.SuccessAlert(result["chartName"]);
-                    f.Show();
-
+                    if (content.Contains("false"))
+                    {
+                        failedFiles.Add(result["chartName"]);
+                    }
 
                 } // 发送 结束
             }

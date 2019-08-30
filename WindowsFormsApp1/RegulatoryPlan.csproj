@@ -176,6 +176,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CustomScrollBar\CustomScrollbar.csproj">
+      <Project>{EC86CB4A-5BB1-4402-951A-0EB831753EB5}</Project>
+      <Name>CustomScrollbar</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RegulatoryModel\RegulatoryModel.csproj">
       <Project>{2386ee5c-509e-4ece-83d5-7c3c7d244fa6}</Project>
       <Name>RegulatoryModel</Name>
@@ -231,6 +235,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shanchu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\middle.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down_arrow.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up_arrow.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\span_image.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -27,7 +29,26 @@ namespace RegulatoryPlan.UI
             InitPage();
             InitData();
             //this.lb_City.Text = cityName;
+            RegulatoryPost.FenTuZe.UIMethod.SetFormRoundRectRgn(this, 5);	//设置圆角
+
+            //Point pt = new Point(this.data.AutoScrollPosition.X,
+            //         this.data.AutoScrollPosition.Y);
+            //this.userControl11.Minimum = 0;
+            //this.userControl11.Maximum = this.data.DisplayRectangle.Height;
+            //this.userControl11.LargeChange = userControl11.Maximum /
+            //             userControl11.Height + this.data.Height;
+            //this.userControl11.SmallChange = 15;
+            //this.userControl11.Value = Math.Abs(this.data.AutoScrollPosition.Y);
         }
+
+        //public void customScrollbar1_Scroll(object sender, EventArgs e)
+        //{
+        //    data.AutoScrollPosition = new Point(0,
+        //                        userControl11.Value);
+        //    userControl11.Invalidate();
+        //    Application.DoEvents();
+        //}
+
 
         public MainForm(string cityName, DerivedTypeEnum derivedType,bool auTo)
         {

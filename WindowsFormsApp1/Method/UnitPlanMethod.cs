@@ -44,8 +44,10 @@ namespace RegulatoryPlan.Method
             //{
             //    GetAttributeIndex(model, layer);
             //}
-
-            GetAttributeIndex(model, "用地代码");
+            if (model.attributeList.Columns.Count != 0)
+            {
+                GetAttributeIndex(model, "用地代码");
+            }
 
         }
 
