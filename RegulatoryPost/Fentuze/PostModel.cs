@@ -17,7 +17,7 @@ namespace RegulatoryPost.FenTuZe
     {
         
         /// <summary>
-        /// 用地规划、居住用地规划、用地代码
+        /// 用地规划、居住用地规划
         /// </summary>
         /// <param name="model"></param>
         public static void PostModelBase(AttributeBaseModel model)
@@ -54,7 +54,7 @@ namespace RegulatoryPost.FenTuZe
                 // 图例
                 tuliList.Add("");
                 // 项目ID或叫城市ID
-                projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                projectId = model.projectId;
                 // 图表名或者叫文件名
                 chartName = model.DocName;
                 // 控规引导
@@ -419,9 +419,8 @@ namespace RegulatoryPost.FenTuZe
             { }
         }
         
-
         /// <summary>
-        /// 单元图则
+        /// 单元图则、分图则、五线设施、其他
         /// </summary>
         /// <param name="model"></param>
         public static void PostModelBase(ModelBase model)
@@ -458,7 +457,7 @@ namespace RegulatoryPost.FenTuZe
                 kgGuide = model.kgGuide;
             }
             tuliList.Add("");
-            projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+            projectId = model.projectId;
             chartName = model.DocName;
             srid = "4326";
 
@@ -976,7 +975,7 @@ namespace RegulatoryPost.FenTuZe
                 kgGuide = model.kgGuide;
             }
             tuliList.Add("");
-            projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+            projectId = model.projectId;
             chartName = model.DocName;
             srid = "4326";
 
@@ -1487,7 +1486,7 @@ namespace RegulatoryPost.FenTuZe
                 {
                     kgGuide = model.kgGuide;
                 }
-                projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                projectId = model.projectId;
                 chartName = model.DocName;
                 srid = "4326";
 
@@ -1922,7 +1921,7 @@ namespace RegulatoryPost.FenTuZe
                 // 图例
                 tuliList.Add("");
                 // 项目ID或叫城市ID
-                projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                projectId = model.projectId;
                 // 图表名或者叫文件名
                 chartName = model.DocName;
                 // 控规引导
@@ -2814,6 +2813,11 @@ namespace RegulatoryPost.FenTuZe
             //output[0] = Math.Round(point.X, 7);
             //output[1] = Math.Round(point.Y, 7);
 
+            if (output[0] == 114.67584404108087)
+            {
+
+            }
+
             return output;
         }
 
@@ -2893,23 +2897,6 @@ namespace RegulatoryPost.FenTuZe
             catch
             {
             }
-        }
-
-        private static string GetGemoSpecialJson(GemoTypeModel typeModel )
-        {
-            return ReflectionClass.GetAllPropertyInfo(typeModel);
-            //if (typeModel is ArcModel)
-            //{
-            //    ReflectionClass.
-            //}
-            //else if (typeModel is CircleModel)
-            //{
-
-            //}
-            //else if (typeModel is EllipseModel)
-            //{
-
-            //}
         }
 
         

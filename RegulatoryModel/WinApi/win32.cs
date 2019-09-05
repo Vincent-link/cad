@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RegulatoryPlan.UI
 {
+    // 表单圆角
     public class Win32
     {
         #region Window Const

@@ -19,10 +19,34 @@ namespace RegulatoryPlan.UI
         public List<string> openFile = new List<string>();
         public string openCity = "";
         public DerivedTypeEnum derivedType = DerivedTypeEnum.None;
+        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
 
         public BatchChooseCityForm()
         {
-            InitializeComponent();
+            List<string> names = new List<string>();
+            try
+            {
+                string projectIdBaseAddress = "http://172.18.84.114:8080/PDD/pdd/individual-manage!findAllProject.action";
+                var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
+
+                var response = projectIdHttp.GetResponse();
+
+                var stream = response.GetResponseStream();
+                var sr = new StreamReader(stream, Encoding.UTF8);
+                var content = sr.ReadToEnd();
+                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            //MessageBox.Show(content);
+            foreach (Dictionary<string, string> name in contentList)
+            {
+                names.Add(name["name"]);
+            }
+
+            InitializeComponent(names);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -178,7 +202,7 @@ namespace RegulatoryPlan.UI
                 }
             }
             derivedType = GetChooseType();
-            openCity = GetChooseCity();
+            openCity = contentList[comboBoxCity.SelectedIndex]["oid"];
             this.Close();
 
         }

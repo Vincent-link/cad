@@ -30,6 +30,7 @@ namespace RegulatoryPlan.UI
             InitData();
             //this.lb_City.Text = cityName;
             RegulatoryPost.FenTuZe.UIMethod.SetFormRoundRectRgn(this, 5);	//设置圆角
+            model.projectId = cityName;
 
             //Point pt = new Point(this.data.AutoScrollPosition.X,
             //         this.data.AutoScrollPosition.Y);
@@ -149,7 +150,7 @@ namespace RegulatoryPlan.UI
                         PostModel.PostModelBase(model);
                         break;
                     case DerivedTypeEnum.UseLandNumber:
-                        PostModel.PostModelBase(model as AttributeBaseModel);
+                        PostModel.PostModelBase(model as ModelBase);
                         break;
                     case DerivedTypeEnum.CenterCityUseLandPlan:
                         PostModel.PostModelBase(model as AttributeBaseModel);

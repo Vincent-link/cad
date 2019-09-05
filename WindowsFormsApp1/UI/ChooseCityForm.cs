@@ -32,10 +32,34 @@ namespace RegulatoryPlan.UI
 
         [DllImport("user32", EntryPoint = "HideCaret")]
         private static extern bool HideCaret(IntPtr hWnd);
+        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
 
         public ChooseCityForm()
         {
-            InitializeComponent();
+            List<string> names = new List<string>();
+            try
+            {
+                string projectIdBaseAddress = "http://172.18.84.114:8080/PDD/pdd/individual-manage!findAllProject.action";
+                var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
+
+                var response = projectIdHttp.GetResponse();
+
+                var stream = response.GetResponseStream();
+                var sr = new StreamReader(stream, Encoding.UTF8);
+                var content = sr.ReadToEnd();
+                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            //MessageBox.Show(content);
+            foreach (Dictionary<string, string> name in contentList)
+            {
+                names.Add(name["name"]);
+            }
+
+            InitializeComponent(names);
             UIMethod.SetFormRoundRectRgn(this, 5);  //设置圆角
             this.textBox1.Hide();
         }
@@ -84,10 +108,10 @@ namespace RegulatoryPlan.UI
             switch (comboBoxCity.SelectedIndex)
             {
                 case 0:
-                    crtCity = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
+                    crtCity = contentList[comboBoxCity.SelectedIndex]["oid"];
                     break;
                 case 1:
-                    crtCity = "";
+                    crtCity = contentList[0]["oid"];
                     break;
             }
             return crtCity;
@@ -193,7 +217,8 @@ namespace RegulatoryPlan.UI
             this.DialogResult = DialogResult.OK;
             openFile = this.textBox1.Text;
             derivedType = GetChooseType();
-            openCity = GetChooseCity();
+            openCity = contentList[comboBoxCity.SelectedIndex]["oid"];
+
             this.Close();
 
         }

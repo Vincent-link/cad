@@ -10,6 +10,8 @@ using RegulatoryPlan.Command;
 using RegulatoryPlan.UI;
 using RegulatoryPost.FenTuZe;
 
+using RegulatoryPlan.Method;
+
 namespace RegulatoryPlan.Method
 {
     public sealed class AutoSendFiles
@@ -25,7 +27,7 @@ namespace RegulatoryPlan.Method
             get { return instance; }
         }
 
-        internal void AutoOpenPointPlanFile(string file, DerivedTypeEnum derivedType, List<string> failedFiles)
+        internal void AutoOpenPointPlanFile(string file, string cityName, DerivedTypeEnum derivedType, List<string> failedFiles)
         {
             try
             {
@@ -34,6 +36,7 @@ namespace RegulatoryPlan.Method
                 Editor ed = acDoc.Editor;
 
                 ModelBase mb = new ModelBase();
+
                 if (derivedType is DerivedTypeEnum.PointsPlan)
                 {
                     mb = new PointsPlanModel();
@@ -46,6 +49,7 @@ namespace RegulatoryPlan.Method
                 // 判断是否读取布局空间（papermodel）
                 MainForm.isOnlyModel = mb.IsOnlyModel;
                 mb.DocName = Path.GetFileNameWithoutExtension(file);
+                mb.projectId = cityName;
 
                 // 获取图例
                 ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();

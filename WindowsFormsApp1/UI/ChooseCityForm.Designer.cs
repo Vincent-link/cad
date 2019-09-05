@@ -26,7 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        private void InitializeComponent(System.Collections.Generic.List<string> names)
         {
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxCity = new System.Windows.Forms.ComboBox();
@@ -70,8 +70,13 @@
             this.comboBoxCity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCity.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBoxCity.FormattingEnabled = true;
-            this.comboBoxCity.Items.AddRange(new object[] {
-            "成安县"});
+            foreach (string name in names)
+            {
+                comboBoxCity.Items.AddRange(new object[] {
+                name
+            });
+            }
+
             this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
             this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
             this.comboBoxCity.Name = "comboBoxCity";

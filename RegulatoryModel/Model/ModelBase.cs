@@ -45,6 +45,7 @@ namespace RegulatoryModel.Model
         bool isOnlyModel=true;
         public System.Data.DataTable attributeList;
         public System.Collections.ArrayList kgGuide;
+        public string projectId;
 
         public List<string> specailLayers;
         public List<string> LayerList;
@@ -60,6 +61,7 @@ namespace RegulatoryModel.Model
 
         public System.Data.DataTable AttributeList { get => attributeList; set => attributeList = value; }
         public System.Collections.ArrayList KgGuide { get => kgGuide; set => kgGuide = value; }
+        public string ProjectId { get => projectId; set => projectId = value; }
 
 
         public virtual string ToJson()

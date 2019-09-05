@@ -59,7 +59,7 @@ namespace RegulatoryPlan.Command
                 foreach (string item in cf.openFile)
                 {
                     if (Path.GetExtension(item).ToLower() == ".dwg")
-                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, cf.derivedType, failedFiles); }
+                    { AutoSendFiles.Instance.AutoOpenPointPlanFile(item, cf.openCity, cf.derivedType, failedFiles); }
                 }
                 if (failedFiles.Count > 0)
                 {

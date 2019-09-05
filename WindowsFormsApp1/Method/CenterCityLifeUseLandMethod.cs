@@ -23,6 +23,9 @@ namespace RegulatoryPlan.Method
             {
                 foreach (string layerName in GetRealLayer(am.LayerName))
                 {
+                    Document doc = Application.DocumentManager.MdiActiveDocument;
+                    Database db = doc.Database;
+
                     LayerModel lyModel = new LayerModel();
                     lyModel.IsHaveAttribute = true;
                     List<BlockInfoModel> list = new List<BlockInfoModel>();
@@ -36,14 +39,14 @@ namespace RegulatoryPlan.Method
                     LayoutManager layoutMgr = LayoutManager.Current;
 
                     string ss = layoutMgr.CurrentLayout;
-                    ProSset = CadHelper.Instance.Editor.SelectAll(sfilter);
+                    ProSset = doc.Editor.SelectAll(sfilter);
                     //  List<ObjectId> idss=  GetEntitiesInModelSpace();
                     //    Database db = doc.Database;
                     List<BlockReference> blockTableRecords = new List<BlockReference>();
                     if (ProSset.Status == PromptStatus.OK)
                     {
                         lyModel.pointFs = new Dictionary<int, List<object>>();
-                        using (Transaction tran = CadHelper.Instance.Database.TransactionManager.StartTransaction())
+                        using (Transaction tran = doc.Database.TransactionManager.StartTransaction())
                         {
                             SelectionSet sst = ProSset.Value;
 
@@ -52,7 +55,7 @@ namespace RegulatoryPlan.Method
                             int ad = 0;
                             List<string> aa = new List<string>();
 
-                            LayerTable lt = (LayerTable)CadHelper.Instance.Database.LayerTableId.GetObject(OpenMode.ForRead);
+                            LayerTable lt = (LayerTable)doc.Database.LayerTableId.GetObject(OpenMode.ForRead);
                             foreach (ObjectId layerId in lt)
                             {
                                 LayerTableRecord ltr = (LayerTableRecord)tran.GetObject(layerId, OpenMode.ForRead);
@@ -76,28 +79,24 @@ namespace RegulatoryPlan.Method
                                     {
                                         foreach (AttributeItemModel attribute in dbTextModel.attItemList)
                                         {
-                                            if (attribute.TargetName == "总户数")
+                                            if (attribute.AtValue.Contains(":") || attribute.AtValue.Contains("："))
                                             {
-                                                string[] fmList = attribute.AtValue.Split(new char[2] { '\r', '\n' });
-                                                foreach (string fmItem in fmList)
+                                                string[] fmList = attribute.AtValue.Split(new char[2] { '：', ':' });
+
+                                                if (attribute.TargetName == "总户数")
                                                 {
-                                                    if (fmItem.Contains("户数"))
-                                                    {
-                                                        totalFamily += double.Parse(fmItem.Split(':')[1]);
-                                                    }
+
+                                                    totalFamily += double.Parse(fmList[3]);
                                                 }
-                                            }
-                                            else if (attribute.TargetName == "总人数")
-                                            {
-                                                string[] fmList = attribute.AtValue.Split(new char[2] { '\r', '\n' });
-                                                foreach (string fmItem in fmList)
+                                                else if (attribute.TargetName == "总人数")
                                                 {
-                                                    if (fmItem.Contains("人口"))
-                                                    {
-                                                        totalPeople += double.Parse(fmItem.Split(':')[1]);
-                                                    }
+                                                    
+                                                    totalPeople += double.Parse(System.Text.RegularExpressions.Regex.Replace(fmList[2].Replace("(", "").Replace(")", ""), @"[\u4e00-\u9fa5]", ""));
+
                                                 }
+
                                             }
+
                                         }
                                     }
                                 }
