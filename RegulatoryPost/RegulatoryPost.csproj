@@ -83,7 +83,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="Resources\btn01.png" />
   </ItemGroup>
   <ItemGroup>
