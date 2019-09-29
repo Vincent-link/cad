@@ -13,6 +13,49 @@ namespace RegulatoryPlan.Model
 {
     public class AutoCad2ModelTools
     {
+        /// <summary>
+        /// 把文字转换才Bitmap
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="font"></param>
+        /// <param name="rect">用于输出的矩形，文字在这个矩形内显示，为空时自动计算</param>
+        /// <param name="fontcolor">字体颜色</param>
+        /// <param name="backColor">背景颜色</param>
+        /// <returns></returns>
+        private static Bitmap TextToBitmap(string text, Font font, Rectangle rect, Color fontcolor, Color backColor)
+        {
+            Graphics g;
+            Bitmap bmp;
+            StringFormat format = new StringFormat(StringFormatFlags.NoClip);
+            if (rect == Rectangle.Empty)
+            {
+                bmp = new Bitmap(1, 1);
+                g = Graphics.FromImage(bmp);
+                //计算绘制文字所需的区域大小（根据宽度计算长度），重新创建矩形区域绘图
+                SizeF sizef = g.MeasureString(text, font, PointF.Empty, format);
+
+                int width = (int)(sizef.Width + 1);
+                int height = (int)(sizef.Height + 1);
+                rect = new Rectangle(0, 0, width, height);
+                bmp.Dispose();
+
+                bmp = new Bitmap(width, height);
+            }
+            else
+            {
+                bmp = new Bitmap(rect.Width, rect.Height);
+            }
+
+            g = Graphics.FromImage(bmp);
+
+            //使用ClearType字体功能
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            g.Clear(Color.Transparent);
+            g.DrawString(text, font, new SolidBrush(fontcolor), rect, format);
+            return bmp;
+        }
+
         public static DbTextModel DbText2Model(DBText dbText)
         {
             DbTextModel dbModel = new DbTextModel();
@@ -23,7 +66,18 @@ namespace RegulatoryPlan.Model
             dbModel.ThickNess = dbText.Thickness;
             dbModel.Text = dbText.TextString;
             dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
+
+            //获取文本
+            string text = dbModel.Text;
+            //得到Bitmap(传入Rectangle.Empty自动计算宽高)
+            Bitmap bmp = TextToBitmap(text, new Font("Arial", 16), Rectangle.Empty, Color.FromName(dbModel.Color), Color.FromName("White"));
+
+            //保存到桌面save.jpg
+            string directory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory);
+            bmp.Save(directory + "\\save.png", System.Drawing.Imaging.ImageFormat.Png);
+
             return dbModel;
+
         }
 
         public static DbTextModel DbText2Model(MText dbText)
@@ -45,7 +99,7 @@ namespace RegulatoryPlan.Model
 
             int cont = dbText.NumberOfLoops;
 
-            for (int i = 0; i < cont; i++)
+            for ( int i = 0; i < cont; i++)
             {
                 dbModel.loopPoints.Add(i, new ColorAndPointItemModel());
                 HatchLoop loop = dbText.GetLoopAt(i);
@@ -60,7 +114,12 @@ namespace RegulatoryPlan.Model
                     cpModel.Color = "#FFFFFF";
                     //  cpModel.ZIndex = "1";
                 }
-                if (loop.IsPolyline)
+
+                if (loop.Polyline.Count == 3)
+                {
+                }
+
+                if (loop.IsPolyline && loop.Polyline.Count > 3)
                 {
                     for (int j = 0; j < loop.Polyline.Count - 1; j++)
                     {
@@ -99,6 +158,7 @@ namespace RegulatoryPlan.Model
                         }
                     }
                 }
+
                 if (cpModel.loopPoints[0] != cpModel.loopPoints[cpModel.loopPoints.Count - 1])
                 {
                     cpModel.loopPoints.Add(cpModel.loopPoints[0]);
@@ -187,66 +247,83 @@ namespace RegulatoryPlan.Model
             polylineModel.Color = polyLine.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(polyLine.LayerId) : System.Drawing.ColorTranslator.ToHtml(polyLine.Color.ColorValue);
             polylineModel.Vertices = new System.Collections.ArrayList();
             int vn = polyLine.NumberOfVertices;  //lwp已知的多段线
-            for (int i = 0; i < vn; i++)
+
+            if(polylineModel.Closed)
             {
-                Point2d pt = polyLine.GetPoint2dAt(i);
-                SegmentType st = polyLine.GetSegmentType(i);
-                if (st == SegmentType.Arc)
+                for (int i = 0; i < vn; i++)
                 {
-                    ArcModel arc = new ArcModel();
-                    CircularArc2d cir = polyLine.GetArcSegment2dAt(i);
-                    //  arc.Center = new System.Drawing.PointF((float)cir.Center.X,(float)cir.Center.Y);
-                    arc.Center = Point2d2Pointf(cir.Center);
-                    arc.Radius = cir.Radius;
-                    arc.Startangel = cir.StartAngle;
-                    arc.EndAngel = cir.EndAngle;
-                    //  arc.StartPoint = new System.Drawing.PointF((float)cir.StartPoint.X, (float)cir.StartPoint.Y);
-                    if (cir.HasStartPoint)
-                    {
-                        arc.StartPoint = Point2d2Pointf(cir.StartPoint);
-                    }
-                    //  arc.EndPoint = new System.Drawing.PointF((float)cir.EndPoint.X, (float)cir.EndPoint.Y);
-                    if (cir.HasEndPoint)
-                    {
-                        arc.EndPoint = Point2d2Pointf(cir.EndPoint);
-                    }
+                    Point2d pt = polyLine.GetPoint2dAt(i);
 
-
-                    MyPoint spt = new MyPoint(arc.StartPoint.X, arc.StartPoint.Y);
-                    MyPoint ept = new MyPoint(arc.EndPoint.X, arc.EndPoint.Y);
-                    MyPoint center = new MyPoint(arc.Center.X, arc.Center.Y);
-                    arc.Color = polylineModel.Color;
-                    // arc.pointList = MethodCommand.GetRoationPoint(spt, ept, center, arc.Startangel,arc.EndAngel,cir.IsClockWise);
-                    arc.pointList = MethodCommand.GetArcPointsByPoint2d(cir.GetSamplePoints(20));
-                    //arc.pointList = MethodCommand.GetArcPoints(arc.Center,arc.Startangel,arc.EndAngel,arc.Radius);
-                    //  arc.pointList.Insert(0, arc.StartPoint);
-                    //   arc.pointList.Add(arc.EndPoint);
-                    polylineModel.Vertices.Add(arc);
+                    PointF ptf = new PointF((float)pt.X, (float)pt.Y);
+                    
+                    polylineModel.Vertices.Add(ptf);
                 }
-                else if (st == SegmentType.Line)
-                {
-                    LineModel line = new LineModel();
-                    LineSegment2d lineSe = polyLine.GetLineSegment2dAt(i);
-                    if (lineSe.HasStartPoint)
-                    {
-                        line.StartPoint = Point2d2Pointf(lineSe.StartPoint);
-                    }
-                    if (lineSe.HasEndPoint)
-                    {
-                        line.EndPoint = Point2d2Pointf(lineSe.EndPoint);
-                    }
-                    if (line.StartPoint.X == line.EndPoint.X && line.StartPoint.Y == line.EndPoint.Y)
-                    {
-                        line.Angle = 0;
-                        line.Length = 0;
-                    }
-                    else if (line.StartPoint.X == line.EndPoint.X)
-                    {
-                        line.Angle = 90;
+            }
+            else
+            {
 
+
+                for (int i = 0; i < vn; i++)
+                {
+                    Point2d pt = polyLine.GetPoint2dAt(i);
+                    SegmentType st = polyLine.GetSegmentType(i);
+                    if (st == SegmentType.Arc)
+                    {
+                        ArcModel arc = new ArcModel();
+                        CircularArc2d cir = polyLine.GetArcSegment2dAt(i);
+                        //  arc.Center = new System.Drawing.PointF((float)cir.Center.X,(float)cir.Center.Y);
+                        arc.Center = Point2d2Pointf(cir.Center);
+                        arc.Radius = cir.Radius;
+                        arc.Startangel = cir.StartAngle;
+                        arc.EndAngel = cir.EndAngle;
+                        //  arc.StartPoint = new System.Drawing.PointF((float)cir.StartPoint.X, (float)cir.StartPoint.Y);
+                        if (cir.HasStartPoint)
+                        {
+                            arc.StartPoint = Point2d2Pointf(cir.StartPoint);
+                        }
+                        //  arc.EndPoint = new System.Drawing.PointF((float)cir.EndPoint.X, (float)cir.EndPoint.Y);
+                        if (cir.HasEndPoint)
+                        {
+                            arc.EndPoint = Point2d2Pointf(cir.EndPoint);
+                        }
+
+
+                        MyPoint spt = new MyPoint(arc.StartPoint.X, arc.StartPoint.Y);
+                        MyPoint ept = new MyPoint(arc.EndPoint.X, arc.EndPoint.Y);
+                        MyPoint center = new MyPoint(arc.Center.X, arc.Center.Y);
+                        arc.Color = polylineModel.Color;
+                        // arc.pointList = MethodCommand.GetRoationPoint(spt, ept, center, arc.Startangel,arc.EndAngel,cir.IsClockWise);
+                        arc.pointList = MethodCommand.GetArcPointsByPoint2d(cir.GetSamplePoints(20));
+                        //arc.pointList = MethodCommand.GetArcPoints(arc.Center,arc.Startangel,arc.EndAngel,arc.Radius);
+                        //  arc.pointList.Insert(0, arc.StartPoint);
+                        //   arc.pointList.Add(arc.EndPoint);
+                        polylineModel.Vertices.Add(arc);
                     }
-                    line.Color = polylineModel.Color;
-                    polylineModel.Vertices.Add(line);
+                    else if (st == SegmentType.Line)
+                    {
+                        LineModel line = new LineModel();
+                        LineSegment2d lineSe = polyLine.GetLineSegment2dAt(i);
+                        if (lineSe.HasStartPoint)
+                        {
+                            line.StartPoint = Point2d2Pointf(lineSe.StartPoint);
+                        }
+                        if (lineSe.HasEndPoint)
+                        {
+                            line.EndPoint = Point2d2Pointf(lineSe.EndPoint);
+                        }
+                        if (line.StartPoint.X == line.EndPoint.X && line.StartPoint.Y == line.EndPoint.Y)
+                        {
+                            line.Angle = 0;
+                            line.Length = 0;
+                        }
+                        else if (line.StartPoint.X == line.EndPoint.X)
+                        {
+                            line.Angle = 90;
+
+                        }
+                        line.Color = polylineModel.Color;
+                        polylineModel.Vertices.Add(line);
+                    }
                 }
             }
 
@@ -421,7 +498,6 @@ namespace RegulatoryPlan.Model
                         BulgeVertex vertex1 = loop.Polyline[j + 1];
                         if (vertex.Bulge != 0)
                         {
-
                             cpModel.loopPoints.AddRange(MethodCommand.GetArcPointsByBulge(vertex.Vertex, vertex1.Vertex, vertex.Bulge));
                         }
                         else
@@ -452,6 +528,7 @@ namespace RegulatoryPlan.Model
                         }
                     }
                 }
+
                 if (cpModel.loopPoints[0] != cpModel.loopPoints[cpModel.loopPoints.Count - 1])
                 {
                     cpModel.loopPoints.Add(cpModel.loopPoints[0]);

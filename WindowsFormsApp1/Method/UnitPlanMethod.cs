@@ -21,8 +21,8 @@ namespace RegulatoryPlan.Method
             LayerModel lm = new LayerModel();
             lm = mbm.GetAllLayerGemo(model, UnitPlanModel.unitPlanLineLayer);
 
-            LayerModel lm2 = new LayerModel();
-            lm2 = mbm.GetAllLayerGemo(model, "控制单元范围");
+            //LayerModel lm2 = new LayerModel();
+            //lm2 = mbm.GetAllLayerGemo(model, "控制单元范围");
 
             if (lm.modelItemList == null)
             {
@@ -34,7 +34,7 @@ namespace RegulatoryPlan.Method
                 model.allLines = new List<LayerModel>();
             }
             model.allLines.Add(lm);
-            model.allLines.Add(lm2);
+            //model.allLines.Add(lm2);
 
             model.attributeList = AttributeList();
             model.kgGuide = ControlList();
@@ -44,6 +44,7 @@ namespace RegulatoryPlan.Method
             //{
             //    GetAttributeIndex(model, layer);
             //}
+
             if (model.attributeList.Columns.Count != 0)
             {
                 GetAttributeIndex(model, "用地代码");

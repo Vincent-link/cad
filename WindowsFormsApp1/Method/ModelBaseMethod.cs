@@ -121,10 +121,14 @@ namespace RegulatoryPlan.Method
                 {
                     SelectionSet sst = ProSset.Value;
 
-                    ObjectId[] oids = sst.GetObjectIds();
+                    ObjectId[] oids2 = sst.GetObjectIds();
+
+                    // 排序
+                    List<ObjectId> oids = Sort(oids2); 
+
                   //  model.LegendPoints = new Dictionary<int, List<System.Drawing.PointF>>();
                     int ad = 0;
-                    for (int i = 0; i < oids.Length; i++)
+                    for (int i = 0; i < oids.Count; i++)
                     {
                         //if (idss.Contains(oids[i]))
                         //{
@@ -144,6 +148,141 @@ namespace RegulatoryPlan.Method
                 }
             }
             return textList;
+        }
+
+        private List<ObjectId> Sort(ObjectId[] oids2)
+        {
+            ObjectId[] idArray = oids2;
+            List<ObjectId> oids3 = new List<ObjectId>();
+            using (Database db = HostApplicationServices.WorkingDatabase)
+            {
+                using (Transaction acTrans = db.TransactionManager.StartTransaction())
+                {
+                    List<Entity> compositionTableIndex = new List<Entity>();
+                    List<Entity> mtexts = new List<Entity>();
+                    List<Entity> mtexts2 = new List<Entity>();
+
+
+                    for (int j = 0; j < idArray.Length; j++)
+                    {
+                        Entity ent2 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
+                        if (ent2 is MText)
+                        {
+                            mtexts.Add(ent2);
+                        }
+                    }
+
+                    double minX = double.NaN;
+                    double maxX = double.NaN;
+                    double maxY = double.NaN;
+                    double minY = double.NaN;
+
+                    ///找出排头兵
+                    for (int j = 0; j < mtexts.Count; j++)
+                    {
+                        Entity ent2 = (Entity)mtexts[j];
+                        if (((MText)ent2).Location.X > maxX || double.IsNaN(maxX))
+                        {
+                            maxX = ((MText)ent2).Location.X;
+                        }
+                        if (((MText)ent2).Location.Y < minY || double.IsNaN(minY))
+                        {
+                            minY = ((MText)ent2).Location.Y;
+                        }
+                        if (((MText)ent2).Location.Y > maxY || double.IsNaN(maxY))
+                        {
+                            maxY = ((MText)ent2).Location.Y;
+                        }
+                        if (((MText)ent2).Location.X < minX || double.IsNaN(minX))
+                        {
+                            minX = ((MText)ent2).Location.X;
+                        }
+                    }
+
+                    // 找出索引
+                    for (int j = 0; j < mtexts.Count; j++)
+                    {
+                        Entity ent2 = (Entity)mtexts[j];
+                        string indexText = ((MText)mtexts[j]).Text.Replace("\n", "").Replace("\r", "").Replace(" ", "");
+
+                        if (maxY - 50 < ((MText)ent2).Location.Y && ((MText)ent2).Location.Y < maxY + 50)
+                        {
+                            compositionTableIndex.Add(ent2);
+                        }
+                    }
+
+                    // 从近到远排序
+                    List<int> distances = new List<int>();
+
+                    for (int h = 0; h < compositionTableIndex.Count; h++)
+                    {
+                        Entity ent3 = (Entity)compositionTableIndex[h];
+
+                        if (((MText)ent3).Location.X == minX && ((MText)ent3).Location.Y == maxY)
+                        {
+                            for (int j = 0; j < compositionTableIndex.Count; j++)
+                            {
+                                Entity ent2 = (Entity)mtexts[j];
+                                for (int z = 0; z < mtexts.Count; z++)
+                                {
+                                    int distance = (int)MethodCommand.DistancePointToPoint(((MText)ent3).Location, ((MText)ent2).Location);
+
+                                    distances.Add(distance);
+                                    mtexts2.Add(ent2);
+                                }
+                            }
+                        }
+                    }
+
+                    // 把获取的属性值按照距离大小排序，距离最近的放在第一位，以此类推
+                    Entity temp;
+                    int tempDis;
+                    for (int m = 0; m < distances.Count; m++)
+                    {
+                        for (int q = 0; q < distances.Count - m - 1; q++)
+                        {
+                            try
+                            {
+                                if (distances[q] > distances[q + 1])
+                                {
+                                    temp = mtexts2[q];
+                                    mtexts2[q] = mtexts2[q + 1];
+                                    mtexts2[q + 1] = temp;
+
+                                    tempDis = distances[q];
+                                    distances[q] = distances[q + 1];
+                                    distances[q + 1] = tempDis;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                System.Windows.Forms.MessageBox.Show(e.Message);
+                            }
+                        }
+                    }
+
+                    // 按索引排序
+                    for (int j = 0; j < mtexts2.Count; j++)
+                    {
+                        Entity ent2 = (Entity)mtexts2[j];
+                        for (int z = 0; z < mtexts.Count; z++)
+                        {
+                            Entity ent3 = (Entity)mtexts[z];
+
+                            if (((MText)ent2).Location.X + 50 > ((MText)ent3).Location.X && ((MText)ent2).Location.X - 50 < ((MText)ent3).Location.X)
+                            {
+                                ObjectId oid = ent3.ObjectId;
+                                oids3.Add(oid);
+                            }
+                        }
+                    }
+
+                    
+
+                }
+            }
+
+            return oids3;
         }
 
         public void GetAllLengedGemo(T model)

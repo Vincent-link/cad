@@ -43,6 +43,8 @@ namespace RegulatoryPlan.Menu
             //AcadPopupMenuItem pmi3 = pmParnet.AddMenuItem(pmParnet.Count + 1, "一般数据检测 ", "AutoShowMainForm\n");
             //单级
             AcadPopupMenuItem pmi4 = pmParnet.AddMenuItem(pmParnet.Count + 1, "自动删除多余图层 ", "AutoDeleteLayer\n");
+            //单级
+            AcadPopupMenuItem pmi6 = pmParnet.AddMenuItem(pmParnet.Count + 1, "自动生成编码 ", "AutoGenerateNumber\n");
             //将创建的菜单加入到CAD的菜单中
             pmParnet.InsertInMenuBar(app.MenuBar.Count + 1);
         }

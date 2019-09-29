@@ -12,6 +12,7 @@ namespace RegulatoryPlan.Method
 {
     public class CenterCityLifeUseLandMethod<T> : AttributeBaseMethod<T> where T : CenterCityLifeUseLandPlanModel
     {
+        // 中心城区居住用地规划
         private CenterCityLifeUseLandMethod() { }
         public CenterCityLifeUseLandMethod(T model) : base(model)
         {

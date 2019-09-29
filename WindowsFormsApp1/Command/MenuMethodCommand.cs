@@ -110,6 +110,16 @@ namespace RegulatoryPlan.Command
 
                 }
             }
+        }
+
+        [CommandMethod("AutoGenerateNumber", CommandFlags.Session)]
+        public void AutoGenerateNumber()
+        {
+            DataGridView polylineList = new DataGridView();
+            polylineList.TabIndex = 0;
+
+            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums());
+            a.Show();
 
 
         }

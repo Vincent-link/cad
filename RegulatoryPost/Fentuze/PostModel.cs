@@ -32,8 +32,7 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList layerName = new ArrayList();
                 ArrayList tableName = new ArrayList(); // 表名
                 System.Data.DataTable attributeList = new System.Data.DataTable();  // 属性集合
-                attributeList.Columns.Add(new System.Data.DataColumn(("id"), typeof(string)));                                     // attributeList.Columns.Add(new System.Data.DataColumn("1"));
-                                                                                                                                   //   System.Data.DataRow row;
+                attributeList.Columns.Add(new System.Data.DataColumn(("id"), typeof(string)));                                    
                 ArrayList attributeIndexList = new ArrayList(); //属性索引集合
 
                 ArrayList tuliList = new ArrayList(); //图例集合
@@ -45,9 +44,11 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList parentId = new ArrayList(); //配套设施所在地块集合
                 ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
                 ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
-                ArrayList zIndex = new ArrayList(); //图层级别
-                int ysIndex = 0;
 
+                ArrayList zIndex = new ArrayList(); //图层级别
+                List<string> selectedLayerList = new List<string>(); //图层
+
+                int ysIndex = 0;
 
                 Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
@@ -62,6 +63,11 @@ namespace RegulatoryPost.FenTuZe
                 {
                     kgGuide = model.kgGuide;
                 }
+                // 所选图层
+                if (model.selectedLayerList != null)
+                {
+                    selectedLayerList = model.selectedLayerList;
+                }
 
                 //地理坐标系统编号
                 srid = "4326";
@@ -70,7 +76,7 @@ namespace RegulatoryPost.FenTuZe
                 {
                     foreach (LayerModel layer in model.allLines)
                     {
-                        if (layer.pointFs != null && layer.IsHaveAttribute)
+                        if (layer.pointFs != null)
                         {
                             foreach (List<object> roadModel in layer.pointFs.Values)
                             {
@@ -81,7 +87,7 @@ namespace RegulatoryPost.FenTuZe
                                     if (pf is PointF)
                                     {
                                         ArrayList singlePoint = new ArrayList();
-                                        geoType = "polyline";
+                                        geoType = "point";
                                         singlePoint.Add(Transform((PointF)pf));
 
                                         geom.Add(singlePoint);
@@ -253,56 +259,96 @@ namespace RegulatoryPost.FenTuZe
                                         {
                                             foreach (PolyLineModel arcModel in blm.PolyLine)
                                             {
-                                                geoType = "polyline";
 
-                                                foreach (object arPt in arcModel.Vertices)
+                                                if (arcModel.Closed)
                                                 {
-                                                    if (arPt is LineModel)
+                                                    geoType = "polyline";
+
+                                                    ArrayList arrayList = new ArrayList();
+
+                                                    try
                                                     {
-                                                        ArrayList arrayList = new ArrayList();
-                                                        if (((LineModel)arPt).StartPoint == ((LineModel)arPt).EndPoint)
+                                                        foreach (PointF arPt in arcModel.Vertices)
                                                         {
-                                                            geoType = "point";
-                                                            arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                            arrayList.Add(Transform((PointF)arPt));
                                                         }
-                                                        else
-                                                        {
-                                                            arrayList.Add(Transform(((LineModel)arPt).StartPoint));
-                                                            arrayList.Add(Transform(((LineModel)arPt).EndPoint));
-                                                        }
+
                                                         geom.Add(arrayList);
 
                                                         string colid = "索引" + ysIndex + "_U9-02";
                                                         GetAttributeTable(attributeList, arcModel.attItemList, colid);
                                                         attributeIndexList.Add(colid); ysIndex++;
+                                                        zIndex.Add(arcModel.ZIndex);
+
+                                                        uuid.Add(GetUUID());
+                                                        colorList.Add(arcModel.Color);
+                                                        type.Add(geoType);
+                                                        layerName.Add(layer.Name);
+
+                                                        tableName.Add("a");
+                                                        parentId.Add("");
+                                                        textContent.Add("");
+                                                        blockContent.Add("");
                                                     }
-                                                    else if (arPt is ArcModel)
+                                                    catch (Exception ex)
                                                     {
-                                                        ArrayList arrayList = new ArrayList();
-                                                        foreach (PointF arPtt in ((ArcModel)arPt).pointList)
-                                                        {
-                                                            arrayList.Add(Transform(arPtt));
-
-                                                        }
-                                                        geom.Add(arrayList);
-
-                                                        string colid = "索引" + ysIndex + "_U9-02";
-                                                        GetAttributeTable(attributeList, arcModel.attItemList, colid);
-                                                        attributeIndexList.Add(colid); ysIndex++;
+                                                        
                                                     }
-                                                    zIndex.Add(arcModel.ZIndex);
 
-
-                                                    uuid.Add(GetUUID());
-                                                    colorList.Add(arcModel.Color);
-                                                    type.Add(geoType);
-                                                    layerName.Add(layer.Name);
-
-                                                    tableName.Add("a");
-                                                    parentId.Add("");
-                                                    textContent.Add("");
-                                                    blockContent.Add("");
                                                 }
+                                                else
+                                                {
+
+                                                    foreach (object arPt in arcModel.Vertices)
+                                                    {
+                                                        geoType = "polyline";
+
+                                                        if (arPt is LineModel)
+                                                        {
+                                                            ArrayList arrayList = new ArrayList();
+                                                            if (((LineModel)arPt).StartPoint == ((LineModel)arPt).EndPoint)
+                                                            {
+                                                                geoType = "point";
+                                                                arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                            }
+                                                            else
+                                                            {
+                                                                arrayList.Add(Transform(((LineModel)arPt).StartPoint));
+                                                                arrayList.Add(Transform(((LineModel)arPt).EndPoint));
+                                                            }
+                                                            geom.Add(arrayList);
+
+                                                        }
+                                                        else if (arPt is ArcModel)
+                                                        {
+                                                            ArrayList arrayList = new ArrayList();
+                                                            foreach (PointF arPtt in ((ArcModel)arPt).pointList)
+                                                            {
+                                                                arrayList.Add(Transform(arPtt));
+
+                                                            }
+                                                            geom.Add(arrayList);
+
+                                                        }
+
+                                                        string colid = "索引" + ysIndex + "_U9-02";
+                                                        GetAttributeTable(attributeList, arcModel.attItemList, colid);
+                                                        attributeIndexList.Add(colid); ysIndex++;
+                                                        zIndex.Add(arcModel.ZIndex);
+
+                                                        uuid.Add(GetUUID());
+                                                        colorList.Add(arcModel.Color);
+                                                        type.Add(geoType);
+                                                        layerName.Add(layer.Name);
+
+                                                        tableName.Add("a");
+                                                        parentId.Add("");
+                                                        textContent.Add("");
+                                                        blockContent.Add("");
+                                                    }
+
+                                                }
+
 
                                             }
                                         }
@@ -375,6 +421,8 @@ namespace RegulatoryPost.FenTuZe
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string zindexstring = JsonConvert.SerializeObject(zIndex);
+                string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
+
                 // UUID
                 result.Add("uuid", uuidString);
                 // 实体坐标信息
@@ -413,6 +461,9 @@ namespace RegulatoryPost.FenTuZe
                 // 块内容
                 result.Add("blockContent", blockContentString);
 
+                // 块内容
+                result.Add("selectedLayerList", selectedLayerListstring);
+
                 FenTuZe.PostData(result);
             }
             catch
@@ -445,6 +496,7 @@ namespace RegulatoryPost.FenTuZe
             ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
             ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
             ArrayList zIndex = new ArrayList(); //图层级别
+            List<string> selectedLayerList = new List<string>(); //图层
 
             Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
@@ -460,6 +512,14 @@ namespace RegulatoryPost.FenTuZe
             projectId = model.projectId;
             chartName = model.DocName;
             srid = "4326";
+
+            // 所选图层
+            if (model.selectedLayerList != null)
+            {
+                selectedLayerList = model.selectedLayerList;
+            }
+            selectedLayerList.Add("用地代码");
+            selectedLayerList.Add("坐标");
 
             if (model.allLines != null)
             {
@@ -515,10 +575,9 @@ namespace RegulatoryPost.FenTuZe
                                 {
                                     foreach (PolyLineModel arcModel in ppim.Geom.PolyLine)
                                     {
-
-                                        geoType = "polyline";
                                         foreach (object arPt in arcModel.Vertices)
                                         {
+                                            geoType = "polyline";
                                             ArrayList arrayList = new ArrayList();
 
                                             if (arPt is LineModel)
@@ -617,7 +676,7 @@ namespace RegulatoryPost.FenTuZe
                                 if (pf is PointF)
                                 {
                                     ArrayList singlePoint = new ArrayList();
-                                    geoType = "polyline";
+                                    geoType = "point";
                                     singlePoint.Add(Transform((PointF)pf));
 
                                     geom.Add(singlePoint);
@@ -738,10 +797,6 @@ namespace RegulatoryPost.FenTuZe
                                             }
                                             else
                                             {
-                                                if (lineModel.StartPoint == null || lineModel.EndPoint == null)
-                                                {
-                                                    geoType = "point";
-                                                }
                                                 arrayList.Add(Transform(lineModel.StartPoint));
                                                 arrayList.Add(Transform(lineModel.EndPoint));
                                             }
@@ -766,9 +821,10 @@ namespace RegulatoryPost.FenTuZe
                                     {
                                         foreach (PolyLineModel arcModel in blm.PolyLine)
                                         {
-                                            geoType = "polyline";
                                             foreach (object arPt in arcModel.Vertices)
                                             {
+                                                geoType = "polyline";
+
                                                 ArrayList arrayList = new ArrayList();
 
                                                 if (arPt is LineModel)
@@ -780,10 +836,6 @@ namespace RegulatoryPost.FenTuZe
                                                     }
                                                     else
                                                     {
-                                                        if (((LineModel)arPt).StartPoint == null || ((LineModel)arPt).EndPoint == null)
-                                                        {
-                                                            geoType = "point";
-                                                        }
                                                         arrayList.Add(Transform(((LineModel)arPt).StartPoint));
                                                         arrayList.Add(Transform(((LineModel)arPt).EndPoint));
                                                     }
@@ -801,29 +853,18 @@ namespace RegulatoryPost.FenTuZe
                                                         if (((ArcModel)arPt).pointList.Count == 1)
                                                         {
                                                             geoType = "point";
+                                                            arrayList.Add(Transform(((ArcModel)arPt).pointList[0]));
                                                         }
-                                                        foreach (PointF arPtt in ((ArcModel)arPt).pointList)
+                                                        else
                                                         {
-                                                            arrayList.Add(Transform(arPtt));
+                                                            foreach (PointF arPtt in ((ArcModel)arPt).pointList)
+                                                            {
+                                                                arrayList.Add(Transform(arPtt));
+                                                            }
                                                         }
+
                                                     }
                                                 }
-
-
-                                                // 属性索引
-
-                                                //string[] compositionTableIndex = new string[22] { "\"R\"_R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41", "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1" };
-                                                // 每次至少要发超过用地代码数量的实体
-                                                //if (u < attributeList.Rows.Count)
-                                                //{
-                                                //    string str2 = "\"" + attributeList.Rows[u]["用地代码"] + "\"" + "_" + attributeList.Rows[u]["用地代码"];
-                                                //    attributeIndexList.Add(str2);
-                                                //}
-                                                //else
-                                                //{
-                                                //    attributeIndexList.Add("");
-                                                //}
-                                                //u++;
 
                                                 geom.Add(arrayList);
                                                 zIndex.Add(arcModel.ZIndex);
@@ -844,9 +885,9 @@ namespace RegulatoryPost.FenTuZe
                                     }
                                     if (blm.Hatch != null)
                                     {
-                                        geoType = "polygon";
                                         foreach (HatchModel arcModel in blm.Hatch)
                                         {
+                                            geoType = "polygon";
 
                                             foreach (int index in arcModel.loopPoints.Keys)
                                             {
@@ -912,6 +953,7 @@ namespace RegulatoryPost.FenTuZe
 
             string blockContentString = JsonConvert.SerializeObject(blockContent);
             string zindexstring = JsonConvert.SerializeObject(zIndex);
+            string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
 
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
@@ -933,6 +975,8 @@ namespace RegulatoryPost.FenTuZe
             result.Add("parentId", parentIdString);
             result.Add("textContent", textContentString);
             result.Add("blockContent", blockContentString);
+
+            result.Add("selectedLayerList", selectedLayerListstring);
 
             FenTuZe.PostData(result);
         }
@@ -962,8 +1006,9 @@ namespace RegulatoryPost.FenTuZe
             ArrayList parentId = new ArrayList(); //配套设施所在地块集合
             ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
             ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
-            ArrayList zIndex = new ArrayList(); //图层级别
 
+            ArrayList zIndex = new ArrayList(); //图层级别
+            List<string> selectedLayerList = new List<string>(); //图层
             Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
             if (model.attributeList != null)
@@ -978,6 +1023,14 @@ namespace RegulatoryPost.FenTuZe
             projectId = model.projectId;
             chartName = model.DocName;
             srid = "4326";
+
+            // 所选图层
+            if (model.LayerList != null)
+            {
+                selectedLayerList = model.LayerList;
+            }
+            selectedLayerList.Add("用地代码");
+            selectedLayerList.Add("坐标");
 
             if (model.allLines != null)
             {
@@ -1282,9 +1335,10 @@ namespace RegulatoryPost.FenTuZe
                                     {
                                         foreach (PolyLineModel arcModel in blm.PolyLine)
                                         {
-                                            geoType = "polyline";
                                             foreach (object arPt in arcModel.Vertices)
                                             {
+                                                geoType = "polyline";
+
                                                 ArrayList arrayList = new ArrayList();
 
                                                 if (arPt is LineModel)
@@ -1324,22 +1378,6 @@ namespace RegulatoryPost.FenTuZe
                                                         }
                                                     }
                                                 }
-
-
-                                                // 属性索引
-
-                                                //string[] compositionTableIndex = new string[22] { "\"R\"_R", "R2", "A", "A1", "A33", "A7", "A9", "B", "B1", "B41", "S", "S1", "S42", "U", "U15", "G", "G1", "G2", "G3", "H11", "E", "E1" };
-                                                // 每次至少要发超过用地代码数量的实体
-                                                //if (u < attributeList.Rows.Count)
-                                                //{
-                                                //    string str2 = "\"" + attributeList.Rows[u]["用地代码"] + "\"" + "_" + attributeList.Rows[u]["用地代码"];
-                                                //    attributeIndexList.Add(str2);
-                                                //}
-                                                //else
-                                                //{
-                                                //    attributeIndexList.Add("");
-                                                //}
-                                                //u++;
 
                                                 geom.Add(arrayList);
                                                 zIndex.Add(arcModel.ZIndex);
@@ -1428,6 +1466,7 @@ namespace RegulatoryPost.FenTuZe
 
             string blockContentString = JsonConvert.SerializeObject(blockContent);
             string zindexstring = JsonConvert.SerializeObject(zIndex);
+            string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
 
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
@@ -1450,6 +1489,8 @@ namespace RegulatoryPost.FenTuZe
             result.Add("textContent", textContentString);
             result.Add("blockContent", blockContentString);
 
+            result.Add("selectedLayerList", selectedLayerListstring);
+
             FenTuZe.AutoPostData(result, failedFiles);
         }
         /// <summary>
@@ -1460,6 +1501,7 @@ namespace RegulatoryPost.FenTuZe
         {
             try
             {
+                Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
                 ArrayList uuid = new ArrayList();
                 ArrayList geom = new ArrayList();   // 坐标点集合
                 ArrayList colorList = new ArrayList();       // 颜色集合
@@ -1479,8 +1521,10 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList parentId = new ArrayList(); //配套设施所在地块集合
                 ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
                 ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
+
                 ArrayList zIndex = new ArrayList(); //图层级别
-                Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+                List<string> selectedLayerList = new List<string>(); //图层
+
 
                 if (model.kgGuide != null)
                 {
@@ -1489,6 +1533,14 @@ namespace RegulatoryPost.FenTuZe
                 projectId = model.projectId;
                 chartName = model.DocName;
                 srid = "4326";
+
+                // 所选图层
+                if (model.LayerList != null)
+                {
+                    selectedLayerList = model.LayerList;
+                }
+                selectedLayerList.Add("用地代码");
+                selectedLayerList.Add("坐标");
 
                 foreach (LayerModel layer in model.allLines)
                 {
@@ -1662,9 +1714,10 @@ namespace RegulatoryPost.FenTuZe
                                     {
                                         foreach (PolyLineModel arcModel in blm.PolyLine)
                                         {
-                                            geoType = "polyline";
                                             foreach (object arPt in arcModel.Vertices)
                                             {
+                                                geoType = "polyline";
+
                                                 if (arPt is LineModel)
                                                 {
                                                     ArrayList arrayList = new ArrayList();
@@ -1841,6 +1894,7 @@ namespace RegulatoryPost.FenTuZe
                 string textContentString = JsonConvert.SerializeObject(textContent);
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
+                string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -1877,6 +1931,7 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("textContent", textContentString);
                 // 块内容
                 result.Add("blockContent", blockContentString);
+                result.Add("selectedLayerList", selectedLayerListstring);
 
                 FenTuZe.PostData(result);
             }
@@ -1894,6 +1949,7 @@ namespace RegulatoryPost.FenTuZe
         {
             try
             {
+                Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
                 ArrayList uuid = new ArrayList();
                 ArrayList geom = new ArrayList();   // 坐标点集合
                 ArrayList colorList = new ArrayList();       // 颜色集合
@@ -1914,9 +1970,9 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList parentId = new ArrayList(); //配套设施所在地块集合
                 ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
                 ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
-                ArrayList zIndex = new ArrayList(); // 块内容（GIS端展示）
-                Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
+                ArrayList zIndex = new ArrayList(); // 块内容（GIS端展示）
+                List<string> selectedLayerList = new List<string>(); //图层
 
                 // 图例
                 tuliList.Add("");
@@ -1932,6 +1988,14 @@ namespace RegulatoryPost.FenTuZe
 
                 //地理坐标系统编号
                 srid = "4326";
+
+                // 所选图层
+                if (model.LayerList != null)
+                {
+                    selectedLayerList = model.LayerList;
+                }
+                selectedLayerList.Add("用地代码");
+                selectedLayerList.Add("坐标");
 
                 int ysIndex = 0;
                 foreach (LayerModel layer in model.allLines)
@@ -2220,9 +2284,9 @@ namespace RegulatoryPost.FenTuZe
                                     {
                                         foreach (PolyLineModel arcModel in blm.PolyLine)
                                         {
-                                            geoType = "polyline";
                                             foreach (object arPt in arcModel.Vertices)
                                             {
+                                                geoType = "polyline";
                                                 string colid = "";
 
                                                 if (arPt is LineModel)
@@ -2363,118 +2427,7 @@ namespace RegulatoryPost.FenTuZe
                             }
                         }
                     }
-                    //特殊数据
-                    //if (layer.modelItemList != null)
-                    //{
-                    //    foreach (PipeItemModel roadModel in layer.modelItemList)
-                    //    {
-
-                    //        //道路模型接口
-                    //        // UUID
-                    //        Guid guid1 = new Guid();
-                    //        guid1 = Guid.NewGuid();
-                    //        string str1 = guid1.ToString();
-                    //        uuid.Add(str1);
-
-                    //        // 单个文字坐标
-                    //        ArrayList singlePoint1 = new ArrayList();
-                    //        PointF pointf1 = roadModel.TxtLocation;
-                    //        singlePoint1.Add(Transform(pointf1));
-                    //        geom.Add(singlePoint1);
-
-                    //        // 实体颜色
-                    //        colorList.Add("");
-                    //        // 实体类型
-                    //        type.Add("text");
-
-                    //        // 实体所在图层名字
-                    //        layerName.Add(roadModel.PipeLayer);
-                    //        // 表名，默认a
-                    //        tableName.Add("a");
-                    //        // 道路名称表，入库需要
-                    //        // GetAttributeTable(attributeList, roaModel.attItemList);
-                    //        // 道路名称索引
-                    //      //  attributeIndexList.Add("");
-
-                    //        // 图例
-                    //        tuliList.Add("");
-                    //        // 项目ID或叫城市ID
-                    //        projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
-                    //        // 图表名或者叫文件名
-                    //        chartName=model.DocName;
-                    //        // 控规引导
-                    //        kgGuide.Add("");
-
-                    //        //地理坐标系统编号
-                    //        srid = "4326";
-                    //        //配套设施所在地块集合
-                    //        parentId.Add("");
-                    //        // 文字内容(单行文字、多行文字、块参照等)
-                    //        textContent.Add(roadModel.PipeText);
-                    //        // 块内容
-                    //        blockContent.Add("");
-
-                    //        //如果是道路多段线
-                    //        if (roadModel.PipeType.ToLower() == "polyline")
-                    //        {
-                    //            // UUID
-                    //            Guid guid = new Guid();
-                    //            guid = Guid.NewGuid();
-                    //            string str = guid.ToString();
-                    //            uuid.Add(str);
-
-                    //            // 坐标
-                    //            ArrayList singlePoint = new ArrayList();
-                    //            foreach (PointF point in roadModel.pipeList)
-                    //            {
-
-                    //                singlePoint.Add(Transform(point));
-                    //            }
-                    //            geom.Add(singlePoint);
-
-                    //            // 实体颜色
-                    //            colorList.Add(roadModel.ColorIndex);
-                    //            // 实体类型
-                    //            type.Add(roadModel.PipeType);
-
-                    //            // 实体所在图层名字
-                    //            layerName.Add(layer.Name);
-                    //            // 表名，默认a
-                    //            tableName.Add("a");
-                    //            // 道路名称表，入库需要
-                    //            //    row = attributeList.NewRow(); row["管道类型"] = roadModel.PipeText; attributeList.Rows.Add(row);
-                    //            // 道路名称索引
-                    //            if (roadModel.PipeText is null)
-                    //            {
-                    //              //  attributeIndexList.Add("");
-                    //            }
-                    //            else
-                    //            {
-                    //                string pp  = roadModel.PipeText + "_U9-02";
-                    //                attributeIndexList.Add(pp);
-                    //            }
-
-                    //            // 图例
-                    //            tuliList.Add("");
-                    //            // 项目ID或叫城市ID
-                    //            projectId = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
-                    //            // 图表名或者叫文件名
-                    //            chartName=model.DocName;
-                    //            // 控规引导
-                    //            kgGuide.Add("");
-
-                    //            //地理坐标系统编号
-                    //            srid = "4326";
-                    //            //配套设施所在地块集合
-                    //            parentId.Add("");
-                    //            // 文字内容(单行文字、多行文字、块参照等)
-                    //            textContent.Add("");
-                    //            // 块内容
-                    //            blockContent.Add("");
-                    //        }
-
-                    //    }
-                    //}
+                    
                 }
 
                 // JSON化
@@ -2495,6 +2448,7 @@ namespace RegulatoryPost.FenTuZe
                 string textContentString = JsonConvert.SerializeObject(textContent);
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
+                string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -2531,6 +2485,7 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("textContent", textContentString);
                 // 块内容
                 result.Add("blockContent", blockContentString);
+                result.Add("selectedLayerList", selectedLayerListstring);
 
                 FenTuZe.PostData(result);
             }
@@ -2813,7 +2768,7 @@ namespace RegulatoryPost.FenTuZe
             //output[0] = Math.Round(point.X, 7);
             //output[1] = Math.Round(point.Y, 7);
 
-            if (output[0] == 114.67584404108087)
+            if (output[0] == 114.67382285563774)
             {
 
             }

@@ -65,8 +65,6 @@ namespace RegulatoryPlan.UI
                         openFile.Add(dialog.FileNames[j]);
                     }
                 }
-                
-
             }
             for (int i = 0; i < openFile.Count; i++)
             {

@@ -80,10 +80,28 @@ namespace RegulatoryPlan.UI
             name});
             }
 
+            int width = this.comboBoxCity.DropDownWidth;
+            Graphics g = this.comboBoxCity.CreateGraphics();
+            int vertScrollBarWidth =
+                (this.comboBoxCity.Items.Count > this.comboBoxCity.MaxDropDownItems)
+                ? System.Windows.Forms.SystemInformation.VerticalScrollBarWidth : 0;
+
+            int newWidth;
+            foreach (string s in comboBoxCity.Items)
+            {
+                newWidth = (int)g.MeasureString(s, Font).Width
+                    + vertScrollBarWidth;
+                if (width < newWidth)
+                {
+                    width = newWidth;
+                }
+            }
+            this.comboBoxCity.DropDownWidth = width;
+
             this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
             this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
             this.comboBoxCity.Name = "comboBoxCity";
-            this.comboBoxCity.Size = new System.Drawing.Size(104, 29);
+            this.comboBoxCity.Size = new System.Drawing.Size(200, 29);
             this.comboBoxCity.TabIndex = 13;
             // 
             // label6
@@ -134,7 +152,7 @@ namespace RegulatoryPlan.UI
             this.comboBox1.Location = new System.Drawing.Point(150, 125);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(104, 29);
+            this.comboBox1.Size = new System.Drawing.Size(200, 29);
             this.comboBox1.TabIndex = 12;
             // 
             // lb_PageName

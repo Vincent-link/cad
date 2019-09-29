@@ -1,4 +1,7 @@
-﻿namespace RegulatoryPlan.UI
+﻿using System.Drawing;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
+namespace RegulatoryPlan.UI
 {
     partial class ChooseCityForm
     {
@@ -77,10 +80,24 @@
             });
             }
 
+            int width = this.comboBoxCity.DropDownWidth;
+            Graphics g = this.comboBoxCity.CreateGraphics();
+
+
+            int newWidth;
+            foreach (string s in comboBoxCity.Items)
+            {
+                newWidth = (int)g.MeasureString(s, Font).Width;
+                if (width < newWidth)
+                {
+                    width = newWidth;
+                }
+            }
+            this.comboBoxCity.DropDownWidth = width;
+
             this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
             this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
             this.comboBoxCity.Name = "comboBoxCity";
-            this.comboBoxCity.Size = new System.Drawing.Size(102, 29);
             this.comboBoxCity.TabIndex = 13;
             // 
             // label6
@@ -161,8 +178,9 @@
             this.comboBox1.Location = new System.Drawing.Point(150, 126);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(102, 29);
+            this.comboBox1.Size = new System.Drawing.Size(200, 29);
             this.comboBox1.TabIndex = 12;
+
             // 
             // lb_PageName
             // 

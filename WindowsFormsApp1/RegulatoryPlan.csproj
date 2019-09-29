@@ -61,12 +61,24 @@
       <HintPath>C:\Program Files (x86)\AutoCAD 2008\acmgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Flurl.Http">
-      <HintPath>..\..\..\..\.nuget\packages\flurl.http\2.4.1\lib\netstandard2.0\Flurl.Http.dll</HintPath>
+    <Reference Include="CustomScrollbar">
+      <HintPath>..\CustomScrollBar\bin\Debug\CustomScrollbar.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Flurl.Http">
+      <HintPath>C:\Users\lyj\.nuget\packages\flurl.http\2.4.1\lib\netstandard2.0\Flurl.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RegulatoryModel">
+      <HintPath>..\RegulatoryModel\bin\Debug\RegulatoryModel.dll</HintPath>
+    </Reference>
+    <Reference Include="RegulatoryPlan, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>bin\Debug\RegulatoryPlan.dll</HintPath>
+    </Reference>
+    <Reference Include="RegulatoryPost">
+      <HintPath>..\RegulatoryPost\bin\Debug\RegulatoryPost.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,6 +97,7 @@
     <Compile Include="Menu\ICommad.cs" />
     <Compile Include="Menu\TitelMenuCommand.cs" />
     <Compile Include="Method\AutoDeleteLayers.cs" />
+    <Compile Include="Method\AutoGenerateNumMethod.cs" />
     <Compile Include="Method\AutoSendFiles.cs" />
     <Compile Include="Method\AttributeBaseMethod.cs" />
     <Compile Include="Method\Cad2ModelTools.cs" />
@@ -105,6 +118,12 @@
     <Compile Include="Method\RoadMethod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\AlertInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AlertInput.Designer.cs">
+      <DependentUpon>AlertInput.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\BatchChooseCityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +164,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\AlertInput.resx">
+      <DependentUpon>AlertInput.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\BatchChooseCityForm.resx">
       <DependentUpon>BatchChooseCityForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -169,25 +191,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>11.0.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CustomScrollBar\CustomScrollbar.csproj">
-      <Project>{EC86CB4A-5BB1-4402-951A-0EB831753EB5}</Project>
-      <Name>CustomScrollbar</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RegulatoryModel\RegulatoryModel.csproj">
-      <Project>{2386ee5c-509e-4ece-83d5-7c3c7d244fa6}</Project>
-      <Name>RegulatoryModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RegulatoryPost\RegulatoryPost.csproj">
-      <Project>{143cb076-871d-4d20-9896-397389d3c6f8}</Project>
-      <Name>RegulatoryPost</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="AutoCAD">

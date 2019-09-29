@@ -55,7 +55,7 @@ namespace RegulatoryPlan.Command
         private Editor editor;
         private Database database;
 
-        internal  void AutoOpenFile(string file, string city, DerivedTypeEnum derivedType)
+        internal void AutoOpenFile(string file, string city, DerivedTypeEnum derivedType)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace RegulatoryPlan.Command
                 dp = derivedType;
                 num = 0;
                 Application.DocumentManager.DocumentActivated += new DocumentCollectionEventHandler(docAutoChange);
-                Doc= Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file, false);
+                Doc= Application.DocumentManager.MdiActiveDocument = Application.DocumentManager.Open(file, true);
                 Application.DocumentManager.DocumentActivated -= docChange;
                 Application.DocumentManager.MdiActiveDocument.CloseAndDiscard();
             }
@@ -145,5 +145,10 @@ namespace RegulatoryPlan.Command
             catch { }
         }
 
+        public void AutoGenerateNumber2()
+        {
+            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums());
+            a.Show();
+        }
     }
 }
