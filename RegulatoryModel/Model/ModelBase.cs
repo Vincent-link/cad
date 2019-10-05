@@ -51,7 +51,7 @@ namespace RegulatoryModel.Model
         public List<string> LayerList;
         public List<LayerModel> allLines;
         public List<LengedModel> LegendList;
-        public List<string> selectedLayerList;
+        public List<string> selectedLayerList = new List<string>();
 
         ///属性字段匹配1.*用地：后缀名含有用地图层，2.道路，全字匹配图层;查询完成后移除所有含有*字段
       //public List<string> attributeLayers;

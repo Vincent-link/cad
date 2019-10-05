@@ -96,6 +96,8 @@ namespace RegulatoryPlan.Command
                 case DerivedTypeEnum.CenterCityLifeUseLandPlan:
                     CenterCityLifeUseLandMethod<CenterCityLifeUseLandPlanModel> cclul = new CenterCityLifeUseLandMethod<CenterCityLifeUseLandPlanModel>(model as CenterCityLifeUseLandPlanModel);
                     break;
+                case DerivedTypeEnum.None:
+                    break;
             }
         }
 

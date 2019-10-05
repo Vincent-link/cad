@@ -112,16 +112,22 @@ namespace RegulatoryPlan.Command
             }
         }
 
+        [CommandMethod("ProjectDefine", CommandFlags.Session)]
+        public void ProjectDefine()
+        {
+            ProjectDefine a = new ProjectDefine();
+            a.Show();
+        }
+
         [CommandMethod("AutoGenerateNumber", CommandFlags.Session)]
         public void AutoGenerateNumber()
         {
             DataGridView polylineList = new DataGridView();
             polylineList.TabIndex = 0;
 
-            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums());
+            System.Data.DataTable table = Method.AutoGenerateNumMethod.GetAllPolylineNums();
+            AlertInput a = new AlertInput(table);
             a.Show();
-
-
         }
 
         // 手动选择实体

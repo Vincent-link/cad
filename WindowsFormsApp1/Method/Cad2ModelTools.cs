@@ -242,25 +242,46 @@ namespace RegulatoryPlan.Model
         public static PolyLineModel Polyline2Model(Autodesk.AutoCAD.DatabaseServices.Polyline polyLine)
         {
             PolyLineModel polylineModel = new PolyLineModel();
+            polylineModel.individualName = "";
+            polylineModel.individualFactor = "";
+            polylineModel.individualCode = "";
+
+            // 增加个体编码、个体要素、个体名称
+            System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNums();
+            if (tb.Rows.Count > 0)
+            {
+                foreach (System.Data.DataRow row in tb.Rows)
+                {
+                    if ((string)row["多段线id"] == polyLine.Id.Handle.Value.ToString())
+                    {
+
+                        polylineModel.individualName = (string)row["个体名称"];
+                        polylineModel.individualFactor = (string)row["个体要素"];
+                        polylineModel.individualCode = (string)row["个体编码"];
+                    }
+
+                }
+            }
+
             polylineModel.Area = polyLine.Area;
             polylineModel.Closed = polyLine.Closed;
             polylineModel.Color = polyLine.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(polyLine.LayerId) : System.Drawing.ColorTranslator.ToHtml(polyLine.Color.ColorValue);
             polylineModel.Vertices = new System.Collections.ArrayList();
             int vn = polyLine.NumberOfVertices;  //lwp已知的多段线
 
-            if(polylineModel.Closed)
-            {
-                for (int i = 0; i < vn; i++)
-                {
-                    Point2d pt = polyLine.GetPoint2dAt(i);
+            //if(polylineModel.Closed)
+            //{
+            //    for (int i = 0; i < vn; i++)
+            //    {
+            //        Point2d pt = polyLine.GetPoint2dAt(i);
 
-                    PointF ptf = new PointF((float)pt.X, (float)pt.Y);
+            //        PointF ptf = new PointF((float)pt.X, (float)pt.Y);
                     
-                    polylineModel.Vertices.Add(ptf);
-                }
-            }
-            else
-            {
+            //        polylineModel.Vertices.Add(ptf);
+            //    }
+            //}
+            //else
+            //{
 
 
                 for (int i = 0; i < vn; i++)
@@ -325,13 +346,12 @@ namespace RegulatoryPlan.Model
                         polylineModel.Vertices.Add(line);
                     }
                 }
-            }
+            //}
 
             return polylineModel;
         }
 
-
-
+        
         internal static CircleModel Polyline2DModel(Polyline2d line)
         {
             CircleModel dbModel = new CircleModel();
@@ -770,6 +790,27 @@ namespace RegulatoryPlan.Model
         public static PolyLineModel Polyline2Model(Autodesk.AutoCAD.DatabaseServices.Polyline polyLine, AttributeModel atModel)
         {
             PolyLineModel polylineModel = new PolyLineModel();
+
+            polylineModel.individualName = "";
+            polylineModel.individualFactor = "";
+            polylineModel.individualCode = "";
+
+            // 增加个体编码、个体要素、个体名称
+            System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNums();
+            if (tb.Rows.Count > 0)
+            {
+                foreach (System.Data.DataRow row in tb.Rows)
+                {
+                    if ((string)row["多段线id"] == polyLine.Id.Handle.Value.ToString())
+                    {
+
+                        polylineModel.individualName = (string)row["个体名称"];
+                        polylineModel.individualFactor = (string)row["个体要素"];
+                        polylineModel.individualCode = (string)row["个体编码"];
+                    }
+
+                }
+            }
             polylineModel.Area = polyLine.Area;
             polylineModel.Closed = polyLine.Closed;
             polylineModel.Color = polyLine.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(polyLine.LayerId) : System.Drawing.ColorTranslator.ToHtml(polyLine.Color.ColorValue);

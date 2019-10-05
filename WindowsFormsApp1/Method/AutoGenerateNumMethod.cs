@@ -80,7 +80,7 @@ namespace RegulatoryPlan.Method
             return entId;
         }
 
-        internal static String GetPolyline(string num)
+        internal static String GetPolyline(string num, string factor, string individualName)
         {
             string polylineId = "";
             try
@@ -109,26 +109,6 @@ namespace RegulatoryPlan.Method
                                     //添加扩展记录之前，先创建对象的扩展字典
                                     DBObject obj = tr.GetObject(acSSObj.ObjectId, OpenMode.ForRead);//以读的方式打开
 
-                                    //Polyline po = (Polyline)ent1;
-                                    //AttributeDefinition ad = AttributeDefinition("编码", "BDB", num, po.StartPoint);
-
-                                    //Polyline po2 = new Polyline();
-                                    //po2.Color = po.Color;
-                                    ////foreach(po.AddVertexAt)
-                                    //BlockTable bt = (BlockTable)tr.GetObject(db.BlockTableId, OpenMode.ForRead);
-                                    //bt.UpgradeOpen();
-                                    //BlockTableRecord btr = (BlockTableRecord)tr.GetObject(bt[BlockTableRecord.ModelSpace], OpenMode.ForWrite);
-
-                                    //ObjectId[] obs = new ObjectId[1] { ent1.ObjectId };
-                                    //ObjectIdCollection ids = new ObjectIdCollection(obs);
-                                    //btr.AssumeOwnershipOf(ids);
-                                    //btr.AppendEntity(po2);
-
-                                    //btr.AppendEntity(ad);
-                                    //ObjectId id = AddToBlockTable(btr);
-                                    //Entity ent2 = tr.GetObject(id, OpenMode.ForRead) as Entity;
-                                    //ToModelSpace(ent2);
-
                                     //AddXdata(acSSObj.ObjectId, "num", num);
                                     if (obj.ExtensionDictionary.IsNull)//如果对象无扩展字典，那就给创建
                                     {
@@ -149,6 +129,9 @@ namespace RegulatoryPlan.Method
                                     {
                                         ResultBuffer valueBuffer = new ResultBuffer();
                                         valueBuffer.Add(new TypedValue(5005, num));
+                                        valueBuffer.Add(new TypedValue(5005, factor));
+                                        valueBuffer.Add(new TypedValue(5005, individualName));
+
                                         Xrecord xrec = new Xrecord();//为对象创建一个扩展记录 
                                         xrec.Data = valueBuffer;//指定扩展记录的内容，这里用到了自定义类型转换，TypedValueList-->ResultBuffer
 
@@ -269,7 +252,9 @@ namespace RegulatoryPlan.Method
         {
             System.Data.DataTable table = new System.Data.DataTable("编码");
             table.Columns.Add(new System.Data.DataColumn(("多段线id"), typeof(string)));
-            table.Columns.Add(new System.Data.DataColumn(("多段线编码"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体编码"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体要素"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体名称"), typeof(string)));
 
             System.Data.DataColumn column;
             System.Data.DataRow row;
@@ -308,21 +293,37 @@ namespace RegulatoryPlan.Method
                                     DBDictionary dict = dictId.GetObject(OpenMode.ForRead) as DBDictionary;//获取对象的扩展字典
                                     if (!dict.Contains("polylineNumber"))
                                     {
-                                        return null;//如果扩展字典中没有包含指定关键 字的扩展记录，则返回null；
+                                        continue;//如果扩展字典中没有包含指定关键 字的扩展记录，则返回null；
                                     }
                                     //先要获取对象的扩展字典或图形中的有名对象字典，然后才能在字典中获取要查询的扩展记录
                                     ObjectId xrecordId = dict.GetAt("polylineNumber");//获取扩展记录对象的id
                                     Xrecord xrecord = xrecordId.GetObject(OpenMode.ForRead) as Xrecord;//根据id获取扩展记录对象
                                     ResultBuffer resBuf = xrecord.Data;
 
-                                    foreach (TypedValue res in resBuf)
-                                    {
-                                        row = table.NewRow();
-                                        row["多段线id"] = id.Handle.Value.ToString();
-                                        row["多段线编码"] = res.Value;
-                                        table.Rows.Add(row);
+                                    ResultBufferEnumerator rator = resBuf.GetEnumerator();
+                                    int i = 0;
+                                    row = table.NewRow();
+                                    row["多段线id"] = id.Handle.Value.ToString();
 
+                                    while (rator.MoveNext())
+                                    {
+                                        TypedValue re = rator.Current;
+                                        if (i==0)
+                                        {
+                                            row["个体编码"] = re.Value;
+                                        }
+                                        if(i == 1)
+                                        {
+                                            row["个体要素"] = re.Value;
+                                        }
+                                        if (i == 2)
+                                        {
+                                            row["个体名称"] = re.Value;
+                                         }
+                                        i++;
                                     }
+
+                                    table.Rows.Add(row);
                                 }
                             }
                         }
@@ -336,10 +337,103 @@ namespace RegulatoryPlan.Method
             {
                 System.Windows.Forms.MessageBox.Show(e.ToString());
             }
-
             return table;
 
         }
+
+        //public static GetPolyInfo(Polyline polyline)
+        //{
+        //    System.Data.DataTable table = new System.Data.DataTable("编码");
+        //    table.Columns.Add(new System.Data.DataColumn(("多段线id"), typeof(string)));
+        //    table.Columns.Add(new System.Data.DataColumn(("多段线编码"), typeof(string)));
+        //    table.Columns.Add(new System.Data.DataColumn(("个体要素"), typeof(string)));
+        //    table.Columns.Add(new System.Data.DataColumn(("个体名称"), typeof(string)));
+
+        //    System.Data.DataColumn column;
+        //    System.Data.DataRow row;
+
+        //    try
+        //    {
+        //        Document doc = Application.DocumentManager.MdiActiveDocument;
+        //        Editor ed = doc.Editor;
+        //        Database db = doc.Database;
+        //        DocumentLock m_DocumentLock = Application.DocumentManager.MdiActiveDocument.LockDocument();
+
+        //        using (Transaction tr = db.TransactionManager.StartTransaction())
+        //        {
+        //            foreach (ObjectId layerId in LayersToList(db))
+        //            {
+        //                LayerTableRecord layer = tr.GetObject(layerId, OpenMode.ForWrite) as LayerTableRecord;
+
+        //                TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layer.Name) };
+        //                SelectionFilter sfilter = new SelectionFilter(filList);
+
+        //                PromptSelectionResult result = ed.SelectAll(sfilter);
+        //                if (result.Status == PromptStatus.OK)
+        //                {
+        //                    SelectionSet acSSet = result.Value;
+        //                    foreach (ObjectId id in acSSet.GetObjectIds())
+        //                    {
+        //                        DBObject obj = id.GetObject(OpenMode.ForRead);//以读的方式打开对象
+
+        //                        ObjectId dictId = obj.ExtensionDictionary;//获取对象的扩展字典的id
+
+        //                        Entity ent1 = tr.GetObject(id, OpenMode.ForRead) as Entity;
+
+        //                        if (ent1 is Polyline && !dictId.IsNull)
+        //                        {
+
+        //                            DBDictionary dict = dictId.GetObject(OpenMode.ForRead) as DBDictionary;//获取对象的扩展字典
+        //                            if (!dict.Contains("polylineNumber"))
+        //                            {
+        //                                return null;//如果扩展字典中没有包含指定关键 字的扩展记录，则返回null；
+        //                            }
+        //                            //先要获取对象的扩展字典或图形中的有名对象字典，然后才能在字典中获取要查询的扩展记录
+        //                            ObjectId xrecordId = dict.GetAt("polylineNumber");//获取扩展记录对象的id
+        //                            Xrecord xrecord = xrecordId.GetObject(OpenMode.ForRead) as Xrecord;//根据id获取扩展记录对象
+        //                            ResultBuffer resBuf = xrecord.Data;
+
+        //                            ResultBufferEnumerator rator = resBuf.GetEnumerator();
+        //                            int i = 0;
+        //                            row = table.NewRow();
+        //                            row["多段线id"] = id.Handle.Value.ToString();
+
+        //                            while (rator.MoveNext())
+        //                            {
+        //                                TypedValue re = rator.Current;
+        //                                if (i == 0)
+        //                                {
+        //                                    row["多段线编码"] = re.Value;
+        //                                }
+        //                                if (i == 1)
+        //                                {
+        //                                    row["个体要素"] = re.Value;
+        //                                }
+        //                                if (i == 2)
+        //                                {
+        //                                    row["个体名称"] = re.Value;
+        //                                }
+        //                                i++;
+        //                            }
+
+        //                            table.Rows.Add(row);
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+        //        }
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        System.Windows.Forms.MessageBox.Show(e.ToString());
+        //    }
+
+        //    return table;
+        //}
+
 
 
         public static List<ObjectId> LayersToList(Database db)

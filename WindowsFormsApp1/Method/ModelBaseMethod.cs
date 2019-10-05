@@ -124,15 +124,15 @@ namespace RegulatoryPlan.Method
                     ObjectId[] oids2 = sst.GetObjectIds();
 
                     // 排序
-                    List<ObjectId> oids = Sort(oids2); 
+                    //List<ObjectId> oids = Sort(oids2);
 
-                  //  model.LegendPoints = new Dictionary<int, List<System.Drawing.PointF>>();
+                    //  model.LegendPoints = new Dictionary<int, List<System.Drawing.PointF>>();
                     int ad = 0;
-                    for (int i = 0; i < oids.Count; i++)
+                    for (int i = 0; i < oids2.Length; i++)
                     {
                         //if (idss.Contains(oids[i]))
                         //{
-                            DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
+                            DBObject ob = tran.GetObject(oids2[i], OpenMode.ForRead);
 
                             if (ob is MText && (((ob as MText).BlockName.ToLower() == "*model_space" && UI.MainForm.isOnlyModel) || (!UI.MainForm.isOnlyModel)))
                         {
@@ -158,8 +158,8 @@ namespace RegulatoryPlan.Method
             {
                 using (Transaction acTrans = db.TransactionManager.StartTransaction())
                 {
-                    List<Entity> compositionTableIndex = new List<Entity>();
-                    List<Entity> mtexts = new List<Entity>();
+                    List<MText> compositionTableIndex = new List<MText>();
+                    List<MText> mtexts = new List<MText>();
                     List<Entity> mtexts2 = new List<Entity>();
 
 
@@ -168,7 +168,15 @@ namespace RegulatoryPlan.Method
                         Entity ent2 = (Entity)idArray[j].GetObject(OpenMode.ForRead);
                         if (ent2 is MText)
                         {
-                            mtexts.Add(ent2);
+                            if (((MText)ent2).Text.Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "") != "图例")
+                            {
+
+                                MText mt = (MText)ent2;
+
+                                mtexts.Add(mt);
+
+                            }
+
                         }
                     }
 
@@ -180,34 +188,30 @@ namespace RegulatoryPlan.Method
                     ///找出排头兵
                     for (int j = 0; j < mtexts.Count; j++)
                     {
-                        Entity ent2 = (Entity)mtexts[j];
-                        if (((MText)ent2).Location.X > maxX || double.IsNaN(maxX))
+                        if (mtexts[j].Location.X > maxX || double.IsNaN(maxX))
                         {
-                            maxX = ((MText)ent2).Location.X;
+                            maxX = mtexts[j].Location.X;
                         }
-                        if (((MText)ent2).Location.Y < minY || double.IsNaN(minY))
+                        if (mtexts[j].Location.Y < minY || double.IsNaN(minY))
                         {
-                            minY = ((MText)ent2).Location.Y;
+                            minY = mtexts[j].Location.Y;
                         }
-                        if (((MText)ent2).Location.Y > maxY || double.IsNaN(maxY))
+                        if (mtexts[j].Location.Y > maxY || double.IsNaN(maxY))
                         {
-                            maxY = ((MText)ent2).Location.Y;
+                            maxY = mtexts[j].Location.Y;
                         }
-                        if (((MText)ent2).Location.X < minX || double.IsNaN(minX))
+                        if (mtexts[j].Location.X < minX || double.IsNaN(minX))
                         {
-                            minX = ((MText)ent2).Location.X;
+                            minX = mtexts[j].Location.X;
                         }
                     }
 
                     // 找出索引
                     for (int j = 0; j < mtexts.Count; j++)
                     {
-                        Entity ent2 = (Entity)mtexts[j];
-                        string indexText = ((MText)mtexts[j]).Text.Replace("\n", "").Replace("\r", "").Replace(" ", "");
-
-                        if (maxY - 50 < ((MText)ent2).Location.Y && ((MText)ent2).Location.Y < maxY + 50)
+                        if (maxY - 50 < ((MText)mtexts[j]).Location.Y && ((MText)mtexts[j]).Location.Y < maxY + 50)
                         {
-                            compositionTableIndex.Add(ent2);
+                            compositionTableIndex.Add(mtexts[j]);
                         }
                     }
 
@@ -216,20 +220,15 @@ namespace RegulatoryPlan.Method
 
                     for (int h = 0; h < compositionTableIndex.Count; h++)
                     {
-                        Entity ent3 = (Entity)compositionTableIndex[h];
-
-                        if (((MText)ent3).Location.X == minX && ((MText)ent3).Location.Y == maxY)
+                        if (minX - 20 < compositionTableIndex[h].Location.X && compositionTableIndex[h].Location.X < minX + 20)
                         {
                             for (int j = 0; j < compositionTableIndex.Count; j++)
                             {
-                                Entity ent2 = (Entity)mtexts[j];
-                                for (int z = 0; z < mtexts.Count; z++)
-                                {
-                                    int distance = (int)MethodCommand.DistancePointToPoint(((MText)ent3).Location, ((MText)ent2).Location);
+
+                                    int distance = (int)MethodCommand.DistancePointToPoint(((MText)compositionTableIndex[h]).Location, ((MText)compositionTableIndex[j]).Location);
 
                                     distances.Add(distance);
-                                    mtexts2.Add(ent2);
-                                }
+                                    mtexts2.Add(mtexts[j]);
                             }
                         }
                     }

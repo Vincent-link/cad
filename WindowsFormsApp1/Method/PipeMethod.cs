@@ -29,6 +29,7 @@ namespace RegulatoryPlan.Method
             {
                 foreach (string layerName in GetRealLayer(am.LayerName))
                 {
+                    model.selectedLayerList.Add(layerName);
                     LayerModel lyModel = new LayerModel();
                     lyModel.IsHaveAttribute = true;
                     List<BlockInfoModel> list = new List<BlockInfoModel>();

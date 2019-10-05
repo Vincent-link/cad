@@ -24,6 +24,10 @@ namespace RegulatoryPlan.Method
             {
                 foreach (string layerName in GetRealLayer(am.LayerName))
                 {
+                    // 需要发送的图层
+                    if (layerName != null)
+                        model.selectedLayerList.Add(layerName);
+
                     Document doc = Application.DocumentManager.MdiActiveDocument;
                     Database db = doc.Database;
 

@@ -29,7 +29,7 @@ namespace RegulatoryPlan.UI
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(System.Collections.Generic.List<string> names)
+        private void InitializeComponent(System.Collections.Generic.List<string> names, string city)
         {
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxCity = new System.Windows.Forms.ComboBox();
@@ -79,12 +79,16 @@ namespace RegulatoryPlan.UI
                 name
             });
             }
+            this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
+            this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
+            this.comboBoxCity.Name = "comboBoxCity";
+            this.comboBoxCity.TabIndex = 13;
+            this.comboBoxCity.Size = new System.Drawing.Size(200, 29);
 
-            int width = this.comboBoxCity.DropDownWidth;
+            int width = 0;
             Graphics g = this.comboBoxCity.CreateGraphics();
-
-
             int newWidth;
+
             foreach (string s in comboBoxCity.Items)
             {
                 newWidth = (int)g.MeasureString(s, Font).Width;
@@ -93,12 +97,20 @@ namespace RegulatoryPlan.UI
                     width = newWidth;
                 }
             }
-            this.comboBoxCity.DropDownWidth = width;
+            this.comboBoxCity.DropDownWidth = width + 70;
 
-            this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
-            this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
-            this.comboBoxCity.Name = "comboBoxCity";
-            this.comboBoxCity.TabIndex = 13;
+            int i = 0;
+            foreach (string name in names)
+            {
+                if (name == city)
+                {
+                    this.comboBoxCity.SelectedIndex = i;
+                    SetControlEnabled(this.comboBoxCity, false);
+                    break;
+                }
+                i++;
+            }
+
             // 
             // label6
             // 
@@ -180,6 +192,16 @@ namespace RegulatoryPlan.UI
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(200, 29);
             this.comboBox1.TabIndex = 12;
+
+            foreach (string s in comboBox1.Items)
+            {
+                newWidth = (int)g.MeasureString(s, Font).Width;
+                if (width < newWidth)
+                {
+                    width = newWidth;
+                }
+            }
+            this.comboBox1.DropDownWidth = width;
 
             // 
             // lb_PageName

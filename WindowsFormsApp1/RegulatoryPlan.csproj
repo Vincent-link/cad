@@ -102,6 +102,7 @@
     <Compile Include="Method\AttributeBaseMethod.cs" />
     <Compile Include="Method\Cad2ModelTools.cs" />
     <Compile Include="Method\RoadSituationMethod.cs" />
+    <Compile Include="Method\SaveSelectedProjectIdToXData.cs" />
     <Compile Include="Method\UseLandNumberMethod.cs" />
     <Compile Include="Method\CenterCityLifeUseLandMethod.cs" />
     <Compile Include="Method\CenterCityUseLandMethod.cs" />
@@ -135,6 +136,12 @@
     </Compile>
     <Compile Include="UI\BatchFailAlert.Designer.cs">
       <DependentUpon>BatchFailAlert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ProjectDefine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ProjectDefine.Designer.cs">
+      <DependentUpon>ProjectDefine.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ChooseCityForm.cs">
       <SubType>Form</SubType>
@@ -172,6 +179,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\BatchFailAlert.resx">
       <DependentUpon>BatchFailAlert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ProjectDefine.resx">
+      <DependentUpon>ProjectDefine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ChooseCityForm.resx">
       <DependentUpon>ChooseCityForm.cs</DependentUpon>

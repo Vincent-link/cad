@@ -35,7 +35,18 @@ namespace RegulatoryModel.Model
         /// </summary>
         public ArrayList Vertices { get; set; }
 
-
+        /// <summary>
+        /// 个体名称
+        /// </summary>
+        public string individualName { get; set; }
+        /// <summary>
+        /// 个体要素
+        /// </summary>
+        public string individualFactor { get; set; }
+        /// <summary>
+        /// 个体编码
+        /// </summary>
+        public string individualCode { get; set; }
     }
     /// <summary>
     /// 直线模型

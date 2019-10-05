@@ -32,7 +32,7 @@ namespace RegulatoryPlan.UI
         /// </summary>
         /// 
 
-        private void InitializeComponent(System.Collections.Generic.List<string> names)
+        private void InitializeComponent(System.Collections.Generic.List<string> names, string city)
         {
             this.components = new System.ComponentModel.Container();
             this.label5 = new System.Windows.Forms.Label();
@@ -74,35 +74,39 @@ namespace RegulatoryPlan.UI
             this.comboBoxCity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCity.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBoxCity.FormattingEnabled = true;
+
+            this.comboBoxCity.Items.AddRange(names.ToArray());
+
+            int i = 0;
             foreach (string name in names)
             {
-                this.comboBoxCity.Items.AddRange(new object[] {
-            name});
+                if (name == city)
+                {
+                    this.comboBoxCity.SelectedIndex = i;
+                    SetControlEnabled(this.comboBoxCity, false);
+                    break;
+                }
+                i++;
             }
 
             int width = this.comboBoxCity.DropDownWidth;
             Graphics g = this.comboBoxCity.CreateGraphics();
-            int vertScrollBarWidth =
-                (this.comboBoxCity.Items.Count > this.comboBoxCity.MaxDropDownItems)
-                ? System.Windows.Forms.SystemInformation.VerticalScrollBarWidth : 0;
-
             int newWidth;
             foreach (string s in comboBoxCity.Items)
             {
-                newWidth = (int)g.MeasureString(s, Font).Width
-                    + vertScrollBarWidth;
+                newWidth = (int)g.MeasureString(s, Font).Width;
                 if (width < newWidth)
                 {
                     width = newWidth;
                 }
             }
-            this.comboBoxCity.DropDownWidth = width;
+            this.comboBoxCity.DropDownWidth = width + 70;
 
             this.comboBoxCity.Location = new System.Drawing.Point(150, 75);
             this.comboBoxCity.Margin = new System.Windows.Forms.Padding(5);
             this.comboBoxCity.Name = "comboBoxCity";
             this.comboBoxCity.Size = new System.Drawing.Size(200, 29);
-            this.comboBoxCity.TabIndex = 13;
+
             // 
             // label6
             // 
@@ -148,7 +152,8 @@ namespace RegulatoryPlan.UI
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "地块控制总图则",
-            "分图图则"});
+            "分图图则",
+            "其他" });
             this.comboBox1.Location = new System.Drawing.Point(150, 125);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(5);
             this.comboBox1.Name = "comboBox1";
@@ -334,6 +339,46 @@ namespace RegulatoryPlan.UI
         private System.Windows.Forms.PictureBox pictureBox3;
         private Panel fileGroup;
         private NotifyIcon notifyIcon1;
+
+        /// <summary>
+        /// 选择项类，用于ComboBox或者ListBox添加项
+        /// </summary>
+        public class ListItem
+        {
+            private string id = string.Empty;
+            private string name = string.Empty;
+            public ListItem(string sid, string sname)
+            {
+                id = sid;
+                name = sname;
+            }
+            public override string ToString()
+            {
+                return this.name;
+            }
+            public string ID
+            {
+                get
+                {
+                    return this.id;
+                }
+                set
+                {
+                    this.id = value;
+                }
+            }
+            public string Name
+            {
+                get
+                {
+                    return this.name;
+                }
+                set
+                {
+                    this.name = value;
+                }
+            }
+        }
 
     }
 

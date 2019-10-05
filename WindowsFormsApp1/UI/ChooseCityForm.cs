@@ -36,6 +36,9 @@ namespace RegulatoryPlan.UI
 
         public ChooseCityForm()
         {
+            // 获取定义好的项目
+            string cityId = Method.SaveProjectIdToXData.GetDefinedProject();
+
             List<string> names = new List<string>();
             try
             {
@@ -53,13 +56,17 @@ namespace RegulatoryPlan.UI
             {
                 MessageBox.Show(ex.Message);
             }
-            //MessageBox.Show(content);
+            string city = "";
             foreach (Dictionary<string, string> name in contentList)
             {
                 names.Add(name["name"]);
+                if (name["oid"] == cityId)
+                {
+                    city = name["name"];
+                }
             }
 
-            InitializeComponent(names);
+            InitializeComponent(names, city);
             UIMethod.SetFormRoundRectRgn(this, 5);  //设置圆角
             this.textBox1.Hide();
         }
@@ -241,6 +248,24 @@ namespace RegulatoryPlan.UI
                 ReleaseCapture();
                 SendMessage(this.Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero); // 拖动窗体 
             }
+        }
+
+
+        [System.Runtime.InteropServices.DllImport("user32.dll ")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int wndproc);
+        [System.Runtime.InteropServices.DllImport("user32.dll ")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        public const int GWL_STYLE = -16;
+        public const int WS_DISABLED = 0x8000000;
+
+
+        public static void SetControlEnabled(Control c, bool enabled)
+        {
+            if (enabled)
+            { SetWindowLong(c.Handle, GWL_STYLE, (~WS_DISABLED) & GetWindowLong(c.Handle, GWL_STYLE)); }
+            else
+            { SetWindowLong(c.Handle, GWL_STYLE, WS_DISABLED + GetWindowLong(c.Handle, GWL_STYLE)); }
         }
 
     }

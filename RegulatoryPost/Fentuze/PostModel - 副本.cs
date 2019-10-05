@@ -107,9 +107,9 @@ namespace RegulatoryPost.FenTuZe
                                         textContent.Add("");
                                         blockContent.Add("");
 
-                                        individualName.Add("");
-                                        individualFactor.Add("");
-                                        individualCode.Add("");
+                                        List<string> individualName = new List<string>(); //图层
+                                        List<string> individualFactor = new List<string>(); //图层
+                                        List<string> individualCode = new List<string>(); //图层
 
                                     }
                                     if (pf is BlockInfoModel)
@@ -142,10 +142,6 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
-
-                                                individualName.Add("");
-                                                individualFactor.Add("");
-                                                individualCode.Add("");
                                             }
                                         }
                                         if (blm.Circle != null && blm.Circle.Count > 0)
@@ -175,10 +171,6 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
-
-                                                individualName.Add("");
-                                                individualFactor.Add("");
-                                                individualCode.Add("");
                                             }
                                         }
                                         if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -210,10 +202,6 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
-
-                                                individualName.Add("");
-                                                individualFactor.Add("");
-                                                individualCode.Add("");
                                             }
                                         }
                                         if (blm.DbText != null)
@@ -238,10 +226,6 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
-
-                                                individualName.Add("");
-                                                individualFactor.Add("");
-                                                individualCode.Add("");
 
                                             }
                                         }
@@ -275,10 +259,6 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
-
-                                                individualName.Add("");
-                                                individualFactor.Add("");
-                                                individualCode.Add("");
                                             }
 
                                         }
@@ -316,11 +296,6 @@ namespace RegulatoryPost.FenTuZe
                                                         parentId.Add("");
                                                         textContent.Add("");
                                                         blockContent.Add("");
-
-                                                        individualName.Add("");
-                                                        individualFactor.Add("");
-                                                        individualCode.Add("");
-
                                                     }
                                                     catch (Exception ex)
                                                     {
@@ -377,10 +352,6 @@ namespace RegulatoryPost.FenTuZe
                                                         parentId.Add("");
                                                         textContent.Add("");
                                                         blockContent.Add("");
-
-                                                        individualName.Add(arcModel.individualName);
-                                                        individualFactor.Add(arcModel.individualFactor);
-                                                        individualCode.Add(arcModel.individualCode);
                                                     }
 
                                                 }
@@ -423,10 +394,6 @@ namespace RegulatoryPost.FenTuZe
                                                         parentId.Add("");
                                                         textContent.Add("");
                                                         blockContent.Add("");
-
-                                                        individualName.Add("");
-                                                        individualFactor.Add("");
-                                                        individualCode.Add("");
                                                     }
                                                 }
 
@@ -462,10 +429,6 @@ namespace RegulatoryPost.FenTuZe
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string zindexstring = JsonConvert.SerializeObject(zIndex);
                 string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
-
-                string individualNamestring = JsonConvert.SerializeObject(individualName);
-                string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
-                string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -507,9 +470,6 @@ namespace RegulatoryPost.FenTuZe
 
                 // 块内容
                 result.Add("selectedLayerList", selectedLayerListstring);
-                result.Add("individualName", individualNamestring);
-                result.Add("individualFactor", individualFactorstring);
-                result.Add("individualCode", individualCodestring);
 
                 FenTuZe.PostData(result);
             }
@@ -1174,10 +1134,6 @@ namespace RegulatoryPost.FenTuZe
                                                 parentId.Add("");
                                                 textContent.Add("");
                                                 blockContent.Add("");
-
-                                                individualName.Add("");
-                                                individualFactor.Add("");
-                                                individualCode.Add("");
                                             }
                                         }
 
@@ -1245,10 +1201,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
 
                                     }
@@ -1273,10 +1225,6 @@ namespace RegulatoryPost.FenTuZe
                                         parentId.Add("");
                                         textContent.Add("");
                                         blockContent.Add("");
-
-                                        individualName.Add("");
-                                        individualFactor.Add("");
-                                        individualCode.Add("");
                                     }
                                 }
                             }
@@ -1313,11 +1261,6 @@ namespace RegulatoryPost.FenTuZe
                                     parentId.Add("");
                                     textContent.Add("");
                                     blockContent.Add("");
-
-                                    individualName.Add("");
-                                    individualFactor.Add("");
-                                    individualCode.Add("");
-
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -1351,10 +1294,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -1385,10 +1324,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
 
@@ -1411,10 +1346,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add(circleModel.Text);
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.DimensionPositon != null)
@@ -1456,10 +1387,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
 
                                     }
@@ -1568,10 +1495,6 @@ namespace RegulatoryPost.FenTuZe
 
                                                     textContent.Add("");
                                                     blockContent.Add("");
-
-                                                    individualName.Add("");
-                                                    individualFactor.Add("");
-                                                    individualCode.Add("");
                                                 }
                                             }
 
@@ -1612,6 +1535,7 @@ namespace RegulatoryPost.FenTuZe
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
+
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
             result.Add("colorList", colorListString);
@@ -1637,6 +1561,7 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+
 
             FenTuZe.AutoPostData(result, failedFiles);
         }
@@ -1672,10 +1597,6 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList zIndex = new ArrayList(); //图层级别
                 List<string> selectedLayerList = new List<string>(); //图层
 
-                List<string> individualName = new List<string>(); //图层
-                List<string> individualFactor = new List<string>(); //图层
-                List<string> individualCode = new List<string>(); //图层
-
 
                 if (model.kgGuide != null)
                 {
@@ -1690,6 +1611,7 @@ namespace RegulatoryPost.FenTuZe
                 {
                     selectedLayerList = model.selectedLayerList;
                 }
+
 
                 foreach (LayerModel layer in model.allLines)
                 {
@@ -1723,11 +1645,6 @@ namespace RegulatoryPost.FenTuZe
                                     parentId.Add("");
                                     textContent.Add("");
                                     blockContent.Add("");
-
-
-                                    individualName.Add("");
-                                    individualFactor.Add("");
-                                    individualCode.Add("");
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -1757,10 +1674,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -1787,10 +1700,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -1818,10 +1727,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.DbText != null)
@@ -1843,10 +1748,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
 
                                         }
                                     }
@@ -1877,10 +1778,6 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
 
                                     }
@@ -1930,10 +1827,6 @@ namespace RegulatoryPost.FenTuZe
                                                 parentId.Add("");
                                                 textContent.Add("");
                                                 blockContent.Add("");
-
-                                                individualName.Add(arcModel.individualName);
-                                                individualFactor.Add(arcModel.individualFactor);
-                                                individualCode.Add(arcModel.individualCode);
                                             }
 
                                         }
@@ -1971,10 +1864,6 @@ namespace RegulatoryPost.FenTuZe
                                                     parentId.Add("");
                                                     textContent.Add("");
                                                     blockContent.Add("");
-
-                                                    individualName.Add("");
-                                                    individualFactor.Add("");
-                                                    individualCode.Add("");
                                                 }
                                             }
 
@@ -2015,10 +1904,6 @@ namespace RegulatoryPost.FenTuZe
                                     parentId.Add("");
                                     textContent.Add(roadModel.RoadName[i]);
                                     blockContent.Add("");
-
-                                    individualName.Add("");
-                                    individualFactor.Add("");
-                                    individualCode.Add("");
                                 }
                             }
 
@@ -2056,10 +1941,6 @@ namespace RegulatoryPost.FenTuZe
                                 parentId.Add("");
                                 textContent.Add("");
                                 blockContent.Add("");
-
-                                individualName.Add("");
-                                individualFactor.Add("");
-                                individualCode.Add("");
                             }
 
                         }
@@ -2085,10 +1966,6 @@ namespace RegulatoryPost.FenTuZe
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
-                string individualNamestring = JsonConvert.SerializeObject(individualName);
-
-                string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
-                string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -2126,10 +2003,6 @@ namespace RegulatoryPost.FenTuZe
                 // 块内容
                 result.Add("blockContent", blockContentString);
                 result.Add("selectedLayerList", selectedLayerListstring);
-
-                result.Add("individualName", individualNamestring);
-                result.Add("individualFactor", individualFactorstring);
-                result.Add("individualCode", individualCodestring);
 
                 FenTuZe.PostData(result);
             }
@@ -2172,10 +2045,6 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList zIndex = new ArrayList(); // 块内容（GIS端展示）
                 List<string> selectedLayerList = new List<string>(); //图层
 
-                List<string> individualName = new List<string>(); //图层
-                List<string> individualFactor = new List<string>(); //图层
-                List<string> individualCode = new List<string>(); //图层
-
                 // 图例
                 tuliList.Add("");
                 // 项目ID或叫城市ID
@@ -2213,7 +2082,7 @@ namespace RegulatoryPost.FenTuZe
                                 if (pf is PointF)
                                 {
                                     ArrayList singlePoint = new ArrayList();
-                                    geoType = "point";
+                                    geoType = "polyline";
                                     singlePoint.Add(Transform((PointF)pf));
 
                                     geom.Add(singlePoint);
@@ -2243,9 +2112,7 @@ namespace RegulatoryPost.FenTuZe
                                     // 块内容
                                     blockContent.Add("");
 
-                                    individualName.Add("");
-                                    individualFactor.Add("");
-                                    individualCode.Add("");
+
                                 }
                                 
                                 if (pf is BlockInfoModel)
@@ -2293,10 +2160,6 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -2343,10 +2206,6 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -2398,10 +2257,6 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
                                     }
                                     if (blm.DbText != null)
@@ -2442,10 +2297,6 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
 
                                         }
                                     }
@@ -2495,10 +2346,6 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
-
-                                            individualName.Add("");
-                                            individualFactor.Add("");
-                                            individualCode.Add("");
                                         }
 
                                     }
@@ -2583,10 +2430,6 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 // 块内容
                                                 blockContent.Add("");
-
-                                                individualName.Add(arcModel.individualName);
-                                                individualFactor.Add(arcModel.individualFactor);
-                                                individualCode.Add(arcModel.individualCode);
                                             }
 
                                         }
@@ -2641,10 +2484,6 @@ namespace RegulatoryPost.FenTuZe
                                                     textContent.Add("");
                                                     // 块内容
                                                     blockContent.Add("");
-
-                                                    individualName.Add("");
-                                                    individualFactor.Add("");
-                                                    individualCode.Add("");
                                                 }
                                             }
 
@@ -2679,10 +2518,6 @@ namespace RegulatoryPost.FenTuZe
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
-
-                string individualNamestring = JsonConvert.SerializeObject(individualName);
-                string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
-                string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -2720,10 +2555,6 @@ namespace RegulatoryPost.FenTuZe
                 // 块内容
                 result.Add("blockContent", blockContentString);
                 result.Add("selectedLayerList", selectedLayerListstring);
-
-                result.Add("individualName", individualNamestring);
-                result.Add("individualFactor", individualFactorstring);
-                result.Add("individualCode", individualCodestring);
 
                 FenTuZe.PostData(result);
             }

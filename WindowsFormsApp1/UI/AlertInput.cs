@@ -15,9 +15,36 @@ namespace RegulatoryPlan.UI
     public partial class AlertInput : Form
     {
         ObjectId objId;
+        System.Data.DataTable ta;
+        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
+
         public AlertInput(System.Data.DataTable table)
         {
-            InitializeComponent();
+            string cityId = Method.SaveProjectIdToXData.GetDefinedProject();
+
+            List<string> factors = new List<string>();
+            try
+            {
+                string projectIdBaseAddress = "http://172.18.84.70:8080/PDD/pdd/cim-interface!findElementByProjectId?projectId="+ cityId;
+                var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
+
+                var response = projectIdHttp.GetResponse();
+
+                var stream = response.GetResponseStream();
+                var sr = new System.IO.StreamReader(stream, Encoding.UTF8);
+                var content = sr.ReadToEnd();
+                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            //MessageBox.Show(content);
+            foreach (Dictionary<string, string> name in contentList)
+            {
+                factors.Add(name["name"]);
+            }
+            InitializeComponent(factors, table);
             Load(table);
         }
 
@@ -28,17 +55,18 @@ namespace RegulatoryPlan.UI
             return;
         }
 
+        // 项目定义确定
+        private void ok_Click(object sender, EventArgs e)
+        {
+
+
+            this.Close();
+            return;
+        }
+
         private void Load(System.Data.DataTable table)
         {
-            if (table != null)
-            {
-                foreach (DataRow row in table.Rows)
-                {
-                    int index = this.dataGridView1.Rows.Add();
-                    this.dataGridView1.Rows[index].Cells[0].Value = row[0];
-                    this.dataGridView1.Rows[index].Cells[1].Value = row[1];
-                }
-            }
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -55,7 +83,27 @@ namespace RegulatoryPlan.UI
                     return;
                 }
 
-                string value = AutoGenerateNumMethod.GetPolyline(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+                if (dataGridView1.Rows[e.RowIndex].Cells["factor"].Value is null)
+                {
+                    MessageBox.Show("请选择个体要素");
+                    return;
+                }
+
+                if (dataGridView1.Rows[e.RowIndex].Cells["individualName"].Value is null)
+                {
+                    MessageBox.Show("请选择个体名称");
+                    return;
+                }
+                string nameId = "";
+                foreach (Dictionary<string, string> name in contentList)
+                {
+                    if (name["name"] == dataGridView1.Rows[e.RowIndex].Cells["factor"].Value.ToString())
+                    {
+                        nameId = name["id"];
+                    }
+                }
+
+                string value = AutoGenerateNumMethod.GetPolyline(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString(), nameId, dataGridView1.Rows[e.RowIndex].Cells["individualName"].Value.ToString());
 
                 try
                 {
@@ -74,7 +122,7 @@ namespace RegulatoryPlan.UI
             if (dataGridView1.Rows.Count > 0 && dataGridView1.Columns[e.ColumnIndex].Name == "btnFind" && e.RowIndex >= 0)
             {
 
-                if (dataGridView1.Rows[e.RowIndex].Cells[0].Value is "" || dataGridView1.Rows[e.RowIndex].Cells[1].Value == null)
+                if (dataGridView1.Rows[e.RowIndex].Cells[0].Value is "" || dataGridView1.Rows[e.RowIndex].Cells[0].Value == null || dataGridView1.Rows[e.RowIndex].Cells[1].Value == null)
                 {
                     MessageBox.Show("请先拾取多端线");
                     return;

@@ -15,6 +15,9 @@ namespace RegulatoryPlan.Method
     {
         public void GetAllUnitPlaneInfo(T model)
         {
+            model.selectedLayerList.Add("用地代码");
+            model.selectedLayerList.Add("坐标");
+
             // 坐标点图层 特殊处理
             ModelBaseMethod<ModelBase> mbm = new ModelBaseMethod<ModelBase>();
 

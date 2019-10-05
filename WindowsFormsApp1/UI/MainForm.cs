@@ -19,12 +19,11 @@ namespace RegulatoryPlan.UI
 {
     public partial class MainForm : Form
     {
-        ModelBase model;
+        ModelBase model = new ModelBase();
         public static bool isOnlyModel=true; Thread waitPostThead;
 
         public MainForm(string cityName, DerivedTypeEnum derivedType)
         {
-
             crtType = derivedType;
             InitializeComponent();
             InitPage();
@@ -393,9 +392,6 @@ namespace RegulatoryPlan.UI
         private void InitData()
         {
             ModelBase mb = new ModelBase();
-
-            mb.selectedLayerList = new List<string>();
-
             mb = ChangeToModel(mb);
             isOnlyModel = mb.IsOnlyModel;
             mb.DocName = System.IO.Path.GetFileNameWithoutExtension(CadHelper.fileName);
@@ -488,7 +484,6 @@ namespace RegulatoryPlan.UI
 
             this.dataGridView1.DataSource = tb;
             model = mb;
-
 
         }
         private void AutoInitData()
@@ -825,9 +820,14 @@ namespace RegulatoryPlan.UI
             }
             else
             {
-                ModelBaseMethod<ModelBase> modelMe = new ModelBaseMethod<ModelBase>();
+                 ModelBaseMethod<ModelBase> modelMe = new ModelBaseMethod<ModelBase>();
                  LayerModel lyModel = modelMe.GetAllLayerGemo(model,treeNode.Text);
-                model.selectedLayerList.Add(treeNode.Text);
+
+                        if (!model.selectedLayerList.Contains(treeNode.Text))
+                        {
+                            model.selectedLayerList.Add(treeNode.Text);
+                        }
+
 
                 GetLineDataRowInfo(lyModel.pointFs, tb, treeNode.Text);
                 if (this.model.allLines == null)

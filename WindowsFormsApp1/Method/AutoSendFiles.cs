@@ -45,6 +45,10 @@ namespace RegulatoryPlan.Method
                 {
                     mb = new UnitPlanModel();
                 }
+                if (derivedType is DerivedTypeEnum.None)
+                {
+                    mb = new ModelBase();
+                }
 
                 // 判断是否读取布局空间（papermodel）
                 MainForm.isOnlyModel = mb.IsOnlyModel;
@@ -79,6 +83,10 @@ namespace RegulatoryPlan.Method
                         PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
                     }
                     if (derivedType is DerivedTypeEnum.UnitPlan)
+                    {
+                        PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
+                    }
+                    if (derivedType is DerivedTypeEnum.None)
                     {
                         PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
                     }

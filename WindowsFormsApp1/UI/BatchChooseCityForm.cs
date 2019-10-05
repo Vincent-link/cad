@@ -23,6 +23,9 @@ namespace RegulatoryPlan.UI
 
         public BatchChooseCityForm()
         {
+            // 获取定义好的项目
+            string cityId = Method.SaveProjectIdToXData.GetDefinedProject();
+
             List<string> names = new List<string>();
             try
             {
@@ -41,12 +44,18 @@ namespace RegulatoryPlan.UI
                 MessageBox.Show(ex.Message);
             }
             //MessageBox.Show(content);
+            string city = "";
             foreach (Dictionary<string, string> name in contentList)
             {
                 names.Add(name["name"]);
+                if (name["oid"] == cityId)
+                {
+                    city = name["name"];
+                }
             }
 
-            InitializeComponent(names);
+
+            InitializeComponent(names, city);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -145,21 +154,6 @@ namespace RegulatoryPlan.UI
         }
 
 
-        private string GetChooseCity()
-        {
-            string crtCity = "";
-            switch (comboBoxCity.SelectedIndex)
-            {
-                case 0:
-                    crtCity = "D3DEC178-2C05-C5F1-F6D3-45729EB9436A";
-                    break;
-                case 1:
-                    crtCity = "";
-                    break;
-            }
-            return crtCity;
-        }
-
         // 取消
         private void cancel_Click(object sender, EventArgs e)
         {
@@ -187,18 +181,7 @@ namespace RegulatoryPlan.UI
             }
 
             this.DialogResult = DialogResult.OK;
-            foreach (Control con in this.fileGroup.Controls)
-            {
-                try
-                {
-                    if (con is Panel)
-                        openFile.Add((con as Panel).Text);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
-            }
+
             derivedType = GetChooseType();
             openCity = contentList[comboBoxCity.SelectedIndex]["oid"];
             this.Close();
@@ -218,69 +201,6 @@ namespace RegulatoryPlan.UI
                     crtType = DerivedTypeEnum.PointsPlan;
                     break;
                 case 2:
-                    crtType = DerivedTypeEnum.Power10Kv;
-                    break;
-                case 3:
-                    crtType = DerivedTypeEnum.Power35kv;
-                    break;
-                case 4:
-                    crtType = DerivedTypeEnum.WaterSupply;
-                    break;
-                case 5:
-                    crtType = DerivedTypeEnum.HeatSupply;
-                    break;
-                case 6:
-                    crtType = DerivedTypeEnum.FuelGas;
-                    break;
-                case 7:
-                    crtType = DerivedTypeEnum.Communication;
-                    break;
-                case 8:
-                    crtType = DerivedTypeEnum.BuildingIntegrated;
-                    break;
-                case 9:
-                    crtType = DerivedTypeEnum.TheRoadSection;
-                    break;
-                case 10:
-                    crtType = DerivedTypeEnum.PipeLine;
-                    break;
-                case 11:
-                    crtType = DerivedTypeEnum.Sewage;
-                    break;
-                case 12:
-                    crtType = DerivedTypeEnum.FiveLine;
-                    break;
-                case 13:
-                    crtType = DerivedTypeEnum.LimitFactor;
-                    break;
-                case 14:
-                    crtType = DerivedTypeEnum.RainWater;
-                    break;
-                case 15:
-                    crtType = DerivedTypeEnum.ReuseWater;
-                    break;
-                case 16:
-                    crtType = DerivedTypeEnum.Road;
-                    break;
-                case 17:
-                    crtType = DerivedTypeEnum.CenterCityUseLandPlan;
-                    break;
-                case 18:
-                    crtType = DerivedTypeEnum.UseLandNumber;
-                    break;
-                case 19:
-                    crtType = DerivedTypeEnum.CenterCityLifeUseLandPlan;
-                    break;
-                case 20:
-                    crtType = DerivedTypeEnum.RoadSituation;
-                    break;
-                case 21:
-                    crtType = DerivedTypeEnum.FacilityControl;
-                    break;
-                case 22:
-                    crtType = DerivedTypeEnum.FiveLineControl;
-                    break;
-                case 23:
                     crtType = DerivedTypeEnum.None;
                     break;
             }
@@ -305,6 +225,25 @@ namespace RegulatoryPlan.UI
                 SendMessage(this.Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero); // 拖动窗体 
             }
         }
+
+
+        [System.Runtime.InteropServices.DllImport("user32.dll ")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int wndproc);
+        [System.Runtime.InteropServices.DllImport("user32.dll ")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        public const int GWL_STYLE = -16;
+        public const int WS_DISABLED = 0x8000000;
+
+
+        public static void SetControlEnabled(Control c, bool enabled)
+        {
+            if (enabled)
+            { SetWindowLong(c.Handle, GWL_STYLE, (~WS_DISABLED) & GetWindowLong(c.Handle, GWL_STYLE)); }
+            else
+            { SetWindowLong(c.Handle, GWL_STYLE, WS_DISABLED + GetWindowLong(c.Handle, GWL_STYLE)); }
+        }
+
 
     }
 }

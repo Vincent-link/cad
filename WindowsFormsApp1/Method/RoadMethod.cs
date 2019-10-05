@@ -16,6 +16,10 @@ namespace RegulatoryPlan.Method
         public void GetAllRoadInfo(T model)
         {
             GetRoadGeom(model);
+            model.selectedLayerList.Add(model.RoadNameLayer);
+            model.selectedLayerList.Add(model.RoadLineLayer);
+            if(model.RoadSectionLayer != null)
+                model.selectedLayerList.Add(model.RoadSectionLayer);
         }
         private void GetRoadGeom(T model)
         {
