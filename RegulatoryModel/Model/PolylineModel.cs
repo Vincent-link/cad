@@ -47,6 +47,10 @@ namespace RegulatoryModel.Model
         /// 个体编码
         /// </summary>
         public string individualCode { get; set; }
+        /// <summary>
+        /// 是否是虚线
+        /// </summary>
+        public bool isDashed { get; set; }
     }
     /// <summary>
     /// 直线模型
@@ -76,6 +80,10 @@ namespace RegulatoryModel.Model
         /// </summary>
         public double Length { get; set; }
         public string Color { get; set; }
+        /// <summary>
+        /// 是否是虚线
+        /// </summary>
+        public bool isDashed { get; set; }
     }
     
     /// <summary>
@@ -121,6 +129,10 @@ namespace RegulatoryModel.Model
         public List<PointF> pointList = new List<PointF>();
 
         public string Color { get; set; }
+        /// <summary>
+        /// 是否是虚线
+        /// </summary>
+        public bool isDashed { get; set; }
     }
     /// <summary>
     /// 圆
@@ -142,6 +154,10 @@ namespace RegulatoryModel.Model
         /// </summary>
         public double Radius { get; set; }
         public string Color { get; set; }
+        /// <summary>
+        /// 是否是虚线
+        /// </summary>
+        public bool isDashed { get; set; }
     }
     /// <summary>
     /// 椭圆
@@ -167,6 +183,10 @@ namespace RegulatoryModel.Model
         /// </summary>
         public double MinorAxis { get; set; }
         public string Color { get; set; }
+        /// <summary>
+        /// 是否是虚线
+        /// </summary>
+        public bool isDashed { get; set; }
     }
 
     public class HatchModel : GemoTypeModel

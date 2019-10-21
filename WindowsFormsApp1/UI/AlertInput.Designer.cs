@@ -1,4 +1,8 @@
-﻿using System.Data;
+﻿using DataGridViewTreeComboxColumn;
+using RegulatoryPlan.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
 
 namespace RegulatoryPlan.UI
@@ -29,7 +33,7 @@ namespace RegulatoryPlan.UI
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(System.Collections.Generic.List<string> factors, System.Data.DataTable table)
+        private void InitializeComponent(FactorJsonData factors, System.Data.DataTable table)
         {
 
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -44,7 +48,9 @@ namespace RegulatoryPlan.UI
             this.polylineId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.polylineNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.individualName = new DataGridViewTextBoxColumn();
-            this.factor = new DataGridViewComboBoxColumn();
+            this.entitycount = new DataGridViewTextBoxColumn();
+            this.treeComboBox1 = new DataGridViewTreeComboxColumn.TreeComboBox();
+            this.factor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnGet = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnFind = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnDelete = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -78,6 +84,7 @@ namespace RegulatoryPlan.UI
             this.polylineNum,
             this.factor,
             this.individualName,
+            this.entitycount,
             this.btnGet,
             this.btnFind,
             this.btnDelete});
@@ -95,8 +102,8 @@ namespace RegulatoryPlan.UI
             this.dataGridView1.Size = new System.Drawing.Size(547, 362);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-
-
+            this.dataGridView1.SelectionChanged += DataGridView1_SelectionChanged;
+            this.dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter;
             // 
             // polylineId
             // 
@@ -109,10 +116,76 @@ namespace RegulatoryPlan.UI
             this.polylineNum.HeaderText = "多段线编码";
             this.polylineNum.Name = "polylineNum";
 
+            //
+            //
+            //
+            this.treeComboBox1.AfterExpand += new TreeViewEventHandler(treeComboBox1_AfterExpand);
+            this.treeComboBox1.AfterCollapse += new TreeViewEventHandler(treeComboBox1_AfterCollapse);
+
+
+            
+
             // factor
-            this.factor.Items.AddRange(factors.ToArray());
+            Dictionary<string,string> dic = new Dictionary<string, string>();
+            List<string> result = new List<string>();
+            TreeNode node = new TreeNode();
+            if (factors.result != null)
+            {
+                GetFactorNode(factors.result, ref node);
+            }
+
+            ////foreach (var item in dic)
+            ////{
+            ////    result.Add(item.Value);
+            ////}
+            ////node.Text = "节点";
+
+            if (node.Nodes.Count > 0)
+            {
+                foreach (TreeNode item in node.Nodes)
+                {
+
+                    this.treeComboBox1.Nodes.Add(item);
+                }
+            }
+            else
+            {
+                this.treeComboBox1.Nodes.Add(node);
+            }
+
+
+            ////为下拉列表添加节点
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    this.treeComboBox1.Nodes.Add("key" + i, "Depart" + i, 0, 0);
+            //    for (int j = 0; j < i + 1; j++)
+            //    {
+            //        this.treeComboBox1.Nodes[i].Nodes.Add("key_child" + i + j, "User" + i + j, 2, 2);
+            //        for (int k = 0; k < j + 1; k++)
+            //        {
+            //            this.treeComboBox1.Nodes[i].Nodes[j].Nodes.Add("key_child" + i + j + k, "User" + i + j + k, 2, 2);
+            //        }
+            //    }
+            //}
+
+            //this.factor._root = this.treeComboBox1;
+            //Items.AddRange(result.ToArray());
             this.factor.HeaderText = "个体要素";
             this.factor.Name = "factor";
+
+            dataGridView1.ColumnWidthChanged += dgv_User_ColumnWidthChanged;
+            dataGridView1.CurrentCellChanged += dgv_User_CurrentCellChanged;
+            dataGridView1.Scroll += dgv_User_Scroll;
+            dataGridView1.DataBindingComplete += dgv_User_DataBindingComplete;
+          
+            this.treeComboBox1.AfterExpand += new TreeViewEventHandler(treeComboBox1_AfterExpand);
+            this.treeComboBox1.AfterCollapse += new TreeViewEventHandler(treeComboBox1_AfterCollapse);
+
+
+            this.treeComboBox1.Visible = false;
+
+            this.treeComboBox1.SelectedIndexChanged += new EventHandler(cmb_Temp_SelectedIndexChanged);
+            dataGridView1.Controls.Add(this.treeComboBox1);
 
             if (table != null)
             {
@@ -122,16 +195,13 @@ namespace RegulatoryPlan.UI
                     this.dataGridView1.Rows[index].Cells[0].Value = row[0];
                     this.dataGridView1.Rows[index].Cells[1].Value = row[1];
                     this.dataGridView1.Rows[index].Cells[3].Value = row["个体名称"];
+                    this.dataGridView1.Rows[index].Cells[4].Value = row["数量"];
 
-                    foreach (string factor in factors)
-                    {
-                        if (factor == (string)row["个体要素"])
-                        {
-                            this.dataGridView1.Rows[index].Cells[2].Value = factor;
-                            //this.factor.Selected = true;
-                        }
-                    }
+                    string result1 = "";
+                    GetFactorName(factors.result, (string)row["个体要素"], ref result1);
 
+                    this.dataGridView1.Rows[index].Cells[2].Value = result1;
+                    this.dataGridView1.Rows[index].Cells[2].Tag = (string)row["个体要素"];
                 }
             }
 
@@ -140,7 +210,12 @@ namespace RegulatoryPlan.UI
             // 
             this.individualName.HeaderText = "个体名称";
             this.individualName.Name = "individualName";
-
+            //
+            //
+            //
+            this.entitycount.HeaderText = "数量";
+            this.entitycount.Name = "entitycount";
+            this.entitycount.ReadOnly = true;
             // 
             // btnGet
             // 
@@ -184,6 +259,8 @@ namespace RegulatoryPlan.UI
 
         }
 
+       
+
         #endregion
 
         private System.Windows.Forms.Button button1;
@@ -194,7 +271,9 @@ namespace RegulatoryPlan.UI
         private DataGridViewButtonColumn btnGet;
         private DataGridViewButtonColumn btnFind;
         private DataGridViewButtonColumn btnDelete;
-        private DataGridViewComboBoxColumn factor;
+        private DataGridViewTextBoxColumn factor;
+        private DataGridViewTreeComboxColumn.TreeComboBox treeComboBox1;
         private DataGridViewTextBoxColumn individualName;
+        private DataGridViewTextBoxColumn entitycount;
     }
 }

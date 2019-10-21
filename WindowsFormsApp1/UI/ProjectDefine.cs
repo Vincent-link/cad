@@ -1,6 +1,7 @@
 ﻿using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using RegulatoryPlan.Model;
+using RegulatoryPlan.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,7 +31,7 @@ namespace RegulatoryPlan.UI
 
         [DllImport("user32", EntryPoint = "HideCaret")]
         private static extern bool HideCaret(IntPtr hWnd);
-        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
+        JsonCityData contentList = new JsonCityData();
 
 
         public ProjectDefine()
@@ -38,7 +39,7 @@ namespace RegulatoryPlan.UI
             List<string> names = new List<string>();
             try
             {
-                string projectIdBaseAddress = "http://172.18.84.114:8080/PDD/pdd/individual-manage!findAllProject.action";
+                string projectIdBaseAddress = "http://172.18.84.155:8080/PDD/pdd/cim-interface!findAllProject";
                 var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
 
                 var response = projectIdHttp.GetResponse();
@@ -46,16 +47,19 @@ namespace RegulatoryPlan.UI
                 var stream = response.GetResponseStream();
                 var sr = new StreamReader(stream, Encoding.UTF8);
                 var content = sr.ReadToEnd();
-                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
+                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonCityData>(content);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             //MessageBox.Show(content);
-            foreach (Dictionary<string, string> name in contentList)
+            if (contentList.result!=null)
             {
-                names.Add(name["name"]);
+                foreach (City city in contentList.result)
+                {
+                    names.Add(city.name);
+                }
             }
 
             InitializeComponent(names);
@@ -77,8 +81,8 @@ namespace RegulatoryPlan.UI
                 return;
             }
 
-            this.DialogResult = DialogResult.OK;
-            openCity = contentList[comboBoxCity.SelectedIndex]["oid"];
+            this.DialogResult = DialogResult.OK;            
+            openCity = contentList.result[comboBoxCity.SelectedIndex].oid;
 
             //点击button按钮事件
             Method.SaveProjectIdToXData.SaveSelectedProjectIdToXData(openCity);

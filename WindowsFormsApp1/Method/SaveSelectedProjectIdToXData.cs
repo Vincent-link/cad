@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RegulatoryPlan.Method
 {
-     public static class SaveProjectIdToXData
+    public static class SaveProjectIdToXData
     {
         public static string GetDefinedProject()
         {
@@ -47,16 +47,18 @@ namespace RegulatoryPlan.Method
                     DBDictionary dict = dictId.GetObject(OpenMode.ForRead) as DBDictionary;//获取对象的扩展字典
                     if (!dict.Contains(xRecordSearchKey))
                     {
+                        tr.Commit();
+                        m_DocumentLock.Dispose();
                         return null;//如果扩展字典中没有包含指定关键 字的扩展记录，则返回null；
                     }
                     //先要获取对象的扩展字典或图形中的有名对象字典，然后才能在字典中获取要查询的扩展记录
                     ObjectId xrecordId = dict.GetAt(xRecordSearchKey);//获取扩展记录对象的id
                     Xrecord xrecord = xrecordId.GetObject(OpenMode.ForRead) as Xrecord;//根据id获取扩展记录对象
                     resBuf = xrecord.Data;
-
                 }
+                tr.Commit();
             }
-
+            m_DocumentLock.Dispose();
             return resBuf;
         }
 
@@ -119,7 +121,7 @@ namespace RegulatoryPlan.Method
                     tr.Commit();
                 }
             }
-            
+
         }
 
         public static bool DelObjXrecord(ObjectId objId, string xRecordSearchKey, Transaction transaction = null)
@@ -150,7 +152,7 @@ namespace RegulatoryPlan.Method
 
                 m_DocumentLock.Dispose();
             }
-            
+
             return true;
         }
 
@@ -206,4 +208,4 @@ namespace RegulatoryPlan.Method
         }
 
     }
-    }
+}

@@ -51,6 +51,8 @@ namespace RegulatoryPost.FenTuZe
                 List<string> individualFactor = new List<string>(); //图层
                 List<string> individualCode = new List<string>(); //图层
 
+                List<bool> dashes = new List<bool>(); //是否虚线
+
                 int ysIndex = 0;
 
                 Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
@@ -107,6 +109,8 @@ namespace RegulatoryPost.FenTuZe
                                         textContent.Add("");
                                         blockContent.Add("");
 
+                                        dashes.Add(false);
+
                                         individualName.Add("");
                                         individualFactor.Add("");
                                         individualCode.Add("");
@@ -143,6 +147,8 @@ namespace RegulatoryPost.FenTuZe
 
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
@@ -175,6 +181,8 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(circleModel.isDashed);
 
                                                 individualName.Add("");
                                                 individualFactor.Add("");
@@ -211,6 +219,8 @@ namespace RegulatoryPost.FenTuZe
 
                                                 blockContent.Add("");
 
+                                                dashes.Add(circleModel.isDashed);
+
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
@@ -238,6 +248,8 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(false);
 
                                                 individualName.Add("");
                                                 individualFactor.Add("");
@@ -275,6 +287,8 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(lineModel.isDashed);
 
                                                 individualName.Add("");
                                                 individualFactor.Add("");
@@ -321,6 +335,7 @@ namespace RegulatoryPost.FenTuZe
                                                         individualFactor.Add("");
                                                         individualCode.Add("");
 
+                                                        dashes.Add(arcModel.isDashed);
                                                     }
                                                     catch (Exception ex)
                                                     {
@@ -378,6 +393,8 @@ namespace RegulatoryPost.FenTuZe
                                                         textContent.Add("");
                                                         blockContent.Add("");
 
+                                                        dashes.Add(arcModel.isDashed);
+
                                                         individualName.Add(arcModel.individualName);
                                                         individualFactor.Add(arcModel.individualFactor);
                                                         individualCode.Add(arcModel.individualCode);
@@ -424,6 +441,8 @@ namespace RegulatoryPost.FenTuZe
                                                         textContent.Add("");
                                                         blockContent.Add("");
 
+                                                        dashes.Add(false);
+
                                                         individualName.Add("");
                                                         individualFactor.Add("");
                                                         individualCode.Add("");
@@ -466,6 +485,8 @@ namespace RegulatoryPost.FenTuZe
                 string individualNamestring = JsonConvert.SerializeObject(individualName);
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
+
+                string dashesString = JsonConvert.SerializeObject(dashes);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -511,6 +532,8 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
 
+                result.Add("dashes", dashesString);
+
                 FenTuZe.PostData(result);
             }
             catch
@@ -548,6 +571,8 @@ namespace RegulatoryPost.FenTuZe
             List<string> individualName = new List<string>(); //图层
             List<string> individualFactor = new List<string>(); //图层
             List<string> individualCode = new List<string>(); //图层
+
+            List<bool> dashes = new List<bool>(); //是否虚线
 
             Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
@@ -613,6 +638,8 @@ namespace RegulatoryPost.FenTuZe
                                                 parentId.Add("");
                                                 textContent.Add("");
                                                 blockContent.Add("");
+
+                                                dashes.Add(false);
 
                                                 individualName.Add("");
                                                 individualFactor.Add("");
@@ -686,6 +713,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -713,6 +742,8 @@ namespace RegulatoryPost.FenTuZe
                                         parentId.Add("");
                                         textContent.Add("");
                                         blockContent.Add("");
+
+                                        dashes.Add(false);
 
                                         individualName.Add("");
                                         individualFactor.Add("");
@@ -754,6 +785,8 @@ namespace RegulatoryPost.FenTuZe
                                     textContent.Add("");
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
+
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
@@ -791,6 +824,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -825,6 +860,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(circleModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -850,6 +887,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add(circleModel.Text);
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -891,6 +930,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -961,6 +1002,8 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
@@ -1004,6 +1047,8 @@ namespace RegulatoryPost.FenTuZe
                                                     textContent.Add("");
                                                     blockContent.Add("");
 
+                                                    dashes.Add(false);
+
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
@@ -1043,10 +1088,12 @@ namespace RegulatoryPost.FenTuZe
             string blockContentString = JsonConvert.SerializeObject(blockContent);
             string zindexstring = JsonConvert.SerializeObject(zIndex);
             string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
-            string individualNamestring = JsonConvert.SerializeObject(individualName);
 
+            string individualNamestring = JsonConvert.SerializeObject(individualName);
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
+
+            string dashesString = JsonConvert.SerializeObject(dashes);
 
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
@@ -1073,6 +1120,8 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+
+            result.Add("dashes", dashesString);
 
             FenTuZe.PostData(result);
         }
@@ -1108,6 +1157,8 @@ namespace RegulatoryPost.FenTuZe
             List<string> individualName = new List<string>(); //图层
             List<string> individualFactor = new List<string>(); //图层
             List<string> individualCode = new List<string>(); //图层
+
+            List<bool> dashes = new List<bool>(); //是否虚线
 
             Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
@@ -1174,6 +1225,8 @@ namespace RegulatoryPost.FenTuZe
                                                 parentId.Add("");
                                                 textContent.Add("");
                                                 blockContent.Add("");
+
+                                                dashes.Add(false);
 
                                                 individualName.Add("");
                                                 individualFactor.Add("");
@@ -1246,6 +1299,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -1273,6 +1328,8 @@ namespace RegulatoryPost.FenTuZe
                                         parentId.Add("");
                                         textContent.Add("");
                                         blockContent.Add("");
+
+                                        dashes.Add(false);
 
                                         individualName.Add("");
                                         individualFactor.Add("");
@@ -1314,6 +1371,8 @@ namespace RegulatoryPost.FenTuZe
                                     textContent.Add("");
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
+
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
@@ -1352,6 +1411,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -1386,6 +1447,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(circleModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -1411,6 +1474,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add(circleModel.Text);
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -1456,6 +1521,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -1525,6 +1592,8 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
@@ -1569,6 +1638,8 @@ namespace RegulatoryPost.FenTuZe
                                                     textContent.Add("");
                                                     blockContent.Add("");
 
+                                                    dashes.Add(false);
+
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
@@ -1612,6 +1683,8 @@ namespace RegulatoryPost.FenTuZe
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
+            string dashesString = JsonConvert.SerializeObject(dashes);
+
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
             result.Add("colorList", colorListString);
@@ -1637,6 +1710,8 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+
+            result.Add("dashes", dashesString);
 
             FenTuZe.AutoPostData(result, failedFiles);
         }
@@ -1671,6 +1746,7 @@ namespace RegulatoryPost.FenTuZe
 
                 ArrayList zIndex = new ArrayList(); //图层级别
                 List<string> selectedLayerList = new List<string>(); //图层
+                List<bool> dashes = new List<bool>(); //是否虚线
 
                 List<string> individualName = new List<string>(); //图层
                 List<string> individualFactor = new List<string>(); //图层
@@ -1724,6 +1800,7 @@ namespace RegulatoryPost.FenTuZe
                                     textContent.Add("");
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
 
                                     individualName.Add("");
                                     individualFactor.Add("");
@@ -1758,6 +1835,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -1787,6 +1866,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -1819,6 +1900,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(circleModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -1843,6 +1926,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -1877,6 +1962,8 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -1931,6 +2018,8 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
@@ -1971,6 +2060,8 @@ namespace RegulatoryPost.FenTuZe
                                                     parentId.Add("");
                                                     textContent.Add("");
                                                     blockContent.Add("");
+
+                                                    dashes.Add(false);
 
                                                     individualName.Add("");
                                                     individualFactor.Add("");
@@ -2016,6 +2107,8 @@ namespace RegulatoryPost.FenTuZe
                                     textContent.Add(roadModel.RoadName[i]);
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
+
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
@@ -2057,9 +2150,11 @@ namespace RegulatoryPost.FenTuZe
                                 textContent.Add("");
                                 blockContent.Add("");
 
-                                individualName.Add("");
-                                individualFactor.Add("");
-                                individualCode.Add("");
+                                dashes.Add(roadModel.isDashed);
+
+                                individualName.Add(roadModel.individualName);
+                                individualFactor.Add(roadModel.individualFactor);
+                                individualCode.Add(roadModel.individualCode);
                             }
 
                         }
@@ -2090,6 +2185,7 @@ namespace RegulatoryPost.FenTuZe
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
+                string dashesString = JsonConvert.SerializeObject(dashes); 
                 // UUID
                 result.Add("uuid", uuidString);
                 // 实体坐标信息
@@ -2130,7 +2226,8 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualName", individualNamestring);
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
-
+                result.Add("dashes", dashesString);
+                
                 FenTuZe.PostData(result);
             }
             catch
@@ -2175,6 +2272,8 @@ namespace RegulatoryPost.FenTuZe
                 List<string> individualName = new List<string>(); //图层
                 List<string> individualFactor = new List<string>(); //图层
                 List<string> individualCode = new List<string>(); //图层
+
+                List<bool> dashes = new List<bool>(); //是否虚线
 
                 // 图例
                 tuliList.Add("");
@@ -2243,6 +2342,8 @@ namespace RegulatoryPost.FenTuZe
                                     // 块内容
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
+
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
@@ -2294,6 +2395,8 @@ namespace RegulatoryPost.FenTuZe
                                             // 块内容
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -2343,6 +2446,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -2399,6 +2504,8 @@ namespace RegulatoryPost.FenTuZe
                                             // 块内容
                                             blockContent.Add("");
 
+                                            dashes.Add(circleModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
@@ -2442,6 +2549,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -2495,6 +2604,8 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
 
                                             individualName.Add("");
                                             individualFactor.Add("");
@@ -2584,6 +2695,8 @@ namespace RegulatoryPost.FenTuZe
                                                 // 块内容
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
@@ -2642,6 +2755,8 @@ namespace RegulatoryPost.FenTuZe
                                                     // 块内容
                                                     blockContent.Add("");
 
+                                                    dashes.Add(false);
+
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
@@ -2684,6 +2799,8 @@ namespace RegulatoryPost.FenTuZe
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
 
+                string dashString = JsonConvert.SerializeObject(dashes);
+
                 // UUID
                 result.Add("uuid", uuidString);
                 // 实体坐标信息
@@ -2724,6 +2841,8 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualName", individualNamestring);
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
+
+                result.Add("dashes", dashString);
 
                 FenTuZe.PostData(result);
             }

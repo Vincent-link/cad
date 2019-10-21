@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -24,9 +25,23 @@ namespace RegulatoryPlan.UI
 
         public MainForm(string cityName, DerivedTypeEnum derivedType)
         {
-            crtType = derivedType;
+            //设置窗体的双缓冲
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
+
             InitializeComponent();
+
+            //利用反射设置DataGridView的双缓冲
+            Type dgvType = this.dataGridView1.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(this.dataGridView1, true, null);
+
+            crtType = derivedType;
             InitPage();
+            //Thread thread = new Thread(InitData);
+            //thread.Name = "子线程";
+            //thread.Start();
             InitData();
             //this.lb_City.Text = cityName;
             RegulatoryPost.FenTuZe.UIMethod.SetFormRoundRectRgn(this, 5);	//设置圆角

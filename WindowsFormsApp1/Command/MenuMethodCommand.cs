@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Autodesk.AutoCAD.Runtime;
 using RegulatoryModel.Model;
 using RegulatoryPlan.Method;
+using RegulatoryPlan.Models;
 using RegulatoryPlan.UI;
 using RegulatoryPost.FenTuZe;
 
@@ -122,13 +123,46 @@ namespace RegulatoryPlan.Command
         [CommandMethod("AutoGenerateNumber", CommandFlags.Session)]
         public void AutoGenerateNumber()
         {
-            DataGridView polylineList = new DataGridView();
-            polylineList.TabIndex = 0;
+            //DataGridView polylineList = new DataGridView();
+            //polylineList.TabIndex = 0;
 
-            System.Data.DataTable table = Method.AutoGenerateNumMethod.GetAllPolylineNums();
-            AlertInput a = new AlertInput(table);
-            a.Show();
+            if (alertInput == null||alertInput.IsDisposed)
+            {
+                FactorJsonData contentList = new FactorJsonData();
+
+                string cityId = Method.SaveProjectIdToXData.GetDefinedProject();
+
+                try
+                {
+                    string projectIdBaseAddress = "http://172.18.84.155:8080/PDD/pdd/cim-interface!findElementByProjectId?projectId=" + cityId;
+                    var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
+
+                    var response = projectIdHttp.GetResponse();
+
+                    var stream = response.GetResponseStream();
+                    var sr = new System.IO.StreamReader(stream, Encoding.UTF8);
+                    var content = sr.ReadToEnd();
+                    contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<FactorJsonData>(content);
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
+                if (contentList.result.Count <= 0)
+                {
+                    MessageBox.Show("请先定义项目");
+                    return;
+                }
+
+                System.Data.DataTable table = Method.AutoGenerateNumMethod.GetAllPolylineNums();
+
+                alertInput = new AlertInput(table, contentList);
+                Autodesk.AutoCAD.ApplicationServices.Application.ShowModelessDialog(alertInput);
+            }
         }
+
+        private static AlertInput alertInput = null;
 
         // 手动选择实体
         [CommandMethod("手动选择")]

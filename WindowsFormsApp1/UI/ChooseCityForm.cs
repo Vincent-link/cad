@@ -1,6 +1,7 @@
 ﻿using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using RegulatoryPlan.Model;
+using RegulatoryPlan.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +33,7 @@ namespace RegulatoryPlan.UI
 
         [DllImport("user32", EntryPoint = "HideCaret")]
         private static extern bool HideCaret(IntPtr hWnd);
-        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
+        JsonCityData contentList = new JsonCityData();
 
         public ChooseCityForm()
         {
@@ -42,7 +43,7 @@ namespace RegulatoryPlan.UI
             List<string> names = new List<string>();
             try
             {
-                string projectIdBaseAddress = "http://172.18.84.114:8080/PDD/pdd/individual-manage!findAllProject.action";
+                string projectIdBaseAddress = "http://172.18.84.155:8080/PDD/pdd/cim-interface!findAllProject";
                 var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
 
                 var response = projectIdHttp.GetResponse();
@@ -50,19 +51,19 @@ namespace RegulatoryPlan.UI
                 var stream = response.GetResponseStream();
                 var sr = new StreamReader(stream, Encoding.UTF8);
                 var content = sr.ReadToEnd();
-                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
+                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonCityData>(content);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             string city = "";
-            foreach (Dictionary<string, string> name in contentList)
+            foreach (City item in contentList.result)
             {
-                names.Add(name["name"]);
-                if (name["oid"] == cityId)
+                names.Add(item.name);
+                if (item.oid == cityId)
                 {
-                    city = name["name"];
+                    city = item.name;
                 }
             }
 
@@ -115,10 +116,10 @@ namespace RegulatoryPlan.UI
             switch (comboBoxCity.SelectedIndex)
             {
                 case 0:
-                    crtCity = contentList[comboBoxCity.SelectedIndex]["oid"];
+                    crtCity = contentList.result[comboBoxCity.SelectedIndex].oid;
                     break;
                 case 1:
-                    crtCity = contentList[0]["oid"];
+                    crtCity = contentList.result[0].oid;
                     break;
             }
             return crtCity;
@@ -224,7 +225,7 @@ namespace RegulatoryPlan.UI
             this.DialogResult = DialogResult.OK;
             openFile = this.textBox1.Text;
             derivedType = GetChooseType();
-            openCity = contentList[comboBoxCity.SelectedIndex]["oid"];
+            openCity = contentList.result[comboBoxCity.SelectedIndex].oid;
 
             this.Close();
 

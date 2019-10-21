@@ -83,7 +83,7 @@ namespace RegulatoryPlan.Method
 
                         DBObject ob = tran.GetObject(oids[i], OpenMode.ForRead);
 
-                        if ((ob as DBText).BlockName.ToLower() == "*model_space")
+                        if ((ob is DBText)&&(ob as DBText).BlockName.ToLower() == "*model_space")
                         {
                             roadText.Add((ob as DBText));
                         }
@@ -207,6 +207,25 @@ namespace RegulatoryPlan.Method
 
                 }
                 item.roadList = PolylineMethod.GetPolyLineInfoPt(line);
+
+                item.individualName = "";
+                item.individualFactor = "";
+                item.individualCode = "";
+                // 增加个体编码、个体要素、个体名称
+                System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNumsEx(line);
+                if (tb.Rows != null && tb.Rows.Count > 0)
+                {
+                    foreach (System.Data.DataRow row in tb.Rows)
+                    {
+                        if ((string)row["多段线id"] == line.Id.Handle.Value.ToString())
+                        {
+                            item.individualName = (string)row["个体名称"];
+                            item.individualFactor = (string)row["个体要素"];
+                            item.individualCode = (string)row["个体编码"];
+                        }
+
+                    }
+                }
             }
             return item;
         }
@@ -281,13 +300,29 @@ namespace RegulatoryPlan.Method
                         }
                     }
                 }
-                    return item;
+
+                item.isDashed = MethodCommand.GetLayerLineTypeByIDEx(line);
+
+                item.individualName = "";
+                item.individualFactor = "";
+                item.individualCode = "";
+                // 增加个体编码、个体要素、个体名称
+                System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNumsEx(line);
+                if (tb.Rows != null && tb.Rows.Count > 0)
+                {
+                    foreach (System.Data.DataRow row in tb.Rows)
+                    {
+                        if ((string)row["多段线id"] == line.Id.Handle.Value.ToString())
+                        {
+                            item.individualName = (string)row["个体名称"];
+                            item.individualFactor = (string)row["个体要素"];
+                            item.individualCode = (string)row["个体编码"];
+                        }
+
+                    }
                 }
-
-            
-
-
+                return item;
+            }
         }
-        
     }
 }

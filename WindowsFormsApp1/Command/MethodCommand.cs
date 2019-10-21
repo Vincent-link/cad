@@ -642,6 +642,7 @@ namespace RegulatoryPlan.Command
         {
             try
             {
+                //添加只读判断
                 if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
                 {
                     num++;
@@ -858,6 +859,37 @@ namespace RegulatoryPlan.Command
                 }
             }
             return colorStr;
+        }
+
+        /// <summary>
+        /// 根据图层名获取图层线型,如果数量大于0就是虚线 否则是实线
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetLayerLineTypeByIDEx(Entity entity)
+        {
+
+            int colorStr = 0;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+            using (Transaction Trans = db.TransactionManager.StartTransaction())
+            {
+                if (entity.Linetype.ToString() == "BYLAYER")
+                {
+                    LayerTableRecord ltr = Trans.GetObject(entity.LayerId, OpenMode.ForRead) as LayerTableRecord;
+                    if (ltr != null)
+                    {
+                        LinetypeTableRecord re = Trans.GetObject(ltr.LinetypeObjectId, OpenMode.ForRead) as LinetypeTableRecord;
+                        colorStr = re.NumDashes;
+                    }
+                }
+                else
+                {
+                    LinetypeTableRecord re = Trans.GetObject(entity.LinetypeId, OpenMode.ForRead) as LinetypeTableRecord;
+                    colorStr = re.NumDashes;
+                }
+            }
+
+            return colorStr > 0;
         }
 
         /// <summary>

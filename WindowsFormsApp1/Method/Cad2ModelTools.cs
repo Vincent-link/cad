@@ -67,14 +67,14 @@ namespace RegulatoryPlan.Model
             dbModel.Text = dbText.TextString;
             dbModel.Color = dbText.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(dbText.LayerId) : System.Drawing.ColorTranslator.ToHtml(dbText.Color.ColorValue);
 
-            //获取文本
-            string text = dbModel.Text;
-            //得到Bitmap(传入Rectangle.Empty自动计算宽高)
-            Bitmap bmp = TextToBitmap(text, new Font("Arial", 16), Rectangle.Empty, Color.FromName(dbModel.Color), Color.FromName("White"));
+            ////获取文本
+            //string text = dbModel.Text;
+            ////得到Bitmap(传入Rectangle.Empty自动计算宽高)
+            //Bitmap bmp = TextToBitmap(text, new Font("Arial", 16), Rectangle.Empty, Color.FromName(dbModel.Color), Color.FromName("White"));
 
-            //保存到桌面save.jpg
-            string directory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory);
-            bmp.Save(directory + "\\save.png", System.Drawing.Imaging.ImageFormat.Png);
+            ////保存到桌面save.jpg
+            //string directory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory);
+            //bmp.Save(directory + "\\save.png", System.Drawing.Imaging.ImageFormat.Png);
 
             return dbModel;
 
@@ -202,7 +202,7 @@ namespace RegulatoryPlan.Model
 
             dbModel.Length = line.Length;
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
-
+            dbModel.isDashed = GetLayerLineTypeByIDEx(line);
             return dbModel;
         }
 
@@ -217,6 +217,7 @@ namespace RegulatoryPlan.Model
             MyPoint center = new MyPoint(dbModel.Center.X, dbModel.Center.Y);
             dbModel.pointList = MethodCommand.GetArcPoints(line, line.Circumference);
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
+            dbModel.isDashed = GetLayerLineTypeByIDEx(line);
             return dbModel;
         }
 
@@ -234,6 +235,7 @@ namespace RegulatoryPlan.Model
 
             double length = line.RadiusRatio * (line.MinorRadius + line.MajorRadius);
             dbModel.pointList = MethodCommand.GetArcPoints(line, length);
+            dbModel.isDashed = GetLayerLineTypeByIDEx(line);
 
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
@@ -247,8 +249,8 @@ namespace RegulatoryPlan.Model
             polylineModel.individualCode = "";
 
             // 增加个体编码、个体要素、个体名称
-            System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNums();
-            if (tb.Rows.Count > 0)
+            System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNumsEx(polyLine);
+            if (tb.Rows != null&&tb.Rows.Count > 0)
             {
                 foreach (System.Data.DataRow row in tb.Rows)
                 {
@@ -347,7 +349,7 @@ namespace RegulatoryPlan.Model
                     }
                 }
             //}
-
+            polylineModel.isDashed = GetLayerLineTypeByIDEx(polyLine);
             return polylineModel;
         }
 
@@ -359,6 +361,7 @@ namespace RegulatoryPlan.Model
 
             double length = line.Length;
             dbModel.pointList = MethodCommand.GetArcPoints(line, length);
+            dbModel.isDashed = GetLayerLineTypeByIDEx(line);
 
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
@@ -381,7 +384,7 @@ namespace RegulatoryPlan.Model
 
             double length = line.Length;
             dbModel.pointList = MethodCommand.GetArcPoints(line, length);
-
+            dbModel.isDashed = GetLayerLineTypeByIDEx(line);
             dbModel.Color = line.ColorIndex == 256 ? MethodCommand.GetLayerColorByID(line.LayerId) : System.Drawing.ColorTranslator.ToHtml(line.Color.ColorValue);
             return dbModel;
         }
@@ -796,8 +799,8 @@ namespace RegulatoryPlan.Model
             polylineModel.individualCode = "";
 
             // 增加个体编码、个体要素、个体名称
-            System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNums();
-            if (tb.Rows.Count > 0)
+            System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNumsEx(polyLine);
+            if (tb.Rows!=null&&tb.Rows.Count > 0)
             {
                 foreach (System.Data.DataRow row in tb.Rows)
                 {

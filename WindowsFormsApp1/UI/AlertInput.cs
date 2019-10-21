@@ -1,12 +1,15 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using CadInterface.CadService;
 using RegulatoryPlan.Method;
+using RegulatoryPlan.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -16,37 +19,21 @@ namespace RegulatoryPlan.UI
     {
         ObjectId objId;
         System.Data.DataTable ta;
-        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
-
-        public AlertInput(System.Data.DataTable table)
+        FactorJsonData _contentList = new FactorJsonData();
+        public AlertInput(System.Data.DataTable table, FactorJsonData contentList)
         {
-            string cityId = Method.SaveProjectIdToXData.GetDefinedProject();
+            _contentList = contentList;
+            //List<string> factors = new List<string>();
 
-            List<string> factors = new List<string>();
-            try
-            {
-                string projectIdBaseAddress = "http://172.18.84.70:8080/PDD/pdd/cim-interface!findElementByProjectId?projectId="+ cityId;
-                var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
-
-                var response = projectIdHttp.GetResponse();
-
-                var stream = response.GetResponseStream();
-                var sr = new System.IO.StreamReader(stream, Encoding.UTF8);
-                var content = sr.ReadToEnd();
-                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            //MessageBox.Show(content);
-            foreach (Dictionary<string, string> name in contentList)
-            {
-                factors.Add(name["name"]);
-            }
-            InitializeComponent(factors, table);
+            ////MessageBox.Show(content);
+            //foreach (Dictionary<string, string> name in _contentList)
+            //{
+            //    factors.Add(name["name"]);
+            //}
+            InitializeComponent(_contentList,table);
             Load(table);
-        }
+
+        } 
 
         // 清除编码
         private void cancel_Click(object sender, EventArgs e)
@@ -68,9 +55,176 @@ namespace RegulatoryPlan.UI
         {
 
         }
+        private void GetFactorId(List<Factor> factors,string key,ref string nameId)
+        {            
+            foreach (Factor factor in factors)
+            {
+                if (factor.name == key)
+                {
+                    nameId = factor.id;                    
+                    break;
+                }
+                else
+                {
+                    if (factor.child != null)
+                    {
+                        GetFactorId(factor.child, key, ref nameId);
+                    }
+                }
+            }
+        }
+        private void GetFactorName(List<Factor> factors, string tag,ref string name)
+        {
+            foreach (Factor factor in factors)
+            {
+                if (factor.id==tag)
+                {
+                    name = factor.name;
+                    break;
+                }
+               
+                if (factor.child!=null)
+                {
+                    GetFactorName(factor.child, tag, ref name);                
+                }
+            }
+        }
 
+        private void GetFactorNode(List<Factor> factors,ref TreeNode node)
+        {
+            foreach (Factor factor in factors)
+            {
+                TreeNode n1 = node.Nodes.Add(factor.name);
+                n1.Tag = factor.id;
+                if (factor.child != null)
+                {
+                    GetFactorNode(factor.child,ref n1);
+                }
+            }
+        }
+
+        private void dgv_User_CurrentCellChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dataGridView1.CurrentCell.ColumnIndex == 2)
+                {
+                    Rectangle rect = dataGridView1.GetCellDisplayRectangle(dataGridView1.CurrentCell.ColumnIndex, dataGridView1.CurrentCell.RowIndex, false);
+                    if(dataGridView1.CurrentCell.Value!=null)
+                    {
+                        string name = dataGridView1.CurrentCell.Value.ToString();
+                        string tag = dataGridView1.CurrentCell.Tag.ToString();
+                        this.treeComboBox1.Text = name;
+                        this.treeComboBox1.Tag = tag;
+                    }
+                    else
+                    {
+                        this.treeComboBox1.Text = "";
+                    }
+                    //if (sexValue == "1")
+                    //{
+                    //    box.Text = "男";
+                    //}
+                    //else
+                    //{
+                    //    box.Text = "女";
+                    //}
+                    this.treeComboBox1.Left = rect.Left;
+                    this.treeComboBox1.Top = rect.Top;
+                    this.treeComboBox1.Width = rect.Width;
+                    this.treeComboBox1.Height = rect.Height;
+                    this.treeComboBox1.Visible = true;
+                }
+                else
+                {
+                    this.treeComboBox1.Visible = false;
+                }
+            }
+            catch
+            {
+            }
+        }
+        private void cmb_Temp_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //if (((ComboBox)sender).Text == "男")
+            //{
+            dataGridView1.CurrentCell.Value = ((DataGridViewTreeComboxColumn.TreeComboBox)sender).Text;
+            dataGridView1.CurrentCell.Tag = ((DataGridViewTreeComboxColumn.TreeComboBox)sender).SelectedNode.Tag;
+            //}
+            //else
+            //{
+            //    dataGridView1.CurrentCell.Value = "女";
+            //    dataGridView1.CurrentCell.Tag = "0";
+            //}
+        }
+        private void HideAllControl(Control control)
+        {
+            if (control.Controls != null)
+            {
+                foreach (Control item in control.Controls)
+                {
+                    item.Visible = false;
+                    HideAllControl(item);
+                }
+            }
+        }
+
+        private void dgv_User_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (this.treeComboBox1.Visible)
+            {
+                this.treeComboBox1.Visible = false;
+            }
+        }
+
+        private void dgv_User_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            if (this.treeComboBox1.Visible)
+            {
+                this.treeComboBox1.Visible = false;
+            }
+        }
+
+
+        private void dgv_User_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            //for (int i = 0; i < this.dataGridView1.Rows.Count; i++)
+            //{
+            //    if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].ColumnIndex == 2)
+            //    {
+            //        dataGridView1.Rows[i].Cells[2].Tag = dataGridView1.Rows[i].Cells[2].Value.ToString();
+            //        if (dataGridView1.Rows[i].Cells[2].Value.ToString() == "1")
+            //        {
+            //            dataGridView1.Rows[i].Cells[2].Value = "男";
+            //        }
+            //        else if (dataGridView1.Rows[i].Cells[2].Value.ToString() == "0")
+            //        {
+            //            dataGridView1.Rows[i].Cells[2].Value = "女";
+            //        }
+            //    }
+            //}
+        }
+
+
+        private void DataGridView1_SelectionChanged(object sender, System.EventArgs e)
+        {
+            dataGridView1.ClearSelection();
+        }
+        void treeComboBox1_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.ImageIndex == 1)
+                e.Node.ImageIndex = e.Node.SelectedImageIndex = 0;
+
+        }
+
+        void treeComboBox1_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.ImageIndex == 0)
+                e.Node.ImageIndex = e.Node.SelectedImageIndex = 1;
+        }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            
             //点击button按钮事件
             if (dataGridView1.Columns[e.ColumnIndex].Name == "btnGet" && e.RowIndex >= 0)
             {
@@ -81,8 +235,7 @@ namespace RegulatoryPlan.UI
                 {
                     MessageBox.Show("请输入编码");
                     return;
-                }
-
+                }                
                 if (dataGridView1.Rows[e.RowIndex].Cells["factor"].Value is null)
                 {
                     MessageBox.Show("请选择个体要素");
@@ -94,28 +247,33 @@ namespace RegulatoryPlan.UI
                     MessageBox.Show("请选择个体名称");
                     return;
                 }
-                string nameId = "";
-                foreach (Dictionary<string, string> name in contentList)
-                {
-                    if (name["name"] == dataGridView1.Rows[e.RowIndex].Cells["factor"].Value.ToString())
-                    {
-                        nameId = name["id"];
-                    }
-                }
+                //string nameId = "";
 
-                string value = AutoGenerateNumMethod.GetPolyline(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString(), nameId, dataGridView1.Rows[e.RowIndex].Cells["individualName"].Value.ToString());
 
-                try
-                {
-                    if (dataGridView1.Rows.Count > 0)
-                    {
-                        dataGridView1.Rows[e.RowIndex].Cells[0].Value = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
+                //foreach (Dictionary<string, string> name in _contentList)
+                //{
+                //    if (name["name"] == dataGridView1.Rows[e.RowIndex].Cells["factor"].Value.ToString())
+                //    {
+                //        nameId = name["id"];
+                //        break;
+                //    }
+                //}
+                //int dlCount = 0;
+                string result = dataGridView1.Rows[e.RowIndex].Cells["factor"].Tag.ToString();
+                //foreach (var item in result)
+                //{
+                //    if (item=='-')
+                //    {
+                //        dlCount++;
+                //    }
+                //}
+
+                
+                //GetFactorId(_contentList.result, result, ref nameId);
+                               
+                AutoGenerateNumMethod.GetPolyline(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString(), result, dataGridView1.Rows[e.RowIndex].Cells["individualName"].Value.ToString(),e.RowIndex,ref dataGridView1);
+
+                
             }
 
             //点击button按钮事件
@@ -124,11 +282,34 @@ namespace RegulatoryPlan.UI
 
                 if (dataGridView1.Rows[e.RowIndex].Cells[0].Value is "" || dataGridView1.Rows[e.RowIndex].Cells[0].Value == null || dataGridView1.Rows[e.RowIndex].Cells[1].Value == null)
                 {
-                    MessageBox.Show("请先拾取多端线");
+                    MessageBox.Show("请先拾取多段线");
                     return;
                 }
+                string selects = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                if (selects.EndsWith(","))
+                {
+                    selects = selects.Remove(selects.Length-1, 1);
+                }
+                List<String> list = new List<string>(selects.Split(','));
+                List<String> list1 = new List<string>();
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        if(row.Index!=e.RowIndex)
+                        {
+                            string select = row.Cells[0].Value.ToString();
+                            if (select.EndsWith(","))
+                            {
+                                select = select.Remove(select.Length - 1, 1);
+                            }
+                            list1.AddRange(select.Split(','));
+                        }
+                    }
+                }
 
-                AutoGenerateNumMethod.FindPolyline(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                LocationService.FindPolyline(list, list1);
+                //LocationService.FindPolylines(list);
                 //dataGridView1.CurrentRow.Cells[2].Value = polylineNumber;
             }
 
@@ -141,7 +322,14 @@ namespace RegulatoryPlan.UI
                     {
                         if (this.dataGridView1.CurrentRow.Cells[0].Value != null)
                         {
-                            AutoGenerateNumMethod.DeletePolyline(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                            string selects = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                            if (selects.EndsWith(","))
+                            {
+                                selects = selects.Remove(selects.Length - 1, 1);
+                            }
+                            List<String> list = new List<string>(selects.Split(','));
+
+                            AutoGenerateNumMethod.DeletePolyline(list);
                             dataGridView1.Rows.RemoveAt(e.RowIndex);
                         }
                         // 如果多段线和编码为空

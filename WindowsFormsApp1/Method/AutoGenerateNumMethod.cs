@@ -10,6 +10,8 @@ using RegulatoryPlan.UI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CadInterface.CadService;
+using System.Runtime.InteropServices;
 
 namespace RegulatoryPlan.Method
 {
@@ -79,88 +81,125 @@ namespace RegulatoryPlan.Method
             }
             return entId;
         }
-
-        internal static String GetPolyline(string num, string factor, string individualName)
+        [DllImport("user32.dll", EntryPoint = "SetFocus")]
+        public static extern int SetFocus(IntPtr hWnd);
+        internal static void GetPolyline(string num, string factor, string individualName,int index,ref System.Windows.Forms.DataGridView dataGridView1)
         {
             string polylineId = "";
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Editor ed = doc.Editor;
+            Database db = doc.Database;
+
+            DocumentLock m_DocumentLock = Application.DocumentManager.MdiActiveDocument.LockDocument();
             try
             {
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                Editor ed = doc.Editor;
-                Database db = doc.Database;
-
-                DocumentLock m_DocumentLock = Application.DocumentManager.MdiActiveDocument.LockDocument();
-
-                using (Transaction tr = db.TransactionManager.StartTransaction())
+                //PromptSelectionResult acSSPrompt = ed.GetSelection();
+                Entity acSSObj = null;
+                while (true)
                 {
-                    PromptSelectionResult acSSPrompt = ed.GetSelection();
-
-                    if (acSSPrompt.Status == PromptStatus.OK)
+                    using (Transaction tr = db.TransactionManager.StartTransaction())
                     {
-                        SelectionSet acSSet = acSSPrompt.Value;
-                        foreach (SelectedObject acSSObj in acSSet)
+                        //让CAD获取焦点
+                        SetFocus(Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Window.Handle);
+                        acSSObj = TechnologicalProcess.GetEntity("请选择多段线！");
+                        bool changeData = false;
+                        if (acSSObj != null&& acSSObj is Polyline)
                         {
-                            if (acSSObj != null)
+                            //如果扩展字典中已包含指定的扩展记录对象  
+                            ResultBuffer resultBuffer = ExtendedDataHelper.GetObjXrecord(acSSObj.ObjectId, "polylineNumber");//读扩展属性
+                            if (resultBuffer != null)
                             {
-                                Entity ent1 = tr.GetObject(acSSObj.ObjectId, OpenMode.ForRead) as Entity;
-
-                                if (ent1 is Polyline)
+                                if (System.Windows.Forms.DialogResult.Yes == System.Windows.Forms.MessageBox.Show("多段线已定义个体，是否覆盖信息！", "消息", System.Windows.Forms.MessageBoxButtons.YesNo))
                                 {
-                                    //添加扩展记录之前，先创建对象的扩展字典
-                                    DBObject obj = tr.GetObject(acSSObj.ObjectId, OpenMode.ForRead);//以读的方式打开
-
-                                    //AddXdata(acSSObj.ObjectId, "num", num);
-                                    if (obj.ExtensionDictionary.IsNull)//如果对象无扩展字典，那就给创建
-                                    {
-                                        obj.UpgradeOpen();//切换对象为写的状态
-                                        obj.CreateExtensionDictionary();//为对象创建扩展字典，一个对象只能拥有一个扩展字典
-                                        obj.DowngradeOpen();//将对象切换为读的状态
-                                    }
-                                    //打开对象的扩展字典
-                                    DBDictionary dict = obj.ExtensionDictionary.GetObject(OpenMode.ForRead) as DBDictionary;
-                                    //如果扩展字典中已包含指定的扩展记录对象  
-                                    if (dict.Contains("polylineNumber"))
-                                    {
-                                        polylineId = acSSObj.ObjectId.Handle.Value.ToString();
-
-                                        m_DocumentLock.Dispose();
-                                    }
-                                    else //若没有包含扩展记录，则创建一个
-                                    {
-                                        ResultBuffer valueBuffer = new ResultBuffer();
-                                        valueBuffer.Add(new TypedValue(5005, num));
-                                        valueBuffer.Add(new TypedValue(5005, factor));
-                                        valueBuffer.Add(new TypedValue(5005, individualName));
-
-                                        Xrecord xrec = new Xrecord();//为对象创建一个扩展记录 
-                                        xrec.Data = valueBuffer;//指定扩展记录的内容，这里用到了自定义类型转换，TypedValueList-->ResultBuffer
-
-                                        dict.UpgradeOpen();//将扩展字典切换为写的状态，以便添加一个扩展记录
-                                        ObjectId xrecId = dict.SetAt("polylineNumber", xrec);//在扩展字典中加入新建的扩展记录，并指定它的搜索关键字
-                                        tr.AddNewlyCreatedDBObject(xrec, true);
-                                        dict.DowngradeOpen();//将扩展字典切换为读的状态
-
-                                        m_DocumentLock.Dispose();
-
-                                        polylineId = acSSObj.ObjectId.Handle.Value.ToString();
-                                        System.Windows.Forms.MessageBox.Show("添加成功");
-
-                                    }
-
+                                    changeData = true;
                                 }
                             }
-                        }
-                    }
-                    tr.Commit();
+                            else
+                            {
+                                changeData = true;
+                            }                   
+                            if(changeData) //若没有包含扩展记录，则创建一个
+                            {
+                                ResultBuffer valueBuffer = new ResultBuffer();
+                                valueBuffer.Add(new TypedValue((int)DxfCode.Text, num));
+                                valueBuffer.Add(new TypedValue((int)DxfCode.Text, factor));
+                                valueBuffer.Add(new TypedValue((int)DxfCode.Text, individualName));
 
+                                ExtendedDataHelper.ModObjXrecord(acSSObj.ObjectId, "polylineNumber", valueBuffer);//写扩展属性
+
+                                polylineId = acSSObj.ObjectId.Handle.Value.ToString();// +",";
+                                //System.Windows.Forms.MessageBox.Show("添加成功");
+                            }
+                        }
+                        else if (acSSObj == null)
+                        {
+                            tr.Commit();
+                            break;
+                        }
+
+                        //去除已添加的id
+                        if (changeData&&dataGridView1.Rows.Count > 0)
+                        {
+                            //string[] vals = value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                            System.Windows.Forms.DataGridViewRow deleteRow = null;
+                            foreach (System.Windows.Forms.DataGridViewRow item in dataGridView1.Rows)
+                            {
+                                string gridData = ((string)item.Cells[0].Value);
+                                if (gridData != null)
+                                {
+                                    //foreach (var val in vals)
+                                    //{
+                                        if (gridData.Contains(polylineId))
+                                        {
+                                            if (gridData.IndexOf(polylineId + ",") >=0)
+                                            {
+                                                gridData = gridData.Replace(polylineId + ",", "");
+                                            }
+                                            else
+                                            {
+                                                gridData = gridData.Replace(polylineId, "");
+                                            }
+                                            int factorcount = 0;
+                                            int.TryParse((string)item.Cells[4].Value, out factorcount);
+                                            item.Cells[4].Value = (factorcount - 1).ToString();
+
+                                            System.Windows.Forms.Application.DoEvents();
+
+                                            if ( factorcount==1 && index!=item.Index )
+                                            {
+                                                deleteRow =item;                                                
+                                            }
+                                        }
+                                    //}
+                                    item.Cells[0].Value = gridData;
+                                }
+                            }
+
+                            dataGridView1.Rows[index].Cells[0].Value += polylineId + ",";
+
+                            //更新数量
+                            int count = 0;
+                            int.TryParse((string)dataGridView1.Rows[index].Cells[4].Value, out count);
+                            dataGridView1.Rows[index].Cells[4].Value = (count + 1).ToString();
+                            System.Windows.Forms.Application.DoEvents();
+                            if (deleteRow!=null)
+                            {
+                                dataGridView1.Rows.Remove(deleteRow);
+                            }
+                        }
+
+                        tr.Commit();
+                    }
                 }
             }
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.ToString());
             }
-
-            return polylineId;
+            finally
+            {
+                m_DocumentLock.Dispose();
+            }
         }
 
         internal static void FindPolyline(string polylineId)
@@ -205,7 +244,7 @@ namespace RegulatoryPlan.Method
 
         }
 
-        internal static void DeletePolyline(string polylineId)
+        internal static void DeletePolyline(List<string> list)
         {
             try
             {
@@ -217,24 +256,26 @@ namespace RegulatoryPlan.Method
 
                 using (Transaction tr = db.TransactionManager.StartTransaction())
                 {
-                    ObjectId newObjectId = db.GetObjectId(false, new Handle(Convert.ToInt64(polylineId)), 0);
-                    Entity entity = tr.GetObject(newObjectId, OpenMode.ForRead) as Entity;
-                    if (entity == null)
+                    foreach (string polylineId in list)
                     {
-                        return;
-                    }
+                        ObjectId newObjectId = db.GetObjectId(false, new Handle(Convert.ToInt64(polylineId)), 0);
+                        Entity entity = tr.GetObject(newObjectId, OpenMode.ForRead) as Entity;
+                        if (entity == null)
+                        {
+                            return;
+                        }
 
-                    ObjectId dictId = entity.ExtensionDictionary;
-                    if (dictId.IsNull)
-                    {
-                        return;//若对象没有扩展字典，则返回
+                        ObjectId dictId = entity.ExtensionDictionary;
+                        if (dictId.IsNull)
+                        {
+                            return;//若对象没有扩展字典，则返回
+                        }
+                        entity.UpgradeOpen();
+                        DBDictionary dict = dictId.GetObject(OpenMode.ForWrite) as DBDictionary;
+                        dict.Remove("polylineNumber");
+                        entity.ReleaseExtensionDictionary();
+                        entity.DowngradeOpen();
                     }
-                    entity.UpgradeOpen();
-                    DBDictionary dict = dictId.GetObject(OpenMode.ForWrite) as DBDictionary;
-                    dict.Remove("polylineNumber");
-                    entity.ReleaseExtensionDictionary();
-                    entity.DowngradeOpen();
-
                     System.Windows.Forms.MessageBox.Show("删除成功");
                     tr.Commit();
                 }
@@ -248,7 +289,7 @@ namespace RegulatoryPlan.Method
 
         }
 
-        public static System.Data.DataTable GetAllPolylineNums()
+        public static System.Data.DataTable GetAllPolylineNumsEx(Polyline line)
         {
             System.Data.DataTable table = new System.Data.DataTable("编码");
             table.Columns.Add(new System.Data.DataColumn(("多段线id"), typeof(string)));
@@ -261,16 +302,76 @@ namespace RegulatoryPlan.Method
 
             try
             {
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                Editor ed = doc.Editor;
-                Database db = doc.Database;
-                DocumentLock m_DocumentLock = Application.DocumentManager.MdiActiveDocument.LockDocument();
+                ObjectId dictId = line.ExtensionDictionary;//获取对象的扩展字典的id
+                if (!dictId.IsNull)
+                {
+                    DBDictionary dict = dictId.GetObject(OpenMode.ForRead) as DBDictionary;//获取对象的扩展字典
+                    if (!dict.Contains("polylineNumber"))
+                    {
+                        return null;//如果扩展字典中没有包含指定关键 字的扩展记录，则返回null；
+                    }
+                    //先要获取对象的扩展字典或图形中的有名对象字典，然后才能在字典中获取要查询的扩展记录
+                    ObjectId xrecordId = dict.GetAt("polylineNumber");//获取扩展记录对象的id
+                    Xrecord xrecord = xrecordId.GetObject(OpenMode.ForRead) as Xrecord;//根据id获取扩展记录对象
+                    ResultBuffer resBuf = xrecord.Data;
 
+                    ResultBufferEnumerator rator = resBuf.GetEnumerator();
+                    int i = 0;
+                    row = table.NewRow();
+                    row["多段线id"] = line.Id.Handle.Value.ToString();
+
+                    while (rator.MoveNext())
+                    {
+                        TypedValue re = rator.Current;
+                        if (i == 0)
+                        {
+                            row["个体编码"] = re.Value;
+                        }
+                        if (i == 1)
+                        {
+                            row["个体要素"] = re.Value;
+                        }
+                        if (i == 2)
+                        {
+                            row["个体名称"] = re.Value;
+                        }
+                        i++;
+                    }
+
+                    table.Rows.Add(row);
+                }
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.ToString());
+            }
+            return table;
+
+        }
+
+        public static System.Data.DataTable GetAllPolylineNums()
+        {           
+            System.Data.DataTable table = new System.Data.DataTable("编码");
+            table.Columns.Add(new System.Data.DataColumn(("多段线id"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体编码"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体要素"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体名称"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("数量"), typeof(string)));
+
+            System.Data.DataColumn column;
+            System.Data.DataRow row;
+
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Editor ed = doc.Editor;
+            Database db = doc.Database;
+            DocumentLock m_DocumentLock = Application.DocumentManager.MdiActiveDocument.LockDocument();
+            try
+            {
                 using (Transaction tr = db.TransactionManager.StartTransaction())
                 {
                     foreach (ObjectId layerId in LayersToList(db))
                     {
-                        LayerTableRecord layer = tr.GetObject(layerId, OpenMode.ForWrite) as LayerTableRecord;
+                        LayerTableRecord layer = tr.GetObject(layerId, OpenMode.ForRead) as LayerTableRecord;
 
                         TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, layer.Name) };
                         SelectionFilter sfilter = new SelectionFilter(filList);
@@ -286,10 +387,8 @@ namespace RegulatoryPlan.Method
                                 ObjectId dictId = obj.ExtensionDictionary;//获取对象的扩展字典的id
 
                                 Entity ent1 = tr.GetObject(id, OpenMode.ForRead) as Entity;
-
                                 if (ent1 is Polyline && !dictId.IsNull)
                                 {
-
                                     DBDictionary dict = dictId.GetObject(OpenMode.ForRead) as DBDictionary;//获取对象的扩展字典
                                     if (!dict.Contains("polylineNumber"))
                                     {
@@ -302,43 +401,74 @@ namespace RegulatoryPlan.Method
 
                                     ResultBufferEnumerator rator = resBuf.GetEnumerator();
                                     int i = 0;
-                                    row = table.NewRow();
-                                    row["多段线id"] = id.Handle.Value.ToString();
 
+                                    List<string> values = new List<string>();
                                     while (rator.MoveNext())
                                     {
-                                        TypedValue re = rator.Current;
-                                        if (i==0)
-                                        {
-                                            row["个体编码"] = re.Value;
-                                        }
-                                        if(i == 1)
-                                        {
-                                            row["个体要素"] = re.Value;
-                                        }
-                                        if (i == 2)
-                                        {
-                                            row["个体名称"] = re.Value;
-                                         }
-                                        i++;
+                                        TypedValue re = rator.Current;                                        
+                                        values.Add((string)re.Value);
                                     }
 
-                                    table.Rows.Add(row);
+                                    bool hasData = false;
+                                    foreach (System.Data.DataRow item in table.Rows)
+                                    {
+                                        if((string)item["个体编码"]==values[0]&&(string)item["个体要素"] ==values[1]&& (string)item["个体名称"] == values[2])
+                                        {
+                                            item["多段线id"] += id.Handle.Value.ToString()+ ",";
+                                            int count = 0;
+                                            int.TryParse((string)item["数量"], out count);
+                                            item["数量"] = count + 1;
+                                            hasData = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!hasData)
+                                    {
+                                        row = table.NewRow();
+                                        row["多段线id"] = id.Handle.Value.ToString() + ",";
+                                        row["数量"] = 1;                                        
+                                        while (rator.MoveNext())
+                                        {
+                                            TypedValue re = rator.Current;
+                                            if (i == 0)
+                                            {
+                                                row["个体编码"] = re.Value;
+                                            }
+                                            if (i == 1)
+                                            {
+                                                row["个体要素"] = re.Value;
+                                            }
+                                            if (i == 2)
+                                            {
+                                                row["个体名称"] = re.Value;
+                                            }
+                                            i++;
+                                        }
+                                        table.Rows.Add(row);
+                                    }
+                                    resBuf.Dispose();
+                                    xrecord.Dispose();
+                                    dict.Dispose();
                                 }
+                                ent1.Dispose();
+                                obj.Dispose();
                             }
                         }
+
+                        layer.Dispose();
                     }
-
+                    tr.Commit();
                 }
-
-
             }
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.ToString());
             }
+            finally
+            {
+                m_DocumentLock.Dispose();
+            }
             return table;
-
         }
 
         //public static GetPolyInfo(Polyline polyline)

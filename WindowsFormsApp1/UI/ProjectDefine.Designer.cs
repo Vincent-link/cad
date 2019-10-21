@@ -32,6 +32,8 @@ namespace RegulatoryPlan.UI
         private void InitializeComponent(System.Collections.Generic.List<string> names)
         {
             this.comboBoxCity = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -69,7 +71,28 @@ namespace RegulatoryPlan.UI
                 }
             }
             this.comboBoxCity.DropDownWidth = width + 70;
-
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.Image = global::RegulatoryPlan.Properties.Resources.Shape002;
+            this.pictureBox1.Location = new System.Drawing.Point(30, 82);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(20, 26);
+            this.pictureBox1.TabIndex = 14;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label5.Location = new System.Drawing.Point(24, 16);
+            this.label5.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(110, 31);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "项目定义";
             // 
             // label6
             // 
@@ -133,6 +156,8 @@ namespace RegulatoryPlan.UI
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(554, 405);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.pictureBox1);            
             this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBoxCity);
             this.Controls.Add(this.button2);
@@ -154,8 +179,10 @@ namespace RegulatoryPlan.UI
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBoxCity;
         private System.Windows.Forms.Label label6;
-
+        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+
     }
 
 }

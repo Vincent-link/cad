@@ -1,6 +1,7 @@
 ﻿using RegulatoryModel.Model;
 using RegulatoryPlan.Command;
 using RegulatoryPlan.Model;
+using RegulatoryPlan.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,7 @@ namespace RegulatoryPlan.UI
         public List<string> openFile = new List<string>();
         public string openCity = "";
         public DerivedTypeEnum derivedType = DerivedTypeEnum.None;
-        List<Dictionary<string, string>> contentList = new List<Dictionary<string, string>>();
+        JsonCityData contentList = new JsonCityData();
 
         public BatchChooseCityForm()
         {
@@ -29,7 +30,7 @@ namespace RegulatoryPlan.UI
             List<string> names = new List<string>();
             try
             {
-                string projectIdBaseAddress = "http://172.18.84.114:8080/PDD/pdd/individual-manage!findAllProject.action";
+                string projectIdBaseAddress = "http://172.18.84.155:8080/PDD/pdd/cim-interface!findAllProject";
                 var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
 
                 var response = projectIdHttp.GetResponse();
@@ -37,7 +38,7 @@ namespace RegulatoryPlan.UI
                 var stream = response.GetResponseStream();
                 var sr = new StreamReader(stream, Encoding.UTF8);
                 var content = sr.ReadToEnd();
-                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(content);
+                contentList = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonCityData>(content);
             }
             catch (Exception ex)
             {
@@ -45,12 +46,12 @@ namespace RegulatoryPlan.UI
             }
             //MessageBox.Show(content);
             string city = "";
-            foreach (Dictionary<string, string> name in contentList)
+            foreach (City item in contentList.result)
             {
-                names.Add(name["name"]);
-                if (name["oid"] == cityId)
+                names.Add(item.name);
+                if (item.oid == cityId)
                 {
-                    city = name["name"];
+                    city = item.name;
                 }
             }
 
@@ -150,7 +151,8 @@ namespace RegulatoryPlan.UI
             //lb_FileTime.Text = File.GetLastWriteTime(fi).ToLongDateString();
             //this.lb_FileLocation.Text = Path.GetDirectoryName(fi);
             this.fileGroup.Controls.Remove((sender as Button).Parent);
-            
+            this.fileGroup.Refresh();
+            openFile.Remove((sender as Button).Parent.Text);
         }
 
 
@@ -169,11 +171,11 @@ namespace RegulatoryPlan.UI
                 MessageBox.Show("城市不能为空！");
                 return;
             }
-            if (this.comboBox1.SelectedItem == null)
-            {
-                MessageBox.Show("导出类型不能为空！");
-                return;
-            }
+            //if (this.comboBox1.SelectedItem == null)
+            //{
+            //    MessageBox.Show("导出类型不能为空！");
+            //    return;
+            //}
             if (this.fileGroup.Controls.Count == 0)
             {
                 MessageBox.Show("图纸不能为空！");
@@ -182,8 +184,8 @@ namespace RegulatoryPlan.UI
 
             this.DialogResult = DialogResult.OK;
 
-            derivedType = GetChooseType();
-            openCity = contentList[comboBoxCity.SelectedIndex]["oid"];
+            //derivedType = GetChooseType();
+            openCity = contentList.result[comboBoxCity.SelectedIndex].oid;
             this.Close();
 
         }
@@ -192,18 +194,78 @@ namespace RegulatoryPlan.UI
         private DerivedTypeEnum GetChooseType()
         {
             DerivedTypeEnum crtType = DerivedTypeEnum.None;
-            switch (comboBox1.SelectedIndex)
-            {
-                case 0:
-                    crtType = DerivedTypeEnum.UnitPlan;
-                    break;
-                case 1:
-                    crtType = DerivedTypeEnum.PointsPlan;
-                    break;
-                case 2:
-                    crtType = DerivedTypeEnum.None;
-                    break;
-            }
+            //switch (comboBox1.SelectedIndex)
+            //{
+            //    case 0:
+            //        crtType = DerivedTypeEnum.UnitPlan;
+            //        break;
+            //    case 1:
+            //        crtType = DerivedTypeEnum.PointsPlan;
+            //        break;
+            //    case 2:
+            //        crtType = DerivedTypeEnum.Power10Kv;
+            //        break;
+            //    case 3:
+            //        crtType = DerivedTypeEnum.WaterSupply;
+            //        break;
+            //    case 4:
+            //        crtType = DerivedTypeEnum.HeatSupply;
+            //        break;
+            //    case 5:
+            //        crtType = DerivedTypeEnum.FuelGas;
+            //        break;
+            //    case 6:
+            //        crtType = DerivedTypeEnum.Communication;
+            //        break;
+            //    case 7:
+            //        crtType = DerivedTypeEnum.BuildingIntegrated;
+            //        break;
+            //    case 8:
+            //        crtType = DerivedTypeEnum.TheRoadSection;
+            //        break;
+            //    case 9:
+            //        crtType = DerivedTypeEnum.PipeLine;
+            //        break;
+            //    case 10:
+            //        crtType = DerivedTypeEnum.Sewage;
+            //        break;
+            //    case 11:
+            //        crtType = DerivedTypeEnum.FiveLine;
+            //        break;
+            //    case 12:
+            //        crtType = DerivedTypeEnum.LimitFactor;
+            //        break;
+            //    case 13:
+            //        crtType = DerivedTypeEnum.RainWater;
+            //        break;
+            //    case 14:
+            //        crtType = DerivedTypeEnum.ReuseWater;
+            //        break;
+            //    case 15:
+            //        crtType = DerivedTypeEnum.Road;
+            //        break;
+            //    case 16:
+            //        crtType = DerivedTypeEnum.CenterCityUseLandPlan;
+            //        break;
+            //    case 17:
+            //        crtType = DerivedTypeEnum.UseLandNumber;
+            //        break;
+            //    case 18:
+            //        crtType = DerivedTypeEnum.CenterCityLifeUseLandPlan;
+            //        break;
+            //    case 19:
+            //        crtType = DerivedTypeEnum.RoadSituation;
+            //        break;
+            //    case 20:
+            //        crtType = DerivedTypeEnum.FacilityControl;
+            //        break;
+            //    case 21:
+            //        crtType = DerivedTypeEnum.FiveLineControl;
+            //        break;
+            //    case 22:
+            //        crtType = DerivedTypeEnum.None;
+            //        break;
+            //}
             return crtType;
         }
 

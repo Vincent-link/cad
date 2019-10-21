@@ -67,8 +67,9 @@
     <Reference Include="Flurl.Http">
       <HintPath>C:\Users\lyj\.nuget\packages\flurl.http\2.4.1\lib\netstandard2.0\Flurl.Http.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>libs\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RegulatoryModel">
       <HintPath>..\RegulatoryModel\bin\Debug\RegulatoryModel.dll</HintPath>
@@ -117,6 +118,8 @@
     <Compile Include="Method\PointsPlanMethod.cs" />
     <Compile Include="Method\UnitPlanMethod.cs" />
     <Compile Include="Method\RoadMethod.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Factor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\AlertInput.cs">
@@ -173,9 +176,11 @@
     </Compile>
     <EmbeddedResource Include="UI\AlertInput.resx">
       <DependentUpon>AlertInput.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\BatchChooseCityForm.resx">
       <DependentUpon>BatchChooseCityForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\BatchFailAlert.resx">
       <DependentUpon>BatchFailAlert.cs</DependentUpon>
@@ -195,6 +200,7 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -266,6 +272,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\span_image.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CadInterface\CadInterface.csproj">
+      <Project>{3a187062-40ed-4434-801a-5461b7ef8d33}</Project>
+      <Name>CadInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataGridViewTreeComboxColumn\DataGridViewTreeComboxColumn.csproj">
+      <Project>{9B3CE81E-9B2F-4B04-84DF-D63EDA2C468D}</Project>
+      <Name>DataGridViewTreeComboxColumn</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

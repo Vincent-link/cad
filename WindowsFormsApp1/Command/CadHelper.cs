@@ -105,18 +105,18 @@ namespace RegulatoryPlan.Command
         {
             try
             {
-                if (fileName == Application.DocumentManager.MdiActiveDocument.Name && num == 0)
+                if (fileName == Application.DocumentManager.MdiActiveDocument.Name && Application.DocumentManager.MdiActiveDocument.IsReadOnly&& num == 0)
                 {
                     Doc = Application.DocumentManager.MdiActiveDocument;
                     num++;
                     MainForm mf = new MainForm(cityName, dp);
-                    mf.Show();
+                    Autodesk.AutoCAD.ApplicationServices.Application.ShowModelessDialog(mf);
+                    //mf.Show();
                     // mf.Close();
 
                 }
             }
             catch(Exception ex)
-
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
 
@@ -147,7 +147,7 @@ namespace RegulatoryPlan.Command
 
         public void AutoGenerateNumber2()
         {
-            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums());
+            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums(),null);
             a.Show();
         }
     }

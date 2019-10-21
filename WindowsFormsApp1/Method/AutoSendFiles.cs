@@ -29,29 +29,30 @@ namespace RegulatoryPlan.Method
 
         internal void AutoOpenPointPlanFile(string file, string cityName, DerivedTypeEnum derivedType, List<string> failedFiles)
         {
+            Document acDoc = Application.DocumentManager.Open(file, false);
+            Database acCurDb = acDoc.Database;
+            Editor ed = acDoc.Editor;
+            DocumentLock docLock = acDoc.LockDocument();
             try
             {
-                Document acDoc = Application.DocumentManager.Open(file, false);
-                Database acCurDb = acDoc.Database;
-                Editor ed = acDoc.Editor;
-
                 ModelBase mb = new ModelBase();
 
-                if (derivedType is DerivedTypeEnum.PointsPlan)
-                {
-                    mb = new PointsPlanModel();
-                }
-                if (derivedType is DerivedTypeEnum.UnitPlan)
-                {
-                    mb = new UnitPlanModel();
-                }
-                if (derivedType is DerivedTypeEnum.None)
-                {
-                    mb = new ModelBase();
-                }
+                //if (derivedType is DerivedTypeEnum.PointsPlan)
+                //{
+                //    mb = new PointsPlanModel();
+                //}
+                //if (derivedType is DerivedTypeEnum.UnitPlan)
+                //{
+                //    mb = new UnitPlanModel();
+                //}
+                //if (derivedType is DerivedTypeEnum.None)
+                //{
+                //    mb = new ModelBase();
+                //}
 
                 // 判断是否读取布局空间（papermodel）
-                MainForm.isOnlyModel = mb.IsOnlyModel;
+                //MainForm.isOnlyModel = mb.IsOnlyModel;
+                MainForm.isOnlyModel = false;
                 mb.DocName = Path.GetFileNameWithoutExtension(file);
                 mb.projectId = cityName;
 
@@ -60,9 +61,9 @@ namespace RegulatoryPlan.Method
                 mbm.GetAllLengedGemo(mb);
                 mbm.GetExportLayers(mb);
 
-                // 获取特殊图层
-                LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
-                layerSpecial.AddSpecialLayerModel(mb);
+                //// 获取特殊图层
+                //LayerSpecialCommand<ModelBase> layerSpecial = new LayerSpecialCommand<ModelBase>();
+                //layerSpecial.AddSpecialLayerModel(mb);
 
                 //mb.LayerList = new List<string>{"道路中线"};
                 if (mb.LayerList != null)
@@ -78,20 +79,27 @@ namespace RegulatoryPlan.Method
                         }
                         mb.allLines.Add(lyModel);
                     }
-                    if (derivedType is DerivedTypeEnum.PointsPlan)
-                    {
-                        PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
-                    }
-                    if (derivedType is DerivedTypeEnum.UnitPlan)
-                    {
-                        PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
-                    }
-                    if (derivedType is DerivedTypeEnum.None)
-                    {
-                        PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
-                    }
-                }
+                    //if (derivedType is DerivedTypeEnum.PointsPlan)
+                    //{
+                    //    PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
+                    //}
+                    //if (derivedType is DerivedTypeEnum.UnitPlan)
+                    //{
+                    //    PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
+                    //}
+                    //if (derivedType is DerivedTypeEnum.None)
+                    //{
+                    //    PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
+                    //}
+                    PostModel.AutoPostModelBase(mb as ModelBase, failedFiles);
 
+                }
+                docLock.Dispose();
+                acCurDb.Dispose();
+                acDoc.CloseAndDiscard();
+                acDoc.Dispose();
+                GC.Collect();
+                System.Windows.Forms.Application.DoEvents();
             }
             catch (Exception e)
             {
@@ -104,8 +112,9 @@ namespace RegulatoryPlan.Method
                 //    logFile.Flush();
                 //    logFile.Close();
                 //}
-
                 System.Windows.Forms.MessageBox.Show(e.Message);
+                docLock.Dispose();
+                GC.Collect();
             }
             // 发送类型
 

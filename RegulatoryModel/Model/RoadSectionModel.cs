@@ -51,6 +51,23 @@ namespace RegulatoryModel.Model
         public string RoadNameLayer { get => roadNameLayer; set => roadNameLayer = value; }
         public string RoadNameType { get => roadNameType; set => roadNameType = value; }
 
+        /// <summary>
+        /// 个体名称
+        /// </summary>
+        public string individualName { get; set; }
+        /// <summary>
+        /// 个体要素
+        /// </summary>
+        public string individualFactor { get; set; }
+        /// <summary>
+        /// 个体编码
+        /// </summary>
+        public string individualCode { get; set; }
+        /// <summary>
+        /// 是否是虚线
+        /// </summary>
+        public bool isDashed { get; set; }
+        
         public override string ItemToJson()
         {
             string outJson = "{";
