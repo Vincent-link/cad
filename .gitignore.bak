@@ -263,10 +263,5 @@ __pycache__/
 # VS
 .WindowsFormsApp1/bin/Debug/
 *.err
-.CadInterface/*.dll
-.CustomScrollBar/*.dll
-.DataGridViewTreeComboxColumn/*.dll
-.RegulatoryModel/*.dll
-.RegulatoryPost/*.dll
-.test/*.dll
+*.dll
 .WindowsFormsApp1/*.dll
