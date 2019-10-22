@@ -80,8 +80,8 @@ namespace RegulatoryPost.FenTuZe
         {
             string[] baseAddresses = new string[] {
                     //"http://172.18.84.102:8080/CIM/", // 測試
-                   // "http://172.18.84.155:8080/PDD/pdd/cad!addCadGeomByType.action", // GIS
-                    "http://172.18.84.155:8080/PDD/pdd/webgl!addIndividual.action" // JAVA
+                   // "http://172.18.84.114:8080/PDD/pdd/cad!addCadGeomByType.action", // GIS
+                    "http://172.18.84.114:8080/PDD/pdd/webgl!addIndividual.action" // JAVA
                 };
             return baseAddresses;
         }

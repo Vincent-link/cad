@@ -134,7 +134,7 @@ namespace RegulatoryPlan.Command
 
                 try
                 {
-                    string projectIdBaseAddress = "http://172.18.84.155:8080/PDD/pdd/cim-interface!findElementByProjectId?projectId=" + cityId;
+                    string projectIdBaseAddress = "http://172.18.84.114:8080/PDD/pdd/cim-interface!findElementByProjectId?projectId=" + cityId;
                     var projectIdHttp = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(projectIdBaseAddress));
 
                     var response = projectIdHttp.GetResponse();
