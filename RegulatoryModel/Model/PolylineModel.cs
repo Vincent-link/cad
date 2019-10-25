@@ -48,6 +48,10 @@ namespace RegulatoryModel.Model
         /// </summary>
         public string individualCode { get; set; }
         /// <summary>
+        /// 个体阶段
+        /// </summary>
+        public string individualStage { get; set; }
+        /// <summary>
         /// 是否是虚线
         /// </summary>
         public bool isDashed { get; set; }

@@ -50,6 +50,7 @@ namespace RegulatoryPost.FenTuZe
                 List<string> individualName = new List<string>(); //图层
                 List<string> individualFactor = new List<string>(); //图层
                 List<string> individualCode = new List<string>(); //图层
+                List<string> individualStage = new List<string>(); //图层
 
                 List<bool> dashes = new List<bool>(); //是否虚线
 
@@ -114,6 +115,7 @@ namespace RegulatoryPost.FenTuZe
                                         individualName.Add("");
                                         individualFactor.Add("");
                                         individualCode.Add("");
+                                        individualStage.Add("");
 
                                     }
                                     if (pf is BlockInfoModel)
@@ -152,6 +154,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
+
                                             }
                                         }
                                         if (blm.Circle != null && blm.Circle.Count > 0)
@@ -187,6 +191,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
+
                                             }
                                         }
                                         if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -224,6 +230,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
+
                                             }
                                         }
                                         if (blm.DbText != null)
@@ -254,6 +262,7 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
 
                                             }
                                         }
@@ -293,6 +302,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
+
                                             }
 
                                         }
@@ -334,6 +345,7 @@ namespace RegulatoryPost.FenTuZe
                                                         individualName.Add("");
                                                         individualFactor.Add("");
                                                         individualCode.Add("");
+                                                        individualStage.Add("");
 
                                                         dashes.Add(arcModel.isDashed);
                                                     }
@@ -398,6 +410,8 @@ namespace RegulatoryPost.FenTuZe
                                                         individualName.Add(arcModel.individualName);
                                                         individualFactor.Add(arcModel.individualFactor);
                                                         individualCode.Add(arcModel.individualCode);
+                                                        individualStage.Add(arcModel.individualStage);
+
                                                     }
 
                                                 }
@@ -446,6 +460,8 @@ namespace RegulatoryPost.FenTuZe
                                                         individualName.Add("");
                                                         individualFactor.Add("");
                                                         individualCode.Add("");
+                                                        individualStage.Add("");
+
                                                     }
                                                 }
 
@@ -485,6 +501,7 @@ namespace RegulatoryPost.FenTuZe
                 string individualNamestring = JsonConvert.SerializeObject(individualName);
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
+                string individualStagestring = JsonConvert.SerializeObject(individualStage);
 
                 string dashesString = JsonConvert.SerializeObject(dashes);
 
@@ -531,6 +548,7 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualName", individualNamestring);
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
+                result.Add("individualStage", individualStagestring);
 
                 result.Add("dashes", dashesString);
 
@@ -571,6 +589,7 @@ namespace RegulatoryPost.FenTuZe
             List<string> individualName = new List<string>(); //图层
             List<string> individualFactor = new List<string>(); //图层
             List<string> individualCode = new List<string>(); //图层
+            List<string> individualStage = new List<string>(); //图层
 
             List<bool> dashes = new List<bool>(); //是否虚线
 
@@ -644,6 +663,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
+
                                             }
                                         }
 
@@ -718,6 +739,7 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
                                         }
 
                                     }
@@ -748,6 +770,8 @@ namespace RegulatoryPost.FenTuZe
                                         individualName.Add("");
                                         individualFactor.Add("");
                                         individualCode.Add("");
+                                        individualStage.Add("");
+
                                     }
                                 }
                             }
@@ -790,6 +814,8 @@ namespace RegulatoryPost.FenTuZe
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
+                                    individualStage.Add("");
+
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -829,6 +855,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -865,6 +893,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
 
@@ -893,6 +923,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.DimensionPositon != null)
@@ -936,6 +968,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
 
                                     }
@@ -1007,6 +1041,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
+                                                individualStage.Add(arcModel.individualStage);
+
                                             }
 
                                         }
@@ -1052,6 +1088,8 @@ namespace RegulatoryPost.FenTuZe
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
+                                                    individualStage.Add("");
+
                                                 }
                                             }
 
@@ -1092,6 +1130,7 @@ namespace RegulatoryPost.FenTuZe
             string individualNamestring = JsonConvert.SerializeObject(individualName);
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
+            string individualStagestring = JsonConvert.SerializeObject(individualStage);
 
             string dashesString = JsonConvert.SerializeObject(dashes);
 
@@ -1120,6 +1159,7 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+            result.Add("individualStage", individualStagestring);
 
             result.Add("dashes", dashesString);
 
@@ -1157,6 +1197,7 @@ namespace RegulatoryPost.FenTuZe
             List<string> individualName = new List<string>(); //图层
             List<string> individualFactor = new List<string>(); //图层
             List<string> individualCode = new List<string>(); //图层
+            List<string> individualStage = new List<string>(); //图层
 
             List<bool> dashes = new List<bool>(); //是否虚线
 
@@ -1231,6 +1272,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                individualStage.Add("");
+
                                             }
                                         }
 
@@ -1304,6 +1347,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
 
                                     }
@@ -1334,6 +1379,8 @@ namespace RegulatoryPost.FenTuZe
                                         individualName.Add("");
                                         individualFactor.Add("");
                                         individualCode.Add("");
+                                        individualStage.Add("");
+
                                     }
                                 }
                             }
@@ -1376,6 +1423,8 @@ namespace RegulatoryPost.FenTuZe
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
+                                    individualStage.Add("");
+
 
                                 }
                                 if (pf is BlockInfoModel)
@@ -1416,6 +1465,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -1452,6 +1503,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
 
@@ -1480,6 +1533,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.DimensionPositon != null)
@@ -1527,6 +1582,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
 
                                     }
@@ -1597,6 +1654,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
+                                                individualStage.Add(arcModel.individualStage);
+
 
                                             }
 
@@ -1643,6 +1702,8 @@ namespace RegulatoryPost.FenTuZe
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
+                                                    individualStage.Add("");
+
                                                 }
                                             }
 
@@ -1682,6 +1743,7 @@ namespace RegulatoryPost.FenTuZe
             string individualNamestring = JsonConvert.SerializeObject(individualName);
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
+            string individualStagestring = JsonConvert.SerializeObject(individualStage);
 
             string dashesString = JsonConvert.SerializeObject(dashes);
 
@@ -1710,6 +1772,7 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+            result.Add("individualStage", individualStagestring);
 
             result.Add("dashes", dashesString);
 
@@ -1751,6 +1814,7 @@ namespace RegulatoryPost.FenTuZe
                 List<string> individualName = new List<string>(); //图层
                 List<string> individualFactor = new List<string>(); //图层
                 List<string> individualCode = new List<string>(); //图层
+                List<string> individualStage = new List<string>(); //图层
 
 
                 if (model.kgGuide != null)
@@ -1805,6 +1869,8 @@ namespace RegulatoryPost.FenTuZe
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
+                                    individualStage.Add("");
+
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -1840,6 +1906,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -1872,6 +1940,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -1905,6 +1975,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.DbText != null)
@@ -1932,6 +2004,7 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
 
                                         }
                                     }
@@ -1968,6 +2041,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
 
                                     }
@@ -2023,6 +2098,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
+                                                individualStage.Add(arcModel.individualStage);
+
                                             }
 
                                         }
@@ -2066,6 +2143,8 @@ namespace RegulatoryPost.FenTuZe
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
+                                                    individualStage.Add("");
+
                                                 }
                                             }
 
@@ -2112,6 +2191,8 @@ namespace RegulatoryPost.FenTuZe
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
+                                    individualStage.Add("");
+
                                 }
                             }
 
@@ -2155,6 +2236,8 @@ namespace RegulatoryPost.FenTuZe
                                 individualName.Add(roadModel.individualName);
                                 individualFactor.Add(roadModel.individualFactor);
                                 individualCode.Add(roadModel.individualCode);
+                                individualStage.Add(roadModel.individualStage);
+
                             }
 
                         }
@@ -2184,6 +2267,7 @@ namespace RegulatoryPost.FenTuZe
 
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
+                string individualStagestring = JsonConvert.SerializeObject(individualStage);
 
                 string dashesString = JsonConvert.SerializeObject(dashes); 
                 // UUID
@@ -2226,6 +2310,8 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualName", individualNamestring);
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
+                result.Add("individualStage", individualStagestring);
+
                 result.Add("dashes", dashesString);
                 
                 FenTuZe.PostData(result);
@@ -2272,6 +2358,7 @@ namespace RegulatoryPost.FenTuZe
                 List<string> individualName = new List<string>(); //图层
                 List<string> individualFactor = new List<string>(); //图层
                 List<string> individualCode = new List<string>(); //图层
+                List<string> individualStage = new List<string>(); //图层
 
                 List<bool> dashes = new List<bool>(); //是否虚线
 
@@ -2347,8 +2434,10 @@ namespace RegulatoryPost.FenTuZe
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
+                                    individualStage.Add("");
+
                                 }
-                                
+
                                 if (pf is BlockInfoModel)
                                 {
                                     BlockInfoModel blm = pf as BlockInfoModel;
@@ -2400,6 +2489,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -2452,6 +2543,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -2509,6 +2602,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.DbText != null)
@@ -2555,6 +2650,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
 
                                         }
                                     }
@@ -2610,6 +2707,8 @@ namespace RegulatoryPost.FenTuZe
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
 
                                     }
@@ -2700,6 +2799,8 @@ namespace RegulatoryPost.FenTuZe
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
+                                                individualStage.Add(arcModel.individualStage);
+
                                             }
 
                                         }
@@ -2760,6 +2861,8 @@ namespace RegulatoryPost.FenTuZe
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
+                                                    individualStage.Add("");
+
                                                 }
                                             }
 
@@ -2798,6 +2901,7 @@ namespace RegulatoryPost.FenTuZe
                 string individualNamestring = JsonConvert.SerializeObject(individualName);
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
+                string individualStagestring = JsonConvert.SerializeObject(individualStage);
 
                 string dashString = JsonConvert.SerializeObject(dashes);
 
@@ -2841,6 +2945,7 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualName", individualNamestring);
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
+                result.Add("individualStage", individualStagestring);
 
                 result.Add("dashes", dashString);
 
@@ -3059,78 +3164,79 @@ namespace RegulatoryPost.FenTuZe
 
         public static double[] Transform(PointF point)
         {
-            double xParam = 94.362163134086399;
-            double yParam = -310.26525523306055;
+            //double xParam = 94.362163134086399;
+            //double yParam = -310.26525523306055;
 
-            double xMultiple = 1.19862910076924;
-            double yMultiple = 1;
+            //double xMultiple = 1.19862910076924;
+            //double yMultiple = 1;
 
-            //旋转中心点
-            double centerX = 114.00092403;
-            double centerY = 36.14333070;
+            ////旋转中心点
+            //double centerX = 114.00092403;
+            //double centerY = 36.14333070;
 
-            //旋转角度
-            double Angle = 0.064894377180536;
+            ////旋转角度
+            //double Angle = 0.064894377180536;
 
-            double X = Math.Round(point.X, 7) + 4000000;
-            double Y = Math.Round(point.Y, 7) + 38500000;
+            //double X = Math.Round(point.X, 7);
+            //double Y = Math.Round(point.Y, 7);
 
-            //double X = 60139 + 4000000;
-            //double Y = 34944 + 38500000;
+            ////double X = 60139 + 4000000;
+            ////double Y = 34944 + 38500000;
 
-            // 由高斯投影坐标反算成经纬度
-            int ProjNo; int ZoneWide; ////带宽
+            //// 由高斯投影坐标反算成经纬度
+            //int ProjNo; int ZoneWide; ////带宽
             double[] output = new double[2];
-            double longitude1, latitude1, longitude0, X0, Y0, xval, yval;//latitude0,
-            double e1, e2, f, a, ee, NN, T, C, M, D, R, u, fai, iPI;
-            iPI = 0.0174532925199433; ////3.1415926535898/180.0;
-            a = 6378245.0; f = 1.0 / 298.3; //54年北京坐标系参数
-                                            //a = 6378140.0; f = 1 / 298.257; //80年西安坐标系参数
-            ZoneWide = 6; ////6度带宽
-            ProjNo = (int)(X / 1000000L); //查找带号
-            longitude0 = (ProjNo - 1) * ZoneWide + ZoneWide / 2;
-            longitude0 = longitude0 * iPI; //中央经线
+            //double longitude1, latitude1, longitude0, X0, Y0, xval, yval;//latitude0,
+            //double e1, e2, f, a, ee, NN, T, C, M, D, R, u, fai, iPI;
+            //iPI = 0.0174532925199433; ////3.1415926535898/180.0;
+            //a = 6378245.0; f = 1.0 / 298.3; //54年北京坐标系参数
+            //                                //a = 6378140.0; f = 1 / 298.257; //80年西安坐标系参数
+            //ZoneWide = 6; ////6度带宽
+            //ProjNo = (int)(X / 1000000L); //查找带号
+            //longitude0 = (ProjNo - 1) * ZoneWide + ZoneWide / 2;
+            //longitude0 = longitude0 * iPI; //中央经线
 
-            X0 = ProjNo * 1000000L + 500000L;
-            Y0 = 0;
-            xval = X - X0; yval = Y - Y0; //带内大地坐标
-            e2 = 2 * f - f * f;
-            e1 = (1.0 - Math.Sqrt(1 - e2)) / (1.0 + Math.Sqrt(1 - e2));
-            ee = e2 / (1 - e2);
-            M = yval;
-            u = M / (a * (1 - e2 / 4 - 3 * e2 * e2 / 64 - 5 * e2 * e2 * e2 / 256));
-            fai = u + (3 * e1 / 2 - 27 * e1 * e1 * e1 / 32) * Math.Sin(2 * u) + (21 * e1 * e1 / 16 - 55 * e1 * e1 * e1 * e1 / 32) * Math.Sin(4 * u)
-            + (151 * e1 * e1 * e1 / 96) * Math.Sin(6 * u) + (1097 * e1 * e1 * e1 * e1 / 512) * Math.Sin(8 * u);
-            C = ee * Math.Cos(fai) * Math.Cos(fai);
-            T = Math.Tan(fai) * Math.Tan(fai);
-            NN = a / Math.Sqrt(1.0 - e2 * Math.Sin(fai) * Math.Sin(fai));
-            R = a * (1 - e2) / Math.Sqrt((1 - e2 * Math.Sin(fai) * Math.Sin(fai)) * (1 - e2 * Math.Sin(fai) * Math.Sin(fai)) * (1 - e2 * Math.Sin
-            (fai) * Math.Sin(fai)));
-            D = xval / NN;
-            //计算经度(Longitude) 纬度(Latitude)
-            longitude1 = longitude0 + (D - (1 + 2 * T + C) * D * D * D / 6 + (5 - 2 * C + 28 * T - 3 * C * C + 8 * ee + 24 * T * T) * D
-            * D * D * D * D / 120) / Math.Cos(fai);
-            latitude1 = fai - (NN * Math.Tan(fai) / R) * (D * D / 2 - (5 + 3 * T + 10 * C - 4 * C * C - 9 * ee) * D * D * D * D / 24
-            + (61 + 90 * T + 298 * C + 45 * T * T - 256 * ee - 3 * C * C) * D * D * D * D * D * D / 720);
-            //转换为度 DD
+            //X0 = ProjNo * 1000000L + 500000L;
+            //Y0 = 0;
+            //xval = X - X0; yval = Y - Y0; //带内大地坐标
+            //e2 = 2 * f - f * f;
+            //e1 = (1.0 - Math.Sqrt(1 - e2)) / (1.0 + Math.Sqrt(1 - e2));
+            //ee = e2 / (1 - e2);
+            //M = yval;
+            //u = M / (a * (1 - e2 / 4 - 3 * e2 * e2 / 64 - 5 * e2 * e2 * e2 / 256));
+            //fai = u + (3 * e1 / 2 - 27 * e1 * e1 * e1 / 32) * Math.Sin(2 * u) + (21 * e1 * e1 / 16 - 55 * e1 * e1 * e1 * e1 / 32) * Math.Sin(4 * u)
+            //+ (151 * e1 * e1 * e1 / 96) * Math.Sin(6 * u) + (1097 * e1 * e1 * e1 * e1 / 512) * Math.Sin(8 * u);
+            //C = ee * Math.Cos(fai) * Math.Cos(fai);
+            //T = Math.Tan(fai) * Math.Tan(fai);
+            //NN = a / Math.Sqrt(1.0 - e2 * Math.Sin(fai) * Math.Sin(fai));
+            //R = a * (1 - e2) / Math.Sqrt((1 - e2 * Math.Sin(fai) * Math.Sin(fai)) * (1 - e2 * Math.Sin(fai) * Math.Sin(fai)) * (1 - e2 * Math.Sin
+            //(fai) * Math.Sin(fai)));
+            //D = xval / NN;
+            ////计算经度(Longitude) 纬度(Latitude)
+            //longitude1 = longitude0 + (D - (1 + 2 * T + C) * D * D * D / 6 + (5 - 2 * C + 28 * T - 3 * C * C + 8 * ee + 24 * T * T) * D
+            //* D * D * D * D / 120) / Math.Cos(fai);
+            //latitude1 = fai - (NN * Math.Tan(fai) / R) * (D * D / 2 - (5 + 3 * T + 10 * C - 4 * C * C - 9 * ee) * D * D * D * D / 24
+            //+ (61 + 90 * T + 298 * C + 45 * T * T - 256 * ee - 3 * C * C) * D * D * D * D * D * D / 720);
+            ////转换为度 DD
 
-            // 现状图
-            output[0] = longitude1 / iPI * xMultiple + xParam;
-            output[1] = latitude1 / iPI * yMultiple + yParam;
+            //// 现状图
+            //output[0] = longitude1 / iPI * xMultiple + xParam;
+            //output[1] = latitude1 / iPI * yMultiple + yParam;
 
-            //output[0] = (lon1 - centerX) * Math.Cos(Angle) - (lat1 - centerY) * Math.Sin(Angle) + centerX;
+            ////output[0] = (lon1 - centerX) * Math.Cos(Angle) - (lat1 - centerY) * Math.Sin(Angle) + centerX;
 
-            //output[1] = (lon1 - centerX) * Math.Sin(Angle) + (lat1 - centerY) * Math.Cos(Angle) + centerY;
+            ////output[1] = (lon1 - centerX) * Math.Sin(Angle) + (lat1 - centerY) * Math.Cos(Angle) + centerY;
+            output[0] = point.X;
+            output[1] = point.Y;
 
-            //output[0] = Math.Round(point.X, 7);
-            //output[1] = Math.Round(point.Y, 7);
+            //if (output[0] == 114.67382285563774)
+            //{
 
-            if (output[0] == 114.67382285563774)
-            {
+            //}
 
-            }
 
             return output;
+
         }
 
         public static string GetUUID()

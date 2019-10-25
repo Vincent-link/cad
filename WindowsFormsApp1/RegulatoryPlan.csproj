@@ -119,6 +119,7 @@
     <Compile Include="Method\UnitPlanMethod.cs" />
     <Compile Include="Method\RoadMethod.cs" />
     <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Stage.cs" />
     <Compile Include="Models\Factor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

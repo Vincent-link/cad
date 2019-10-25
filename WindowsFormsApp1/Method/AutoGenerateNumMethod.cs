@@ -83,7 +83,7 @@ namespace RegulatoryPlan.Method
         }
         [DllImport("user32.dll", EntryPoint = "SetFocus")]
         public static extern int SetFocus(IntPtr hWnd);
-        internal static void GetPolyline(string num, string factor, string individualName,int index,ref System.Windows.Forms.DataGridView dataGridView1)
+        internal static void GetPolyline(string num, string factor, string individualName, string stage, int index,ref System.Windows.Forms.DataGridView dataGridView1)
         {
             string polylineId = "";
             Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -124,6 +124,7 @@ namespace RegulatoryPlan.Method
                                 valueBuffer.Add(new TypedValue((int)DxfCode.Text, num));
                                 valueBuffer.Add(new TypedValue((int)DxfCode.Text, factor));
                                 valueBuffer.Add(new TypedValue((int)DxfCode.Text, individualName));
+                                valueBuffer.Add(new TypedValue((int)DxfCode.Text, stage));
 
                                 ExtendedDataHelper.ModObjXrecord(acSSObj.ObjectId, "polylineNumber", valueBuffer);//写扩展属性
 
@@ -160,8 +161,8 @@ namespace RegulatoryPlan.Method
                                                 gridData = gridData.Replace(polylineId, "");
                                             }
                                             int factorcount = 0;
-                                            int.TryParse((string)item.Cells[4].Value, out factorcount);
-                                            item.Cells[4].Value = (factorcount - 1).ToString();
+                                            int.TryParse((string)item.Cells["entitycount"].Value, out factorcount);
+                                            item.Cells["entitycount"].Value = (factorcount - 1).ToString();
 
                                             System.Windows.Forms.Application.DoEvents();
 
@@ -179,8 +180,8 @@ namespace RegulatoryPlan.Method
 
                             //更新数量
                             int count = 0;
-                            int.TryParse((string)dataGridView1.Rows[index].Cells[4].Value, out count);
-                            dataGridView1.Rows[index].Cells[4].Value = (count + 1).ToString();
+                            int.TryParse((string)dataGridView1.Rows[index].Cells["entitycount"].Value, out count);
+                            dataGridView1.Rows[index].Cells["entitycount"].Value = (count + 1).ToString();
                             System.Windows.Forms.Application.DoEvents();
                             if (deleteRow!=null)
                             {
@@ -296,6 +297,7 @@ namespace RegulatoryPlan.Method
             table.Columns.Add(new System.Data.DataColumn(("个体编码"), typeof(string)));
             table.Columns.Add(new System.Data.DataColumn(("个体要素"), typeof(string)));
             table.Columns.Add(new System.Data.DataColumn(("个体名称"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体阶段"), typeof(string)));
 
             System.Data.DataColumn column;
             System.Data.DataRow row;
@@ -335,6 +337,10 @@ namespace RegulatoryPlan.Method
                         {
                             row["个体名称"] = re.Value;
                         }
+                        if (i == 3)
+                        {
+                            row["个体名称"] = re.Value;
+                        }
                         i++;
                     }
 
@@ -357,6 +363,7 @@ namespace RegulatoryPlan.Method
             table.Columns.Add(new System.Data.DataColumn(("个体要素"), typeof(string)));
             table.Columns.Add(new System.Data.DataColumn(("个体名称"), typeof(string)));
             table.Columns.Add(new System.Data.DataColumn(("数量"), typeof(string)));
+            table.Columns.Add(new System.Data.DataColumn(("个体阶段"), typeof(string)));
 
             System.Data.DataColumn column;
             System.Data.DataRow row;
@@ -412,7 +419,7 @@ namespace RegulatoryPlan.Method
                                     bool hasData = false;
                                     foreach (System.Data.DataRow item in table.Rows)
                                     {
-                                        if((string)item["个体编码"]==values[0]&&(string)item["个体要素"] ==values[1]&& (string)item["个体名称"] == values[2])
+                                        if((string)item["个体编码"]==values[0]&&(string)item["个体要素"] ==values[1]&& (string)item["个体名称"] == values[2] && (string)item["个体阶段"] == values[3])
                                         {
                                             item["多段线id"] += id.Handle.Value.ToString()+ ",";
                                             int count = 0;
@@ -441,6 +448,10 @@ namespace RegulatoryPlan.Method
                                             if (i == 2)
                                             {
                                                 row["个体名称"] = re.Value;
+                                            }
+                                            if (i == 3)
+                                            {
+                                                row["个体阶段"] = re.Value;
                                             }
                                             i++;
                                         }

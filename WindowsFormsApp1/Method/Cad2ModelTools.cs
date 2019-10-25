@@ -247,6 +247,7 @@ namespace RegulatoryPlan.Model
             polylineModel.individualName = "";
             polylineModel.individualFactor = "";
             polylineModel.individualCode = "";
+            polylineModel.individualStage = "";
 
             // 增加个体编码、个体要素、个体名称
             System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNumsEx(polyLine);
@@ -260,6 +261,8 @@ namespace RegulatoryPlan.Model
                         polylineModel.individualName = (string)row["个体名称"];
                         polylineModel.individualFactor = (string)row["个体要素"];
                         polylineModel.individualCode = (string)row["个体编码"];
+                        polylineModel.individualStage = (string)row["个体阶段"];
+
                     }
 
                 }
@@ -797,6 +800,7 @@ namespace RegulatoryPlan.Model
             polylineModel.individualName = "";
             polylineModel.individualFactor = "";
             polylineModel.individualCode = "";
+            polylineModel.individualStage = "";
 
             // 增加个体编码、个体要素、个体名称
             System.Data.DataTable tb = Method.AutoGenerateNumMethod.GetAllPolylineNumsEx(polyLine);
@@ -810,6 +814,8 @@ namespace RegulatoryPlan.Model
                         polylineModel.individualName = (string)row["个体名称"];
                         polylineModel.individualFactor = (string)row["个体要素"];
                         polylineModel.individualCode = (string)row["个体编码"];
+                        polylineModel.individualStage = (string)row["个体阶段"];
+
                     }
 
                 }

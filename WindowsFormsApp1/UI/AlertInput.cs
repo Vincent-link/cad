@@ -20,9 +20,13 @@ namespace RegulatoryPlan.UI
         ObjectId objId;
         System.Data.DataTable ta;
         FactorJsonData _contentList = new FactorJsonData();
-        public AlertInput(System.Data.DataTable table, FactorJsonData contentList)
+        StageJsonData _stages = new StageJsonData();
+
+        public AlertInput(System.Data.DataTable table, FactorJsonData contentList, StageJsonData stages)
         {
             _contentList = contentList;
+            _stages = stages;
+
             //List<string> factors = new List<string>();
 
             ////MessageBox.Show(content);
@@ -30,7 +34,7 @@ namespace RegulatoryPlan.UI
             //{
             //    factors.Add(name["name"]);
             //}
-            InitializeComponent(_contentList,table);
+            InitializeComponent(_contentList, _stages, table);
             Load(table);
 
         } 
@@ -90,6 +94,23 @@ namespace RegulatoryPlan.UI
             }
         }
 
+        private void GetStageName(List<Stage> stages, string tag, ref string name)
+        {
+            foreach (Stage stage in stages)
+            {
+                if (stage.id == tag)
+                {
+                    name = stage.name;
+                    break;
+                }
+
+                if (stage.child != null)
+                {
+                    GetStageName(stage.child, tag, ref name);
+                }
+            }
+        }
+
         private void GetFactorNode(List<Factor> factors,ref TreeNode node)
         {
             foreach (Factor factor in factors)
@@ -99,6 +120,19 @@ namespace RegulatoryPlan.UI
                 if (factor.child != null)
                 {
                     GetFactorNode(factor.child,ref n1);
+                }
+            }
+        }
+
+        private void GetStageNode(List<Stage> stages, ref TreeNode node)
+        {
+            foreach (Stage stage in stages)
+            {
+                TreeNode n1 = node.Nodes.Add(stage.name);
+                n1.Tag = stage.id;
+                if (stage.child != null)
+                {
+                    GetStageNode(stage.child, ref n1);
                 }
             }
         }
@@ -144,6 +178,49 @@ namespace RegulatoryPlan.UI
             {
             }
         }
+
+        private void stage_CurrentCellChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dataGridView1.CurrentCell.ColumnIndex == 5)
+                {
+                    Rectangle rect = dataGridView1.GetCellDisplayRectangle(dataGridView1.CurrentCell.ColumnIndex, dataGridView1.CurrentCell.RowIndex, false);
+                    if (dataGridView1.CurrentCell.Value != null)
+                    {
+                        string name = dataGridView1.CurrentCell.Value.ToString();
+                        string tag = dataGridView1.CurrentCell.Tag.ToString();
+                        this.treeComboBox2.Text = name;
+                        this.treeComboBox2.Tag = tag;
+                    }
+                    else
+                    {
+                        this.treeComboBox2.Text = "";
+                    }
+                    //if (sexValue == "1")
+                    //{
+                    //    box.Text = "男";
+                    //}
+                    //else
+                    //{
+                    //    box.Text = "女";
+                    //}
+                    this.treeComboBox2.Left = rect.Left;
+                    this.treeComboBox2.Top = rect.Top;
+                    this.treeComboBox2.Width = rect.Width;
+                    this.treeComboBox2.Height = rect.Height;
+                    this.treeComboBox2.Visible = true;
+                }
+                else
+                {
+                    this.treeComboBox2.Visible = false;
+                }
+            }
+            catch
+            {
+            }
+        }
+
         private void cmb_Temp_SelectedIndexChanged(object sender, EventArgs e)
         {
             //if (((ComboBox)sender).Text == "男")
@@ -177,6 +254,14 @@ namespace RegulatoryPlan.UI
             }
         }
 
+        private void stage_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (this.treeComboBox2.Visible)
+            {
+                this.treeComboBox2.Visible = false;
+            }
+        }
+
         private void dgv_User_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             if (this.treeComboBox1.Visible)
@@ -185,6 +270,13 @@ namespace RegulatoryPlan.UI
             }
         }
 
+        private void stage_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            if (this.treeComboBox2.Visible)
+            {
+                this.treeComboBox2.Visible = false;
+            }
+        }
 
         private void dgv_User_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -222,6 +314,18 @@ namespace RegulatoryPlan.UI
             if (e.Node.ImageIndex == 0)
                 e.Node.ImageIndex = e.Node.SelectedImageIndex = 1;
         }
+
+        void treeComboBox2_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.ImageIndex == 1)
+                e.Node.ImageIndex = e.Node.SelectedImageIndex = 0;
+
+        }
+        void treeComboBox2_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.ImageIndex == 0)
+                e.Node.ImageIndex = e.Node.SelectedImageIndex = 1;
+        }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             
@@ -247,8 +351,12 @@ namespace RegulatoryPlan.UI
                     MessageBox.Show("请选择个体名称");
                     return;
                 }
+                if (dataGridView1.Rows[e.RowIndex].Cells["individualStage"].Value is null)
+                {
+                    MessageBox.Show("请选择阶段");
+                    return;
+                }
                 //string nameId = "";
-
 
                 //foreach (Dictionary<string, string> name in _contentList)
                 //{
@@ -260,6 +368,8 @@ namespace RegulatoryPlan.UI
                 //}
                 //int dlCount = 0;
                 string result = dataGridView1.Rows[e.RowIndex].Cells["factor"].Tag.ToString();
+                string stage = dataGridView1.Rows[e.RowIndex].Cells["individualStage"].Tag.ToString();
+
                 //foreach (var item in result)
                 //{
                 //    if (item=='-')
@@ -268,12 +378,9 @@ namespace RegulatoryPlan.UI
                 //    }
                 //}
 
-                
                 //GetFactorId(_contentList.result, result, ref nameId);
-                               
-                AutoGenerateNumMethod.GetPolyline(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString(), result, dataGridView1.Rows[e.RowIndex].Cells["individualName"].Value.ToString(),e.RowIndex,ref dataGridView1);
 
-                
+                AutoGenerateNumMethod.GetPolyline(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString(), result, dataGridView1.Rows[e.RowIndex].Cells["individualName"].Value.ToString(), stage, e.RowIndex,ref dataGridView1);
             }
 
             //点击button按钮事件

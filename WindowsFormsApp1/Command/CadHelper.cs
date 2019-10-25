@@ -147,7 +147,7 @@ namespace RegulatoryPlan.Command
 
         public void AutoGenerateNumber2()
         {
-            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums(),null);
+            AlertInput a = new AlertInput(Method.AutoGenerateNumMethod.GetAllPolylineNums(),null, null);
             a.Show();
         }
     }

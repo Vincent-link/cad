@@ -155,9 +155,19 @@ namespace RegulatoryPlan.Command
                     return;
                 }
 
+                StageJsonData stages = new StageJsonData();
+                stages.result = new List<Stage>();
+                for (int i = 0; i < 6; i++)
+                {
+                    Stage stage1 = new Stage();
+                    stage1.id = "1" + i;
+                    stage1.name = "BIM" + i;
+                    stages.result.Add(stage1);
+                }
+
                 System.Data.DataTable table = Method.AutoGenerateNumMethod.GetAllPolylineNums();
 
-                alertInput = new AlertInput(table, contentList);
+                alertInput = new AlertInput(table, contentList, stages);
                 Autodesk.AutoCAD.ApplicationServices.Application.ShowModelessDialog(alertInput);
             }
         }

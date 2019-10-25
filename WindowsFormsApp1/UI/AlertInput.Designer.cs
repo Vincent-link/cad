@@ -33,7 +33,7 @@ namespace RegulatoryPlan.UI
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(FactorJsonData factors, System.Data.DataTable table)
+        private void InitializeComponent(FactorJsonData factors, StageJsonData stages, System.Data.DataTable table)
         {
 
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -49,11 +49,14 @@ namespace RegulatoryPlan.UI
             this.polylineNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.individualName = new DataGridViewTextBoxColumn();
             this.entitycount = new DataGridViewTextBoxColumn();
+            this.individualStage = new DataGridViewTextBoxColumn();
             this.treeComboBox1 = new DataGridViewTreeComboxColumn.TreeComboBox();
             this.factor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnGet = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnFind = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnDelete = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.treeComboBox2 = new DataGridViewTreeComboxColumn.TreeComboBox();
+
 
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -85,6 +88,7 @@ namespace RegulatoryPlan.UI
             this.factor,
             this.individualName,
             this.entitycount,
+            this.individualStage,
             this.btnGet,
             this.btnFind,
             this.btnDelete});
@@ -116,15 +120,6 @@ namespace RegulatoryPlan.UI
             this.polylineNum.HeaderText = "多段线编码";
             this.polylineNum.Name = "polylineNum";
 
-            //
-            //
-            //
-            this.treeComboBox1.AfterExpand += new TreeViewEventHandler(treeComboBox1_AfterExpand);
-            this.treeComboBox1.AfterCollapse += new TreeViewEventHandler(treeComboBox1_AfterCollapse);
-
-
-            
-
             // factor
             Dictionary<string,string> dic = new Dictionary<string, string>();
             List<string> result = new List<string>();
@@ -153,6 +148,23 @@ namespace RegulatoryPlan.UI
                 this.treeComboBox1.Nodes.Add(node);
             }
 
+            TreeNode node2 = new TreeNode();
+            if (stages.result != null)
+            {
+                GetStageNode(stages.result, ref node2);
+            }
+
+            if (node2.Nodes.Count > 0)
+            {
+                foreach (TreeNode item in node2.Nodes)
+                {
+                    this.treeComboBox2.Nodes.Add(item);
+                }
+            }
+            else
+            {
+                this.treeComboBox2.Nodes.Add(node2);
+            }
 
             ////为下拉列表添加节点
             //for (int i = 0; i < 4; i++)
@@ -187,6 +199,20 @@ namespace RegulatoryPlan.UI
             this.treeComboBox1.SelectedIndexChanged += new EventHandler(cmb_Temp_SelectedIndexChanged);
             dataGridView1.Controls.Add(this.treeComboBox1);
 
+
+            // 阶段
+            dataGridView1.ColumnWidthChanged += stage_ColumnWidthChanged;
+            dataGridView1.CurrentCellChanged += stage_CurrentCellChanged;
+            dataGridView1.Scroll += stage_Scroll;
+
+            this.treeComboBox2.AfterExpand += new TreeViewEventHandler(treeComboBox2_AfterExpand);
+            this.treeComboBox2.AfterCollapse += new TreeViewEventHandler(treeComboBox2_AfterCollapse);
+
+            this.treeComboBox2.Visible = false;
+
+            this.treeComboBox2.SelectedIndexChanged += new EventHandler(cmb_Temp_SelectedIndexChanged);
+            dataGridView1.Controls.Add(this.treeComboBox2);
+
             if (table != null)
             {
                 foreach (DataRow row in table.Rows)
@@ -202,6 +228,13 @@ namespace RegulatoryPlan.UI
 
                     this.dataGridView1.Rows[index].Cells[2].Value = result1;
                     this.dataGridView1.Rows[index].Cells[2].Tag = (string)row["个体要素"];
+
+                    string result2 = "";
+                    GetStageName(stages.result, (string)row["个体阶段"], ref result2);
+
+                    this.dataGridView1.Rows[index].Cells[5].Value = result2;
+                    this.dataGridView1.Rows[index].Cells[5].Tag = (string)row["个体阶段"];
+
                 }
             }
 
@@ -216,6 +249,12 @@ namespace RegulatoryPlan.UI
             this.entitycount.HeaderText = "数量";
             this.entitycount.Name = "entitycount";
             this.entitycount.ReadOnly = true;
+            this.entitycount.FillWeight = 30;
+            //
+            //
+            //
+            this.individualStage.HeaderText = "个体阶段";
+            this.individualStage.Name = "individualStage";
             // 
             // btnGet
             // 
@@ -275,5 +314,8 @@ namespace RegulatoryPlan.UI
         private DataGridViewTreeComboxColumn.TreeComboBox treeComboBox1;
         private DataGridViewTextBoxColumn individualName;
         private DataGridViewTextBoxColumn entitycount;
+        private DataGridViewTextBoxColumn individualStage;
+        private DataGridViewTreeComboxColumn.TreeComboBox treeComboBox2;
+
     }
 }
