@@ -115,9 +115,9 @@ namespace RegulatoryPlan.Model
                     //  cpModel.ZIndex = "1";
                 }
 
-                if (loop.Polyline.Count == 3)
-                {
-                }
+                //if (loop.Polyline.Count == 3)
+                //{
+                //}
 
                 if (loop.IsPolyline && loop.Polyline.Count > 3)
                 {

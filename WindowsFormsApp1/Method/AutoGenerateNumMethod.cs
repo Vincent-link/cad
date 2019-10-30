@@ -339,7 +339,7 @@ namespace RegulatoryPlan.Method
                         }
                         if (i == 3)
                         {
-                            row["个体名称"] = re.Value;
+                            row["个体阶段"] = re.Value;
                         }
                         i++;
                     }

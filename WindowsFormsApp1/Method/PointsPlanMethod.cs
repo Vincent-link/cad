@@ -16,6 +16,9 @@ namespace RegulatoryPlan.Method
     {
         public void GetAllPointsPlaneInfo(T model)
         {
+            //model.selectedLayerList.Add("地块界限");
+            //model.selectedLayerList.Add("尺寸标注");
+
             LayerModel lm = new LayerModel();
             //string attributeLists = JsonConvert.SerializeObject(attributeList);
             //MessageBox.Show(attributeLists);
@@ -35,8 +38,8 @@ namespace RegulatoryPlan.Method
             model.kgGuide = KgGuide();
 
             //地块图层
-            GetAllYDBMGemo(model, "地块界限");
-            GetAllDimensioning(model, "尺寸标注");
+            //GetAllYDBMGemo(model, "地块界限");
+            //GetAllDimensioning(model, "尺寸标注");
         }
 
         public void GetAllYDBMGemo(T model, string layerName)

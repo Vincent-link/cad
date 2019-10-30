@@ -291,8 +291,9 @@ namespace RegulatoryPlan.Method
             Document doc = Application.DocumentManager.MdiActiveDocument;
             ObjectIdCollection ids = new ObjectIdCollection();
 
-            PromptSelectionResult ProSset = null;
             TypedValue[] filList = new TypedValue[1] { new TypedValue((int)DxfCode.LayerName, "图例") };
+
+            PromptSelectionResult ProSset = null;
             SelectionFilter sfilter = new SelectionFilter(filList);
             LayoutManager layoutMgr = LayoutManager.Current;
 

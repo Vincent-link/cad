@@ -51,8 +51,8 @@ namespace RegulatoryPlan.Method
                 //}
 
                 // 判断是否读取布局空间（papermodel）
-                //MainForm.isOnlyModel = mb.IsOnlyModel;
-                MainForm.isOnlyModel = false;
+                MainForm.isOnlyModel = mb.IsOnlyModel;
+                //MainForm.isOnlyModel = false;
                 mb.DocName = Path.GetFileNameWithoutExtension(file);
                 mb.projectId = cityName;
 
