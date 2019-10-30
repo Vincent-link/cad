@@ -132,7 +132,7 @@ namespace RegulatoryPlan.UI
                         PostModel.PostModelBase(model as FuelGasModel);
                         break;
                     case DerivedTypeEnum.Communication:
-                        PostModel.PostModelBase(model as CommunicationModel);
+                        PostModel.PostModelBase(model as AttributeBaseModel);
                         break;
                     case DerivedTypeEnum.TheRoadSection:
                         PostModel.PostModelBase(model as RoadModel);

@@ -24,6 +24,8 @@ namespace RegulatoryPost.FenTuZe
         {
             try
             {
+                Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+
                 ArrayList uuid = new ArrayList();
                 ArrayList geom = new ArrayList();   // 坐标点集合
                 ArrayList colorList = new ArrayList();       // 颜色集合
@@ -49,11 +51,12 @@ namespace RegulatoryPost.FenTuZe
                 List<string> selectedLayerList = new List<string>(); //图层
                 List<string> individualName = new List<string>(); //图层
                 List<string> individualFactor = new List<string>(); //图层
+
                 List<string> individualCode = new List<string>(); //图层
+                DataTable individualAttrList = new DataTable(); //图层
+                List<bool> dashes = new List<bool>(); //是否虚线
 
                 int ysIndex = 0;
-
-                Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
 
                 // 图例
                 tuliList.Add("");
@@ -107,9 +110,12 @@ namespace RegulatoryPost.FenTuZe
                                         textContent.Add("");
                                         blockContent.Add("");
 
-                                        List<string> individualName = new List<string>(); //图层
-                                        List<string> individualFactor = new List<string>(); //图层
-                                        List<string> individualCode = new List<string>(); //图层
+                                        dashes.Add(false);
+
+                                        individualName.Add("");
+                                        individualFactor.Add("");
+                                        individualCode.Add("");
+                                        GetIndividualAttributeTable(individualAttrList, "");
 
                                     }
                                     if (pf is BlockInfoModel)
@@ -142,6 +148,14 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(arcModel.isDashed);
+
+                                                individualName.Add("");
+                                                individualFactor.Add("");
+                                                individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
+
                                             }
                                         }
                                         if (blm.Circle != null && blm.Circle.Count > 0)
@@ -171,6 +185,14 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(circleModel.isDashed);
+
+                                                individualName.Add("");
+                                                individualFactor.Add("");
+                                                individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
+
                                             }
                                         }
                                         if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -202,6 +224,14 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(circleModel.isDashed);
+
+                                                individualName.Add("");
+                                                individualFactor.Add("");
+                                                individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
+
                                             }
                                         }
                                         if (blm.DbText != null)
@@ -226,6 +256,13 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(false);
+
+                                                individualName.Add("");
+                                                individualFactor.Add("");
+                                                individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
 
                                             }
                                         }
@@ -259,6 +296,14 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
 
                                                 blockContent.Add("");
+
+                                                dashes.Add(lineModel.isDashed);
+
+                                                individualName.Add("");
+                                                individualFactor.Add("");
+                                                individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
+
                                             }
 
                                         }
@@ -296,6 +341,13 @@ namespace RegulatoryPost.FenTuZe
                                                         parentId.Add("");
                                                         textContent.Add("");
                                                         blockContent.Add("");
+
+                                                        individualName.Add("");
+                                                        individualFactor.Add("");
+                                                        individualCode.Add("");
+                                                        GetIndividualAttributeTable(individualAttrList, "");
+
+                                                        dashes.Add(arcModel.isDashed);
                                                     }
                                                     catch (Exception ex)
                                                     {
@@ -352,6 +404,22 @@ namespace RegulatoryPost.FenTuZe
                                                         parentId.Add("");
                                                         textContent.Add("");
                                                         blockContent.Add("");
+
+                                                        dashes.Add(arcModel.isDashed);
+
+                                                        individualName.Add(arcModel.individualName);
+                                                        individualFactor.Add(arcModel.individualFactor);
+                                                        individualCode.Add(arcModel.individualCode);
+
+                                                        if (arcModel.individualStage != null)
+                                                        {
+                                                            GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+                                                        }
+                                                        else
+                                                        {
+                                                            GetIndividualAttributeTable(individualAttrList, "");
+                                                        }
+
                                                     }
 
                                                 }
@@ -394,6 +462,13 @@ namespace RegulatoryPost.FenTuZe
                                                         parentId.Add("");
                                                         textContent.Add("");
                                                         blockContent.Add("");
+
+                                                        dashes.Add(false);
+
+                                                        individualName.Add("");
+                                                        individualFactor.Add("");
+                                                        individualCode.Add("");
+                                                        GetIndividualAttributeTable(individualAttrList, "");
                                                     }
                                                 }
 
@@ -429,6 +504,13 @@ namespace RegulatoryPost.FenTuZe
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string zindexstring = JsonConvert.SerializeObject(zIndex);
                 string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
+
+                string individualNamestring = JsonConvert.SerializeObject(individualName);
+                string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
+                string individualCodestring = JsonConvert.SerializeObject(individualCode);
+                string individualAttrListstring = JsonConvert.SerializeObject(individualAttrList);
+
+                string dashesString = JsonConvert.SerializeObject(dashes);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -470,6 +552,12 @@ namespace RegulatoryPost.FenTuZe
 
                 // 块内容
                 result.Add("selectedLayerList", selectedLayerListstring);
+                result.Add("individualName", individualNamestring);
+                result.Add("individualFactor", individualFactorstring);
+                result.Add("individualCode", individualCodestring);
+                result.Add("individualAttrList", individualAttrListstring);
+
+                result.Add("dashes", dashesString);
 
                 FenTuZe.PostData(result);
             }
@@ -483,6 +571,8 @@ namespace RegulatoryPost.FenTuZe
         /// <param name="model"></param>
         public static void PostModelBase(ModelBase model)
         {
+            Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+
             ArrayList uuid = new ArrayList();
             ArrayList geom = new ArrayList();   // 坐标点集合
             ArrayList colorList = new ArrayList();       // 颜色集合
@@ -502,14 +592,15 @@ namespace RegulatoryPost.FenTuZe
             ArrayList parentId = new ArrayList(); //配套设施所在地块集合
             ArrayList textContent = new ArrayList(); // 文字内容（GIS端展示）
             ArrayList blockContent = new ArrayList(); // 块内容（GIS端展示）
+
             ArrayList zIndex = new ArrayList(); //图层级别
             List<string> selectedLayerList = new List<string>(); //图层
-
             List<string> individualName = new List<string>(); //图层
             List<string> individualFactor = new List<string>(); //图层
-            List<string> individualCode = new List<string>(); //图层
 
-            Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+            List<string> individualCode = new List<string>(); //图层
+            DataTable individualAttrList = new DataTable();  // 个体属性集合
+            List<bool> dashes = new List<bool>(); //是否虚线
 
             if (model.attributeList != null)
             {
@@ -574,9 +665,12 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 blockContent.Add("");
 
+                                                dashes.Add(false);
+
                                                 individualName.Add("");
                                                 individualFactor.Add("");
                                                 individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
                                             }
                                         }
 
@@ -646,9 +740,12 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
                                         }
 
                                     }
@@ -674,9 +771,13 @@ namespace RegulatoryPost.FenTuZe
                                         textContent.Add("");
                                         blockContent.Add("");
 
+                                        dashes.Add(false);
+
                                         individualName.Add("");
                                         individualFactor.Add("");
                                         individualCode.Add("");
+                                        GetIndividualAttributeTable(individualAttrList, "");
+
                                     }
                                 }
                             }
@@ -714,9 +815,13 @@ namespace RegulatoryPost.FenTuZe
                                     textContent.Add("");
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
+
                                     individualName.Add("");
                                     individualFactor.Add("");
                                     individualCode.Add("");
+                                    GetIndividualAttributeTable(individualAttrList, "");
+
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -751,9 +856,13 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(arcModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -785,9 +894,13 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(circleModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
 
@@ -811,9 +924,13 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add(circleModel.Text);
                                             blockContent.Add("");
 
+                                            dashes.Add(false);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.DimensionPositon != null)
@@ -852,9 +969,13 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             blockContent.Add("");
 
+                                            dashes.Add(lineModel.isDashed);
+
                                             individualName.Add("");
                                             individualFactor.Add("");
                                             individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
 
                                     }
@@ -921,9 +1042,22 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
+
+                                                // 个体属性索引
+                                                if (arcModel.individualStage != null)
+                                                {
+                                                    GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+                                                }
+                                                else
+                                                {
+                                                    GetIndividualAttributeTable(individualAttrList, "");
+                                                }
+
                                             }
 
                                         }
@@ -964,9 +1098,13 @@ namespace RegulatoryPost.FenTuZe
                                                     textContent.Add("");
                                                     blockContent.Add("");
 
+                                                    dashes.Add(false);
+
                                                     individualName.Add("");
                                                     individualFactor.Add("");
                                                     individualCode.Add("");
+                                                    GetIndividualAttributeTable(individualAttrList, "");
+
                                                 }
                                             }
 
@@ -1003,10 +1141,13 @@ namespace RegulatoryPost.FenTuZe
             string blockContentString = JsonConvert.SerializeObject(blockContent);
             string zindexstring = JsonConvert.SerializeObject(zIndex);
             string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
-            string individualNamestring = JsonConvert.SerializeObject(individualName);
 
+            string individualNamestring = JsonConvert.SerializeObject(individualName);
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
+            string individualAttrListstring = JsonConvert.SerializeObject(individualAttrList);
+
+            string dashesString = JsonConvert.SerializeObject(dashes);
 
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
@@ -1033,6 +1174,9 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+            result.Add("individualAttrList", individualAttrListstring);
+
+            result.Add("dashes", dashesString);
 
             FenTuZe.PostData(result);
         }
@@ -1043,6 +1187,8 @@ namespace RegulatoryPost.FenTuZe
         //attributeIndex数量和uuid相同，attributeIndex属性必须在attributeList属性列表里
         public static void AutoPostModelBase(ModelBase model, List<string> failedFiles)
         {
+            Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+
             ArrayList uuid = new ArrayList();
             ArrayList geom = new ArrayList();   // 坐标点集合
             ArrayList colorList = new ArrayList();       // 颜色集合
@@ -1067,9 +1213,10 @@ namespace RegulatoryPost.FenTuZe
             List<string> selectedLayerList = new List<string>(); //图层
             List<string> individualName = new List<string>(); //图层
             List<string> individualFactor = new List<string>(); //图层
-            List<string> individualCode = new List<string>(); //图层
 
-            Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+            List<string> individualCode = new List<string>(); //图层
+            DataTable individualAttrList = new DataTable();  // 个体属性集合
+            List<bool> dashes = new List<bool>(); //是否虚线
 
             if (model.attributeList != null)
             {
@@ -1134,6 +1281,14 @@ namespace RegulatoryPost.FenTuZe
                                                 parentId.Add("");
                                                 textContent.Add("");
                                                 blockContent.Add("");
+
+                                                dashes.Add(false);
+
+                                                individualName.Add("");
+                                                individualFactor.Add("");
+                                                individualCode.Add("");
+                                                GetIndividualAttributeTable(individualAttrList, "");
+
                                             }
                                         }
 
@@ -1201,6 +1356,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(arcModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
 
                                     }
@@ -1225,6 +1388,14 @@ namespace RegulatoryPost.FenTuZe
                                         parentId.Add("");
                                         textContent.Add("");
                                         blockContent.Add("");
+
+                                        dashes.Add(false);
+
+                                        individualName.Add("");
+                                        individualFactor.Add("");
+                                        individualCode.Add("");
+                                        GetIndividualAttributeTable(individualAttrList, "");
+
                                     }
                                 }
                             }
@@ -1261,6 +1432,14 @@ namespace RegulatoryPost.FenTuZe
                                     parentId.Add("");
                                     textContent.Add("");
                                     blockContent.Add("");
+
+                                    dashes.Add(false);
+
+                                    individualName.Add("");
+                                    individualFactor.Add("");
+                                    individualCode.Add("");
+                                    GetIndividualAttributeTable(individualAttrList, "");
+
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -1294,6 +1473,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(arcModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -1324,6 +1511,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
 
@@ -1346,6 +1541,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add(circleModel.Text);
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.DimensionPositon != null)
@@ -1387,6 +1590,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
 
                                     }
@@ -1452,9 +1663,17 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 blockContent.Add("");
 
+                                                dashes.Add(arcModel.isDashed);
+
                                                 individualName.Add(arcModel.individualName);
                                                 individualFactor.Add(arcModel.individualFactor);
                                                 individualCode.Add(arcModel.individualCode);
+
+                                                // 个体属性索引
+                                                if (arcModel.individualStage != null)
+                                                {
+                                                    GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+                                                }
 
                                             }
 
@@ -1495,6 +1714,14 @@ namespace RegulatoryPost.FenTuZe
 
                                                     textContent.Add("");
                                                     blockContent.Add("");
+
+                                                    dashes.Add(false);
+
+                                                    individualName.Add("");
+                                                    individualFactor.Add("");
+                                                    individualCode.Add("");
+                                                    GetIndividualAttributeTable(individualAttrList, "");
+
                                                 }
                                             }
 
@@ -1534,7 +1761,9 @@ namespace RegulatoryPost.FenTuZe
             string individualNamestring = JsonConvert.SerializeObject(individualName);
             string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
             string individualCodestring = JsonConvert.SerializeObject(individualCode);
+            string individualAttrListstring = JsonConvert.SerializeObject(individualAttrList);
 
+            string dashesString = JsonConvert.SerializeObject(dashes);
 
             result.Add("uuid", uuidString);
             result.Add("geom", geomString);
@@ -1561,7 +1790,9 @@ namespace RegulatoryPost.FenTuZe
             result.Add("individualName", individualNamestring);
             result.Add("individualFactor", individualFactorstring);
             result.Add("individualCode", individualCodestring);
+            result.Add("individualAttrList", individualAttrListstring);
 
+            result.Add("dashes", dashesString);
 
             FenTuZe.AutoPostData(result, failedFiles);
         }
@@ -1574,6 +1805,7 @@ namespace RegulatoryPost.FenTuZe
             try
             {
                 Dictionary<string, string> result = new Dictionary<string, string>(); // 汇总
+
                 ArrayList uuid = new ArrayList();
                 ArrayList geom = new ArrayList();   // 坐标点集合
                 ArrayList colorList = new ArrayList();       // 颜色集合
@@ -1581,8 +1813,8 @@ namespace RegulatoryPost.FenTuZe
 
                 ArrayList layerName = new ArrayList();
                 ArrayList tableName = new ArrayList(); // 表名
-                System.Data.DataTable attributeList = new System.Data.DataTable();  // 属性集合
-                ArrayList attributeIndexList = new ArrayList(); //属性索引集合
+                DataTable attributeList = new DataTable();  // 指标集合
+                ArrayList attributeIndexList = new ArrayList(); //指标索引集合
 
                 ArrayList tuliList = new ArrayList(); //图例集合
                 string projectId = ""; //项目ID
@@ -1596,7 +1828,13 @@ namespace RegulatoryPost.FenTuZe
 
                 ArrayList zIndex = new ArrayList(); //图层级别
                 List<string> selectedLayerList = new List<string>(); //图层
+                List<bool> dashes = new List<bool>(); //是否虚线
+                List<string> individualName = new List<string>(); //个体名称
 
+                List<string> individualFactor = new List<string>(); //个体要素
+                List<string> individualCode = new List<string>(); //个体编码
+                List<string> individualAttrIndex = new List<string>(); //个体属性索引
+                DataTable individualAttrList = new DataTable();  // 个体属性集合
 
                 if (model.kgGuide != null)
                 {
@@ -1611,7 +1849,6 @@ namespace RegulatoryPost.FenTuZe
                 {
                     selectedLayerList = model.selectedLayerList;
                 }
-
 
                 foreach (LayerModel layer in model.allLines)
                 {
@@ -1645,6 +1882,13 @@ namespace RegulatoryPost.FenTuZe
                                     parentId.Add("");
                                     textContent.Add("");
                                     blockContent.Add("");
+
+                                    dashes.Add(false);
+
+                                    individualName.Add("");
+                                    individualFactor.Add("");
+                                    individualCode.Add("");
+                                    GetIndividualAttributeTable(individualAttrList, "");
                                 }
                                 if (pf is BlockInfoModel)
                                 {
@@ -1674,6 +1918,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(arcModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -1700,6 +1952,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -1727,6 +1987,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
                                     }
                                     if (blm.DbText != null)
@@ -1748,6 +2016,13 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
 
                                         }
                                     }
@@ -1778,6 +2053,14 @@ namespace RegulatoryPost.FenTuZe
                                             parentId.Add("");
                                             textContent.Add("");
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            GetIndividualAttributeTable(individualAttrList, "");
+
                                         }
 
                                     }
@@ -1827,6 +2110,20 @@ namespace RegulatoryPost.FenTuZe
                                                 parentId.Add("");
                                                 textContent.Add("");
                                                 blockContent.Add("");
+
+                                                dashes.Add(arcModel.isDashed);
+
+                                                individualName.Add(arcModel.individualName);
+                                                individualFactor.Add(arcModel.individualFactor);
+                                                individualCode.Add(arcModel.individualCode);
+
+                                                // 个体属性索引
+                                                if (arcModel.individualStage != null)
+                                                {
+                                                    GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+                                                }
+
+
                                             }
 
                                         }
@@ -1864,6 +2161,14 @@ namespace RegulatoryPost.FenTuZe
                                                     parentId.Add("");
                                                     textContent.Add("");
                                                     blockContent.Add("");
+
+                                                    dashes.Add(false);
+
+                                                    individualName.Add("");
+                                                    individualFactor.Add("");
+                                                    individualCode.Add("");
+                                                    GetIndividualAttributeTable(individualAttrList, "");
+
                                                 }
                                             }
 
@@ -1904,6 +2209,14 @@ namespace RegulatoryPost.FenTuZe
                                     parentId.Add("");
                                     textContent.Add(roadModel.RoadName[i]);
                                     blockContent.Add("");
+
+                                    dashes.Add(false);
+
+                                    individualName.Add("");
+                                    individualFactor.Add("");
+                                    individualCode.Add("");
+                                    GetIndividualAttributeTable(individualAttrList, "");
+
                                 }
                             }
 
@@ -1941,6 +2254,19 @@ namespace RegulatoryPost.FenTuZe
                                 parentId.Add("");
                                 textContent.Add("");
                                 blockContent.Add("");
+
+                                dashes.Add(roadModel.isDashed);
+
+                                individualName.Add(roadModel.individualName);
+                                individualFactor.Add(roadModel.individualFactor);
+                                individualCode.Add(roadModel.individualCode);
+
+                                // 个体属性索引
+                                if (roadModel.individualStage != null)
+                                {
+                                    GetIndividualAttributeTable(individualAttrList, roadModel.individualStage);
+                                }
+
                             }
 
                         }
@@ -1966,7 +2292,14 @@ namespace RegulatoryPost.FenTuZe
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
+                string individualNamestring = JsonConvert.SerializeObject(individualName);
 
+                string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
+                string individualCodestring = JsonConvert.SerializeObject(individualCode);
+                string individualStagestring = JsonConvert.SerializeObject(individualAttrIndex);
+                string individualAttrListstring = JsonConvert.SerializeObject(individualAttrList);
+
+                string dashesString = JsonConvert.SerializeObject(dashes); 
                 // UUID
                 result.Add("uuid", uuidString);
                 // 实体坐标信息
@@ -2004,6 +2337,14 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("blockContent", blockContentString);
                 result.Add("selectedLayerList", selectedLayerListstring);
 
+                result.Add("individualName", individualNamestring);
+                result.Add("individualFactor", individualFactorstring);
+                result.Add("individualCode", individualCodestring);
+                //result.Add("individualStage", individualStagestring);
+                result.Add("individualAttrList", individualAttrListstring);
+
+                result.Add("dashes", dashesString);
+                
                 FenTuZe.PostData(result);
             }
             catch
@@ -2045,6 +2386,13 @@ namespace RegulatoryPost.FenTuZe
                 ArrayList zIndex = new ArrayList(); // 块内容（GIS端展示）
                 List<string> selectedLayerList = new List<string>(); //图层
 
+                List<string> individualName = new List<string>(); //图层
+                List<string> individualFactor = new List<string>(); //图层
+                List<string> individualCode = new List<string>(); //图层
+                List<string> individualStage = new List<string>(); //图层
+
+                List<bool> dashes = new List<bool>(); //是否虚线
+
                 // 图例
                 tuliList.Add("");
                 // 项目ID或叫城市ID
@@ -2082,7 +2430,7 @@ namespace RegulatoryPost.FenTuZe
                                 if (pf is PointF)
                                 {
                                     ArrayList singlePoint = new ArrayList();
-                                    geoType = "polyline";
+                                    geoType = "point";
                                     singlePoint.Add(Transform((PointF)pf));
 
                                     geom.Add(singlePoint);
@@ -2112,9 +2460,15 @@ namespace RegulatoryPost.FenTuZe
                                     // 块内容
                                     blockContent.Add("");
 
+                                    dashes.Add(false);
+
+                                    individualName.Add("");
+                                    individualFactor.Add("");
+                                    individualCode.Add("");
+                                    individualStage.Add("");
 
                                 }
-                                
+
                                 if (pf is BlockInfoModel)
                                 {
                                     BlockInfoModel blm = pf as BlockInfoModel;
@@ -2160,6 +2514,14 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(arcModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Circle != null && blm.Circle.Count > 0)
@@ -2206,6 +2568,14 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.Ellipse != null && blm.Ellipse.Count > 0)
@@ -2257,6 +2627,14 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(circleModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
                                     }
                                     if (blm.DbText != null)
@@ -2294,9 +2672,24 @@ namespace RegulatoryPost.FenTuZe
                                             //配套设施所在地块集合
                                             parentId.Add("");
                                             // 文字内容(单行文字、多行文字、块参照等)
-                                            textContent.Add("");
+                                            if (circleModel.Text != null)
+                                            {
+                                                textContent.Add(circleModel.Text);
+                                            }
+                                            else
+                                            {
+                                                textContent.Add("");
+                                            }
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(false);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            individualStage.Add("");
+
 
                                         }
                                     }
@@ -2346,6 +2739,14 @@ namespace RegulatoryPost.FenTuZe
                                             textContent.Add("");
                                             // 块内容
                                             blockContent.Add("");
+
+                                            dashes.Add(lineModel.isDashed);
+
+                                            individualName.Add("");
+                                            individualFactor.Add("");
+                                            individualCode.Add("");
+                                            individualStage.Add("");
+
                                         }
 
                                     }
@@ -2430,6 +2831,14 @@ namespace RegulatoryPost.FenTuZe
                                                 textContent.Add("");
                                                 // 块内容
                                                 blockContent.Add("");
+
+                                                dashes.Add(arcModel.isDashed);
+
+                                                individualName.Add(arcModel.individualName);
+                                                individualFactor.Add(arcModel.individualFactor);
+                                                individualCode.Add(arcModel.individualCode);
+                                                individualStage.Add(arcModel.individualStage);
+
                                             }
 
                                         }
@@ -2484,6 +2893,14 @@ namespace RegulatoryPost.FenTuZe
                                                     textContent.Add("");
                                                     // 块内容
                                                     blockContent.Add("");
+
+                                                    dashes.Add(false);
+
+                                                    individualName.Add("");
+                                                    individualFactor.Add("");
+                                                    individualCode.Add("");
+                                                    individualStage.Add("");
+
                                                 }
                                             }
 
@@ -2518,6 +2935,13 @@ namespace RegulatoryPost.FenTuZe
 
                 string blockContentString = JsonConvert.SerializeObject(blockContent);
                 string selectedLayerListstring = JsonConvert.SerializeObject(selectedLayerList);
+
+                string individualNamestring = JsonConvert.SerializeObject(individualName);
+                string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
+                string individualCodestring = JsonConvert.SerializeObject(individualCode);
+                string individualStagestring = JsonConvert.SerializeObject(individualStage);
+
+                string dashString = JsonConvert.SerializeObject(dashes);
 
                 // UUID
                 result.Add("uuid", uuidString);
@@ -2555,6 +2979,13 @@ namespace RegulatoryPost.FenTuZe
                 // 块内容
                 result.Add("blockContent", blockContentString);
                 result.Add("selectedLayerList", selectedLayerListstring);
+
+                result.Add("individualName", individualNamestring);
+                result.Add("individualFactor", individualFactorstring);
+                result.Add("individualCode", individualCodestring);
+                result.Add("individualStage", individualStagestring);
+
+                result.Add("dashes", dashString);
 
                 FenTuZe.PostData(result);
             }
@@ -2833,16 +3264,17 @@ namespace RegulatoryPost.FenTuZe
             //output[0] = (lon1 - centerX) * Math.Cos(Angle) - (lat1 - centerY) * Math.Sin(Angle) + centerX;
 
             //output[1] = (lon1 - centerX) * Math.Sin(Angle) + (lat1 - centerY) * Math.Cos(Angle) + centerY;
+            //output[0] = point.X;
+            //output[1] = point.Y;
 
-            //output[0] = Math.Round(point.X, 7);
-            //output[1] = Math.Round(point.Y, 7);
+            //if (output[0] == 114.67382285563774)
+            //{
 
-            if (output[0] == 114.67382285563774)
-            {
+            //}
 
-            }
 
             return output;
+
         }
 
         public static string GetUUID()
@@ -2923,7 +3355,26 @@ namespace RegulatoryPost.FenTuZe
             }
         }
 
-        
+
+        public static void GetIndividualAttributeTable(DataTable tb, string roadName)
+        {
+            try
+            {
+                DataRow dr = tb.NewRow();
+
+                if (!tb.Columns.Contains("个体阶段"))
+                {
+                    tb.Columns.Add("个体阶段");
+                }
+                dr["个体阶段"] = roadName;
+                tb.Rows.Add(dr);
+            }
+            catch
+            {
+            }
+        }
+
+
 
     }
 }

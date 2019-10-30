@@ -410,7 +410,15 @@ namespace RegulatoryPost.FenTuZe
                                                         individualName.Add(arcModel.individualName);
                                                         individualFactor.Add(arcModel.individualFactor);
                                                         individualCode.Add(arcModel.individualCode);
-                                                        GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+
+                                                        if (arcModel.individualStage != null)
+                                                        {
+                                                            GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+                                                        }
+                                                        else
+                                                        {
+                                                            GetIndividualAttributeTable(individualAttrList, "");
+                                                        }
 
                                                     }
 
@@ -500,7 +508,7 @@ namespace RegulatoryPost.FenTuZe
                 string individualNamestring = JsonConvert.SerializeObject(individualName);
                 string individualFactorstring = JsonConvert.SerializeObject(individualFactor);
                 string individualCodestring = JsonConvert.SerializeObject(individualCode);
-                string individualStagestring = JsonConvert.SerializeObject(individualAttrList);
+                string individualAttrListstring = JsonConvert.SerializeObject(individualAttrList);
 
                 string dashesString = JsonConvert.SerializeObject(dashes);
 
@@ -547,7 +555,7 @@ namespace RegulatoryPost.FenTuZe
                 result.Add("individualName", individualNamestring);
                 result.Add("individualFactor", individualFactorstring);
                 result.Add("individualCode", individualCodestring);
-                result.Add("individualStage", individualStagestring);
+                result.Add("individualAttrList", individualAttrListstring);
 
                 result.Add("dashes", dashesString);
 
@@ -1044,6 +1052,10 @@ namespace RegulatoryPost.FenTuZe
                                                 if (arcModel.individualStage != null)
                                                 {
                                                     GetIndividualAttributeTable(individualAttrList, arcModel.individualStage);
+                                                }
+                                                else
+                                                {
+                                                    GetIndividualAttributeTable(individualAttrList, "");
                                                 }
 
                                             }
